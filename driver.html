@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver GPS - HVS BDO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f4f7f9; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #status { font-size: 1.2em; margin: 15px 0; font-weight: bold; color: #888; }
+        .btn { padding: 15px; width: 100%; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; color: white; cursor: pointer; }
+        .btn-start { background: #28a745; }
+        .btn-stop { background: #dc3545; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🚚 Driver Panel</h2>
+        <div id="driver-name" style="color: #007bff; margin-bottom: 10px;">Mendeteksi ID...</div>
+        <div id="status">OFFLINE</div>
+        <button id="btnStart" class="btn btn-start" onclick="startTracking()">MULAI LIVE LOKASI</button>
+        <button id="btnStop" class="btn btn-stop" onclick="stopTracking()">BERHENTI</button>
+        <p id="coords" style="font-size: 10px; color: #ccc; margin-top: 15px;"></p>
+    </div>
+
+<script>
+    // GANTI URL DI BAWAH INI DENGAN URL APPS SCRIPT KAMU
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDA4Pj6_IPWtwKwFW1lSMTgbJPgEdSj_eFzDc1Nsi6ZruJV6STOJ1iYEHfzfCB3aj1/exec";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const driverId = urlParams.get('id') || "Tanpa_Nama";
+    document.getElementById('driver-name').innerText = "ID: " + driverId;
+
+    let watchId = null;
+
+    function startTracking() {
+        if (navigator.geolocation) {
+            document.getElementById('status').innerText = "🔴 LIVE (SEDANG MENGIRIM)";
+            document.getElementById('status').style.color = "#dc3545";
+            document.getElementById('btnStart').style.display = 'none';
+            document.getElementById('btnStop').style.display = 'block';
+
+            watchId = navigator.geolocation.watchPosition(sendData, null, {
+                enableHighAccuracy: true,
+                maximumAge: 0
+            });
+        } else {
+            alert("GPS tidak didukung di browser ini.");
+        }
+    }
+
+    function sendData(pos) {
+        const payload = {
+            action: "updateLocation",
+            driverId: driverId,
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+        };
+
+        document.getElementById('coords').innerText = `Update: ${payload.lat}, ${payload.lng}`;
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        }).catch(e => console.error("Error:", e));
+    }
+
+    function stopTracking() {
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+        location.reload();
+    }
+</script>
+</body>
+</html>
