@@ -813,29 +813,42 @@ function updateScanListUI() {
 }
 
 function saveAllShipments() {
-  var itemsToSave=scannedItems.slice();
+  var itemsToSave = scannedItems.slice();
+  var savedCount  = itemsToSave.length;
   showLoading('Menyimpan AWB...');
-  gasPost('saveShipmentDetails',{
-    noHvs:currentNoHvs, service:currentService, tujuan:currentTujuan,
-    awbList:itemsToSave, status: STATUS_PROSES
+  gasPost('saveShipmentDetails', {
+    noHvs: currentNoHvs, service: currentService, tujuan: currentTujuan,
+    awbList: itemsToSave, status: STATUS_PROSES
   }).then(function(res) {
-    if (res.success) {
-      return gasGet('getMasterData').then(function(data) {
-        rawData=data.hvsList||[];
-        if (currentDetailHvs) {
-          var updated=rawData.find(function(d){ return d.no_hvs===currentDetailHvs.no_hvs; });
-          if (updated) currentDetailHvs=updated;
-        }
-        hideLoading(); scannedItems=[];
-        function goToPhoto() {
-          isScannerRunning=false; html5QrCode=null;
-          document.getElementById('reader').innerHTML=''; openPhotoPage();
-        }
-        if (html5QrCode&&isScannerRunning) html5QrCode.stop().catch(function(){}).finally(goToPhoto);
-        else goToPhoto();
-      });
-    } else { hideLoading(); alert("Gagal menyimpan: "+(res.error||'')); }
-  }).catch(function(e){ hideLoading(); alert("Error: "+e.message); });
+    hideLoading();
+    if (!res.success) { alert("Gagal menyimpan: " + (res.error||'')); return; }
+
+    // Update local rawData langsung tanpa tunggu getMasterData
+    var idx = rawData.findIndex(function(d){ return d.no_hvs === currentNoHvs; });
+    if (idx !== -1) rawData[idx].total = (parseInt(rawData[idx].total)||0) + savedCount;
+    if (currentDetailHvs && currentDetailHvs.no_hvs === currentNoHvs) {
+      currentDetailHvs.total = (parseInt(currentDetailHvs.total)||0) + savedCount;
+    }
+    scannedItems = [];
+
+    // Langsung buka foto, getMasterData jalan di background
+    gasGet('getMasterData').then(function(data) {
+      rawData = data.hvsList || [];
+      if (currentDetailHvs) {
+        var updated = rawData.find(function(d){ return d.no_hvs === currentDetailHvs.no_hvs; });
+        if (updated) currentDetailHvs = updated;
+      }
+    }).catch(function(){});  // silent — data sudah di-update lokal
+
+    function goToPhoto() {
+      isScannerRunning = false; html5QrCode = null;
+      document.getElementById('reader').innerHTML = '';
+      openPhotoPage();
+    }
+    if (html5QrCode && isScannerRunning) html5QrCode.stop().catch(function(){}).finally(goToPhoto);
+    else goToPhoto();
+
+  }).catch(function(e){ hideLoading(); alert("Error: " + e.message); });
 }
 
 // ============================================================
