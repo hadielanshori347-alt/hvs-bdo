@@ -4,8 +4,7 @@
   <base target="_top">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <!-- Izin kamera penuh di GitHub Pages (HTTPS) -->
-  <meta http-equiv="Permissions-Policy" content="camera=*, microphone=*, geolocation=*">
+  <meta http-equiv="Permissions-Policy" content="camera=, microphone=, geolocation=*">
   <title>HVS BDO</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -34,7 +33,6 @@
     .hvs-card-bottom { display: flex; gap: 8px; align-items: center; }
     .btn-card-selesai { flex: 1; padding: 8px 0; border-radius: 8px; font-size: 13px; font-weight: 700; background: #E6F4EA; color: #1E8E3E; border: none; cursor: pointer; }
 
-    /* SCAN PAGE */
     #reader { width: 100%; background: #1a1a1a; flex-shrink: 0; }
     #reader video { width: 100% !important; }
     #reader img { width: 100% !important; }
@@ -47,7 +45,6 @@
     #loadingText { font-size: 14px; color: #555; font-weight: 500; }
     .filter-input { background: #f1f3f4; border: none; border-radius: 10px; padding: 10px; width: 100%; margin-bottom: 15px; font-size: 14px; }
 
-    /* PHOTO PAGE */
     #photoPage { background: #000; }
     #photoContainer { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     #photoVideo { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -58,9 +55,8 @@
     .btn-ambil { background: var(--google-blue); color: white; }
     .btn-ulangi { background: #444; color: white; }
     .btn-simpan-foto { background: #34A853; color: white; }
-    #gpsStatus { color: #aaa; font-size: 11px; text-align: center; padding: 6px 0; flex-shrink: 0; background: #111; }
+    #gpsStatus { color: #aaa; font-size: 11px; text-align: center; padding: 6px 8px; flex-shrink: 0; background: #111; }
 
-    /* DETAIL PAGE */
     #detailPage { background: var(--bg-gray); }
     .detail-scroll { flex: 1; overflow-y: auto; padding-bottom: 16px; }
     .detail-section { background: white; margin-top: 10px; }
@@ -77,7 +73,6 @@
     .btn-action-tambah { flex: 1; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 14px; background: var(--google-blue); color: white; border: none; cursor: pointer; }
     .btn-action-view { flex: 1; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 14px; background: #F1F3F4; color: #444; border: 1px solid #ddd; cursor: pointer; }
 
-    /* AWB MODAL */
     .awb-modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.45); z-index: 9000; display: flex; align-items: flex-end; }
     .awb-modal-sheet { background: white; border-radius: 20px 20px 0 0; width: 100%; max-height: 75vh; display: flex; flex-direction: column; padding-bottom: 24px; }
     .awb-modal-header { padding: 16px 16px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; flex-shrink: 0; }
@@ -86,7 +81,6 @@
     .awb-row { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; font-size: 14px; color: #333; display: flex; align-items: center; gap: 8px; }
     .awb-row:before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--google-blue); flex-shrink: 0; }
 
-    /* DROPDOWN */
     .dropdown-menu-custom { position: fixed; top: 50px; right: 12px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.18); z-index: 500; min-width: 175px; overflow: hidden; }
     .dropdown-item-custom { padding: 13px 18px; font-size: 14px; color: #333; cursor: pointer; display: flex; align-items: center; gap: 10px; }
     .dropdown-item-custom:active { background: #f5f5f5; }
@@ -95,7 +89,6 @@
     .dropdown-item-custom.danger .material-icons { color: #D93025; }
     .dropdown-overlay { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 499; }
 
-    /* Kamera error info */
     #cameraError { display:none; padding:16px; background:#fff3cd; border-radius:8px; margin:12px; font-size:13px; color:#856404; }
   </style>
 </head>
@@ -152,7 +145,7 @@
       <span id="torchBtn" class="material-icons" onclick="toggleFlash()" style="cursor:pointer;">flash_off</span>
     </div>
     <div id="reader"></div>
-    <div id="cameraError">⚠️ Kamera tidak dapat diakses. Pastikan browser mengizinkan kamera atau gunakan input manual di bawah.</div>
+    <div id="cameraError">⚠️ Kamera tidak dapat diakses. Gunakan input manual di bawah.</div>
     <div class="scanner-bottom">
       <small class="fw-bold text-muted">Input Manual AWB</small>
       <input type="text" id="manualAwb" class="form-control border-0 bg-light py-3 mt-1" style="border-radius:12px;" placeholder="Ketik AWB & tekan Enter" onkeypress="handleManualInput(event)">
@@ -252,25 +245,28 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // ============================================================
-    // ⚠️ GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-    // Cara dapat URL: GAS → Deploy → Manage deployments → copy URL
+    // GAS URL — URL terbaru
     // ============================================================
-    var GAS_URL = "https://script.google.com/macros/s/AKfycbz54Jji9xZjR8n-SOX9tKmTOMUurstPbYPtKl9u5ZvKQvSpe0hkM8Lu22LDUnhkurRv/exec";
+    var GAS_URL = "https://script.google.com/macros/s/AKfycbxj7zCo4mrui_F7wY9DI3_gizKk-gTiarGji765fKIW-Dru_Hpdld-CaDXACBTq_W-3dQ/exec";
 
     // ============================================================
-    // API HELPER — menggantikan google.script.run
+    // API HELPER
+    // Penting: GAS Web App butuh redirect:follow dan Content-Type text/plain
+    // supaya POST tidak kena CORS preflight error
     // ============================================================
     function gasGet(action, params) {
       var url = new URL(GAS_URL);
       url.searchParams.set('action', action);
       if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
-      return fetch(url.toString()).then(function(r){ return r.json(); });
+      return fetch(url.toString(), { redirect: 'follow' }).then(function(r){ return r.json(); });
     }
 
     function gasPost(action, data) {
       data.action = action;
       return fetch(GAS_URL, {
         method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
       }).then(function(r){ return r.json(); });
     }
@@ -278,21 +274,21 @@
     // ============================================================
     // STATE
     // ============================================================
-    var rawData        = [];
-    var currentTab     = 'OPEN';
-    var html5QrCode    = null;
-    var scannedItems   = [];
-    var isScannerRunning = false;
-    var photoStream    = null;
+    var rawData           = [];
+    var currentTab        = 'OPEN';
+    var html5QrCode       = null;
+    var scannedItems      = [];
+    var isScannerRunning  = false;
+    var photoStream       = null;
     var capturedImageDataUrl = null;
-    var currentNoHvs   = '';
-    var currentService = '';
-    var currentTujuan  = '';
-    var gpsCoords      = null;
-    var currentDetailHvs = null;
-    var flashOn        = false;
-    var currentCameraId = null;
-    var allCameras     = [];
+    var currentNoHvs      = '';
+    var currentService    = '';
+    var currentTujuan     = '';
+    var gpsCoords         = null;
+    var currentDetailHvs  = null;
+    var flashOn           = false;
+    var currentCameraId   = null;
+    var allCameras        = [];
 
     window.onload = reloadData;
 
@@ -314,7 +310,7 @@
         hideLoading();
       }).catch(function(err) {
         hideLoading();
-        alert("Gagal memuat data. Pastikan GAS_URL sudah diisi dengan benar.\n\nError: " + err.message);
+        alert("Gagal memuat data.\n\nError: " + err.message);
       });
     }
 
@@ -323,8 +319,8 @@
       var tOpt = '<option value="" disabled selected>Select Tujuan</option>';
       var fsOpt = '<option value="">All Service</option>';
       var ftOpt = '<option value="">All Tujuan</option>';
-      (data.services || []).forEach(function(v) { sOpt += '<option>'+v+'</option>'; fsOpt += '<option>'+v+'</option>'; });
-      (data.tujuans  || []).forEach(function(v) { tOpt += '<option>'+v+'</option>'; ftOpt += '<option>'+v+'</option>'; });
+      (data.services||[]).forEach(function(v){ sOpt+='<option>'+v+'</option>'; fsOpt+='<option>'+v+'</option>'; });
+      (data.tujuans ||[]).forEach(function(v){ tOpt+='<option>'+v+'</option>'; ftOpt+='<option>'+v+'</option>'; });
       document.getElementById('selService').innerHTML = sOpt;
       document.getElementById('selTujuan').innerHTML  = tOpt;
       document.getElementById('fService').innerHTML   = fsOpt;
@@ -336,20 +332,20 @@
     // ============================================================
     function renderList(filteredData) {
       var container = document.getElementById('listContainer');
-      var data = filteredData || rawData.filter(function(d){ return d.status === currentTab; });
+      var data = filteredData || rawData.filter(function(d){ return d.status===currentTab; });
       if (!data.length) {
         container.innerHTML = '<p class="text-center mt-5 text-muted small">Tidak ada data</p>';
         return;
       }
       container.innerHTML = data.map(function(d) {
-        var isProses = d.status === 'OPEN';
+        var isProses = d.status==='OPEN';
         var bottomHtml = isProses
           ? '<div class="hvs-card-bottom"><button class="btn-card-selesai" onclick="selesaikanHvs(event,\''+d.no_hvs+'\')">✓ Selesai</button></div>'
           : '<div class="hvs-card-bottom"><span style="font-size:12px;color:#1E8E3E;font-weight:600;">✓ Selesai</span></div>';
         return '<div class="hvs-card" onclick="openDetailPage(\''+d.no_hvs+'\')">'
-          + '<div class="hvs-card-top"><div class="hvs-card-no">'+d.no_hvs+'</div><div class="hvs-card-badge">'+d.total+' AWB</div></div>'
-          + '<div class="hvs-card-sub">'+d.service+' | '+d.tujuan+'</div>'
-          + bottomHtml + '</div>';
+          +'<div class="hvs-card-top"><div class="hvs-card-no">'+d.no_hvs+'</div><div class="hvs-card-badge">'+d.total+' AWB</div></div>'
+          +'<div class="hvs-card-sub">'+d.service+' | '+d.tujuan+'</div>'
+          +bottomHtml+'</div>';
       }).join('');
     }
 
@@ -387,13 +383,11 @@
       event.stopPropagation();
       if (!confirm('Tandai HVS '+noHvs+' sebagai SELESAI?')) return;
       showLoading('Mengubah status...');
-      gasPost('updateHvsStatus', { noHvs: noHvs, newStatus: 'CLOSED' }).then(function(res) {
+      gasPost('updateHvsStatus', { noHvs:noHvs, newStatus:'CLOSED' }).then(function(res) {
         hideLoading();
-        if (res.success) {
-          rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; });
-          renderList();
-        } else { alert('Gagal mengubah status.'); }
-      }).catch(function(){ hideLoading(); alert('Gagal mengubah status.'); });
+        if (res.success) { rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; }); renderList(); }
+        else alert('Gagal: '+(res.error||''));
+      }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
     }
 
     // ============================================================
@@ -404,26 +398,20 @@
       if (!hvs) return;
       currentDetailHvs = hvs;
       document.getElementById('detailTitle').innerText = noHvs;
-      document.getElementById('dService').innerText = hvs.service || '-';
-      document.getElementById('dTujuan').innerText  = hvs.tujuan  || '-';
-      document.getElementById('dDate').innerText    = hvs.date    || '-';
-      document.getElementById('dTotal').innerText   = hvs.total   || 0;
-      var statusEl = document.getElementById('dStatus');
-      statusEl.innerHTML = hvs.status==='OPEN'
+      document.getElementById('dService').innerText = hvs.service||'-';
+      document.getElementById('dTujuan').innerText  = hvs.tujuan ||'-';
+      document.getElementById('dDate').innerText    = hvs.date   ||'-';
+      document.getElementById('dTotal').innerText   = hvs.total  ||0;
+      document.getElementById('dStatus').innerHTML  = hvs.status==='OPEN'
         ? '<span class="status-proses">● On Proses</span>'
         : '<span class="status-selesai">● Selesai</span>';
-      var imgBox = document.getElementById('dImageBox');
-      imgBox.innerHTML = hvs.foto_url
+      document.getElementById('dImageBox').innerHTML = hvs.foto_url
         ? '<img src="'+hvs.foto_url+'" alt="Foto HVS">'
         : '<span class="no-img">No Image</span>';
-      var actionBar = document.getElementById('detailActionBar');
-      if (hvs.status === 'OPEN') {
-        actionBar.innerHTML =
-          '<button class="btn-action-tambah" onclick="bukaScanner()">+ Tambahkan</button>'
-          +'<button class="btn-action-view" onclick="openAwbModal()">View List</button>';
-      } else {
-        actionBar.innerHTML = '<button class="btn-action-view" style="flex:1;" onclick="openAwbModal()">📋 View List</button>';
-      }
+      var ab = document.getElementById('detailActionBar');
+      ab.innerHTML = hvs.status==='OPEN'
+        ? '<button class="btn-action-tambah" onclick="bukaScanner()">+ Tambahkan</button><button class="btn-action-view" onclick="openAwbModal()">View List</button>'
+        : '<button class="btn-action-view" style="flex:1;" onclick="openAwbModal()">📋 View List</button>';
       document.getElementById('homePage').classList.add('hidden');
       document.getElementById('detailPage').classList.remove('hidden');
     }
@@ -440,11 +428,10 @@
     function toggleDetailMenu() {
       var dd = document.getElementById('detailDropdown');
       if (dd.classList.contains('hidden')) {
-        var hvs = currentDetailHvs;
-        var html = '';
+        var hvs = currentDetailHvs, html = '';
         html += '<div class="dropdown-item-custom" onclick="exportPdf()"><span class="material-icons">picture_as_pdf</span>Export PDF</div>';
         html += '<div class="dropdown-item-custom" onclick="exportExcel()"><span class="material-icons">table_chart</span>Export Excel</div>';
-        if (hvs && hvs.status === 'OPEN') {
+        if (hvs && hvs.status==='OPEN') {
           html += '<div class="dropdown-item-custom" onclick="selesaikanDariDetail()"><span class="material-icons" style="color:#1E8E3E;">check_circle</span>Selesai</div>';
           html += '<div class="dropdown-item-custom danger" onclick="deleteHvsFromDetail()"><span class="material-icons">delete</span>Hapus HVS</div>';
         }
@@ -464,201 +451,147 @@
       var noHvs = currentDetailHvs.no_hvs;
       if (!confirm('Tandai HVS '+noHvs+' sebagai SELESAI?')) return;
       showLoading('Mengubah status...');
-      gasPost('updateHvsStatus', { noHvs: noHvs, newStatus: 'CLOSED' }).then(function(res) {
+      gasPost('updateHvsStatus', { noHvs:noHvs, newStatus:'CLOSED' }).then(function(res) {
         hideLoading();
         if (res.success) {
           rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; });
-          currentDetailHvs.status = 'CLOSED';
-          openDetailPage(noHvs);
-        } else { alert('Gagal mengubah status.'); }
-      }).catch(function(){ hideLoading(); alert('Gagal mengubah status.'); });
+          currentDetailHvs.status='CLOSED'; openDetailPage(noHvs);
+        } else alert('Gagal: '+(res.error||''));
+      }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
     }
 
     function deleteHvsFromDetail() {
       closeDetailMenu();
       var noHvs = currentDetailHvs.no_hvs;
-      if (!confirm('Hapus HVS '+noHvs+'? Tindakan ini tidak bisa dibatalkan.')) return;
+      if (!confirm('Hapus HVS '+noHvs+'? Tidak bisa dibatalkan.')) return;
       showLoading('Menghapus HVS...');
-      gasPost('deleteHvs', { noHvs: noHvs }).then(function(res) {
+      gasPost('deleteHvs', { noHvs:noHvs }).then(function(res) {
         hideLoading();
-        if (res.success) {
-          rawData = rawData.filter(function(d){ return d.no_hvs!==noHvs; });
-          closeDetailPage(); renderList();
-        } else { alert('Gagal menghapus HVS.'); }
-      }).catch(function(){ hideLoading(); alert('Gagal menghapus HVS.'); });
+        if (res.success) { rawData=rawData.filter(function(d){ return d.no_hvs!==noHvs; }); closeDetailPage(); renderList(); }
+        else alert('Gagal: '+(res.error||''));
+      }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
     }
 
-    function exportPdf()   { closeDetailMenu(); alert('Export PDF: ' + currentDetailHvs.no_hvs); }
-    function exportExcel() { closeDetailMenu(); alert('Export Excel: ' + currentDetailHvs.no_hvs); }
+    function exportPdf()   { closeDetailMenu(); alert('Export PDF: '+currentDetailHvs.no_hvs); }
+    function exportExcel() { closeDetailMenu(); alert('Export Excel: '+currentDetailHvs.no_hvs); }
 
     // ============================================================
     // AWB MODAL
     // ============================================================
     function openAwbModal() {
       showLoading('Memuat list AWB...');
-      gasGet('getAwbList', { noHvs: currentDetailHvs.no_hvs }).then(function(res) {
+      gasGet('getAwbList', { noHvs:currentDetailHvs.no_hvs }).then(function(res) {
         hideLoading();
-        var list = res.list || [];
+        var list = res.list||[];
         document.getElementById('awbModalCount').innerText = list.length;
-        document.getElementById('awbModalList').innerHTML = list.length
+        document.getElementById('awbModalList').innerHTML  = list.length
           ? list.map(function(awb){ return '<div class="awb-row">'+awb+'</div>'; }).join('')
           : '<p class="text-center text-muted small mt-4">Belum ada AWB</p>';
         document.getElementById('awbModal').classList.remove('hidden');
       }).catch(function(){ hideLoading(); alert('Gagal memuat list AWB.'); });
     }
 
-    function closeAwbModal(e) { if (e.target === document.getElementById('awbModal')) closeAwbModalDirect(); }
+    function closeAwbModal(e) { if(e.target===document.getElementById('awbModal')) closeAwbModalDirect(); }
     function closeAwbModalDirect() { document.getElementById('awbModal').classList.add('hidden'); }
 
     // ============================================================
-    // SCANNER — Html5Qrcode (bukan Scanner) agar kamera bebas
+    // SCANNER
     // ============================================================
     function bukaScanner() {
       var hvs = currentDetailHvs;
-      currentNoHvs = hvs.no_hvs; currentService = hvs.service; currentTujuan = hvs.tujuan;
+      currentNoHvs=hvs.no_hvs; currentService=hvs.service; currentTujuan=hvs.tujuan;
       document.getElementById('scanTitle').innerText = hvs.no_hvs;
       document.getElementById('detailPage').classList.add('hidden');
       document.getElementById('scanPage').classList.remove('hidden');
-      scannedItems = []; updateScanListUI(); startScanner();
+      scannedItems=[]; updateScanListUI(); startScanner();
     }
 
     function processHvs() {
-      var s = document.getElementById('selService').value;
-      var t = document.getElementById('selTujuan').value;
+      var s=document.getElementById('selService').value, t=document.getElementById('selTujuan').value;
       showLoading('Membuat HVS...');
-      gasPost('saveNewHvs', { service: s, tujuan: t }).then(function(res) {
+      gasPost('saveNewHvs', { service:s, tujuan:t }).then(function(res) {
         hideLoading();
-        var noHvs = res.noHvs;
-        currentNoHvs = noHvs; currentService = s; currentTujuan = t;
-        document.getElementById('scanTitle').innerText = noHvs;
+        if (res.error) { alert('Gagal: '+res.error); return; }
+        currentNoHvs=res.noHvs; currentService=s; currentTujuan=t;
+        document.getElementById('scanTitle').innerText = res.noHvs;
         document.getElementById('createPage').classList.add('hidden');
         document.getElementById('scanPage').classList.remove('hidden');
-        scannedItems = []; updateScanListUI(); startScanner();
-      }).catch(function(){ hideLoading(); alert('Gagal membuat HVS.'); });
+        scannedItems=[]; updateScanListUI(); startScanner();
+      }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
     }
 
     function startScanner() {
-      document.getElementById('cameraError').style.display = 'none';
-      if (html5QrCode) {
-        try { html5QrCode.stop().catch(function(){}); } catch(e){}
-        html5QrCode = null;
-      }
-      document.getElementById('reader').innerHTML = '';
-
-      // Cek kamera yang tersedia
+      document.getElementById('cameraError').style.display='none';
+      if (html5QrCode) { try { html5QrCode.stop().catch(function(){}); } catch(e){} html5QrCode=null; }
+      document.getElementById('reader').innerHTML='';
       Html5Qrcode.getCameras().then(function(cameras) {
-        if (!cameras || cameras.length === 0) {
-          showCameraError();
-          return;
-        }
-        allCameras = cameras;
-        // Prefer kamera belakang
-        var backCam = cameras.find(function(c){ return /back|rear|environment/i.test(c.label); });
-        currentCameraId = backCam ? backCam.id : cameras[cameras.length - 1].id;
+        if (!cameras||cameras.length===0) { showCameraError(); return; }
+        allCameras=cameras;
+        var backCam=cameras.find(function(c){ return /back|rear|environment/i.test(c.label); });
+        currentCameraId=backCam?backCam.id:cameras[cameras.length-1].id;
         startWithCameraId(currentCameraId);
-      }).catch(function(err) {
-        console.error('getCameras error:', err);
-        // Coba langsung pakai environment
-        startWithConstraint({ facingMode: 'environment' });
-      });
+      }).catch(function(){ startWithConstraint({ facingMode:'environment' }); });
     }
 
     function startWithCameraId(cameraId) {
-      html5QrCode = new Html5Qrcode("reader");
-      var config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
-      html5QrCode.start(
-        cameraId, config,
-        function(text) { addAwbToList(text); if (navigator.vibrate) navigator.vibrate(100); },
-        function(msg) { /* scan error normal, abaikan */ }
-      ).then(function(){
-        isScannerRunning = true;
-      }).catch(function(err) {
-        console.error('start cameraId error:', err);
-        startWithConstraint({ facingMode: 'environment' });
-      });
+      html5QrCode=new Html5Qrcode("reader");
+      html5QrCode.start(cameraId,{ fps:10,qrbox:{width:250,height:250},aspectRatio:1.0 },
+        function(text){ addAwbToList(text); if(navigator.vibrate) navigator.vibrate(100); }, function(){})
+        .then(function(){ isScannerRunning=true; })
+        .catch(function(){ startWithConstraint({ facingMode:'environment' }); });
     }
 
-    function startWithConstraint(constraint) {
-      if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-      var config = { fps: 10, qrbox: { width: 250, height: 250 } };
-      html5QrCode.start(
-        constraint, config,
-        function(text) { addAwbToList(text); if (navigator.vibrate) navigator.vibrate(100); },
-        function() {}
-      ).then(function(){
-        isScannerRunning = true;
-      }).catch(function(err) {
-        console.error('start constraint error:', err);
-        // Coba kamera depan sebagai fallback terakhir
-        if (constraint.facingMode === 'environment') {
-          startWithConstraint({ facingMode: 'user' });
-        } else {
-          showCameraError();
-        }
-      });
+    function startWithConstraint(c) {
+      if (!html5QrCode) html5QrCode=new Html5Qrcode("reader");
+      html5QrCode.start(c,{ fps:10,qrbox:{width:250,height:250} },
+        function(text){ addAwbToList(text); if(navigator.vibrate) navigator.vibrate(100); }, function(){})
+        .then(function(){ isScannerRunning=true; })
+        .catch(function(){ if(c.facingMode==='environment') startWithConstraint({facingMode:'user'}); else showCameraError(); });
     }
 
-    function showCameraError() {
-      document.getElementById('cameraError').style.display = 'block';
-      document.getElementById('reader').innerHTML = '';
-    }
+    function showCameraError() { document.getElementById('cameraError').style.display='block'; document.getElementById('reader').innerHTML=''; }
 
     function toggleFlash() {
       if (!html5QrCode) return;
-      flashOn = !flashOn;
-      html5QrCode.applyVideoConstraints({ advanced: [{ torch: flashOn }] })
-        .catch(function(){ alert('Flash tidak didukung di perangkat ini.'); flashOn = !flashOn; });
-      document.getElementById('torchBtn').innerText = flashOn ? 'flash_on' : 'flash_off';
-    }
-
-    function flipCamera() {
-      if (allCameras.length < 2) { alert('Hanya ada 1 kamera.'); return; }
-      var idx = allCameras.findIndex(function(c){ return c.id === currentCameraId; });
-      currentCameraId = allCameras[(idx + 1) % allCameras.length].id;
-      if (html5QrCode && isScannerRunning) {
-        html5QrCode.stop().then(function(){ startWithCameraId(currentCameraId); }).catch(function(){ startWithCameraId(currentCameraId); });
-      }
+      flashOn=!flashOn;
+      html5QrCode.applyVideoConstraints({ advanced:[{ torch:flashOn }] })
+        .catch(function(){ alert('Flash tidak didukung.'); flashOn=!flashOn; });
+      document.getElementById('torchBtn').innerText=flashOn?'flash_on':'flash_off';
     }
 
     function stopScanner() {
       function goBack() {
-        isScannerRunning = false;
+        isScannerRunning=false;
         document.getElementById('scanPage').classList.add('hidden');
-        document.getElementById('cameraError').style.display = 'none';
-        if (currentDetailHvs) {
-          document.getElementById('detailPage').classList.remove('hidden');
-        } else {
-          document.getElementById('homePage').classList.remove('hidden');
-        }
-        html5QrCode = null;
-        document.getElementById('reader').innerHTML = '';
+        document.getElementById('cameraError').style.display='none';
+        if (currentDetailHvs) document.getElementById('detailPage').classList.remove('hidden');
+        else document.getElementById('homePage').classList.remove('hidden');
+        html5QrCode=null; document.getElementById('reader').innerHTML='';
       }
-      if (html5QrCode && isScannerRunning) {
-        html5QrCode.stop().catch(function(){}).finally(goBack);
-      } else { goBack(); }
+      if (html5QrCode&&isScannerRunning) html5QrCode.stop().catch(function(){}).finally(goBack);
+      else goBack();
     }
 
     function handleManualInput(e) {
-      if (e.key === 'Enter') {
-        var input = document.getElementById('manualAwb');
-        if (input.value.trim()) { addAwbToList(input.value.trim()); input.value = ''; }
+      if (e.key==='Enter') {
+        var input=document.getElementById('manualAwb');
+        if (input.value.trim()) { addAwbToList(input.value.trim()); input.value=''; }
       }
     }
 
-    function addAwbToList(awb) { if (scannedItems.includes(awb)) return; scannedItems.unshift(awb); updateScanListUI(); }
-    function removeAwb(i) { scannedItems.splice(i, 1); updateScanListUI(); }
-    function clearAllScans() { if (confirm("Hapus semua list scan?")) { scannedItems = []; updateScanListUI(); } }
+    function addAwbToList(awb) { if(scannedItems.includes(awb)) return; scannedItems.unshift(awb); updateScanListUI(); }
+    function removeAwb(i) { scannedItems.splice(i,1); updateScanListUI(); }
+    function clearAllScans() { if(confirm("Hapus semua list scan?")) { scannedItems=[]; updateScanListUI(); } }
 
     function updateScanListUI() {
-      var container = document.getElementById('scanList');
-      var btn = document.getElementById('btnSaveScan');
-      document.getElementById('scanCount').innerText = scannedItems.length;
-      if (scannedItems.length === 0) {
-        btn.disabled = true; btn.style.background = '#E8EAED'; btn.style.color = '#9AA0A6';
-        container.innerHTML = '<p class="text-center text-muted small mt-3">Belum ada data di scan</p>';
+      var container=document.getElementById('scanList'), btn=document.getElementById('btnSaveScan');
+      document.getElementById('scanCount').innerText=scannedItems.length;
+      if (scannedItems.length===0) {
+        btn.disabled=true; btn.style.background='#E8EAED'; btn.style.color='#9AA0A6';
+        container.innerHTML='<p class="text-center text-muted small mt-3">Belum ada data di scan</p>';
       } else {
-        btn.disabled = false; btn.style.background = 'var(--google-blue)'; btn.style.color = 'white';
-        container.innerHTML = scannedItems.map(function(awb, i) {
+        btn.disabled=false; btn.style.background='var(--google-blue)'; btn.style.color='white';
+        container.innerHTML=scannedItems.map(function(awb,i){
           return '<div class="scan-item"><span>'+awb+'</span>'
             +'<span class="material-icons text-danger" style="cursor:pointer;font-size:20px;" onclick="removeAwb('+i+')">delete</span></div>';
         }).join('');
@@ -666,79 +599,86 @@
     }
 
     function saveAllShipments() {
-      var itemsToSave = scannedItems.slice();
+      var itemsToSave=scannedItems.slice();
       showLoading('Menyimpan AWB...');
-      gasPost('saveShipmentDetails', {
-        noHvs: currentNoHvs, service: currentService, tujuan: currentTujuan,
-        awbList: itemsToSave, status: 'OPEN'
+      gasPost('saveShipmentDetails',{
+        noHvs:currentNoHvs, service:currentService, tujuan:currentTujuan, awbList:itemsToSave, status:'OPEN'
       }).then(function(res) {
         if (res.success) {
           return gasGet('getMasterData').then(function(data) {
-            rawData = data.hvsList || [];
+            rawData=data.hvsList||[];
             if (currentDetailHvs) {
-              var updated = rawData.find(function(d){ return d.no_hvs===currentDetailHvs.no_hvs; });
-              if (updated) currentDetailHvs = updated;
+              var updated=rawData.find(function(d){ return d.no_hvs===currentDetailHvs.no_hvs; });
+              if (updated) currentDetailHvs=updated;
             }
-            hideLoading();
-            scannedItems = [];
+            hideLoading(); scannedItems=[];
             function goToPhoto() {
-              isScannerRunning = false; html5QrCode = null;
-              document.getElementById('reader').innerHTML = '';
-              openPhotoPage();
+              isScannerRunning=false; html5QrCode=null;
+              document.getElementById('reader').innerHTML=''; openPhotoPage();
             }
-            if (html5QrCode && isScannerRunning) { html5QrCode.stop().catch(function(){}).finally(goToPhoto); }
-            else { goToPhoto(); }
+            if (html5QrCode&&isScannerRunning) html5QrCode.stop().catch(function(){}).finally(goToPhoto);
+            else goToPhoto();
           });
-        } else { hideLoading(); alert("Gagal menyimpan data."); }
-      }).catch(function(){ hideLoading(); alert("Terjadi kesalahan saat menyimpan."); });
+        } else { hideLoading(); alert("Gagal menyimpan: "+(res.error||'')); }
+      }).catch(function(e){ hideLoading(); alert("Error: "+e.message); });
     }
 
     // ============================================================
-    // PHOTO PAGE — kamera dengan fallback berlapis
+    // PHOTO PAGE
     // ============================================================
     function openPhotoPage() {
       document.getElementById('scanPage').classList.add('hidden');
       document.getElementById('photoPage').classList.remove('hidden');
       document.getElementById('photoBottomAmbil').classList.remove('hidden');
       document.getElementById('photoBottomResult').classList.add('hidden');
-      document.getElementById('photoPreview').style.display = 'none';
-      document.getElementById('photoVideo').style.display = 'block';
-      capturedImageDataUrl = null; gpsCoords = null;
-      document.getElementById('gpsStatus').innerText = '📍 Mendapatkan lokasi GPS...';
+      document.getElementById('photoPreview').style.display='none';
+      document.getElementById('photoVideo').style.display='block';
+      capturedImageDataUrl=null; gpsCoords=null;
+      document.getElementById('gpsStatus').innerText='📍 Mendapatkan lokasi GPS...';
 
+      // GPS + Reverse Geocoding (nama jalan, bukan koordinat)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function(pos) {
-            gpsCoords = pos.coords.latitude.toFixed(6)+', '+pos.coords.longitude.toFixed(6);
-            document.getElementById('gpsStatus').innerText = '📍 '+gpsCoords;
+            var lat=pos.coords.latitude, lon=pos.coords.longitude;
+            // Tampilkan koordinat sementara
+            gpsCoords=lat.toFixed(6)+', '+lon.toFixed(6);
+            document.getElementById('gpsStatus').innerText='📍 '+gpsCoords;
+            // Reverse geocode ke nama jalan (Nominatim OpenStreetMap, gratis, tanpa API key)
+            fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json&accept-language=id')
+              .then(function(r){ return r.json(); })
+              .then(function(geo) {
+                var a=geo.address||{};
+                var parts=[
+                  a.road||a.pedestrian||a.footway||'',
+                  a.suburb||a.village||a.neighbourhood||'',
+                  a.city_district||'',
+                  a.city||a.town||a.county||''
+                ].filter(Boolean);
+                if (parts.length>0) {
+                  gpsCoords=parts.join(', ');
+                  document.getElementById('gpsStatus').innerText='📍 '+gpsCoords;
+                }
+              })
+              .catch(function(){ /* tetap pakai koordinat jika geocode gagal */ });
           },
           function() { gpsCoords='Lokasi tidak tersedia'; document.getElementById('gpsStatus').innerText='📍 Lokasi tidak tersedia'; },
-          { enableHighAccuracy: true, timeout: 10000 }
+          { enableHighAccuracy:true, timeout:15000 }
         );
       }
 
-      // Coba kamera belakang → kamera depan → tanpa constraint
-      var constraints = [
-        { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
-        { video: { facingMode: 'environment' }, audio: false },
-        { video: { facingMode: 'user' }, audio: false },
-        { video: true, audio: false }
+      // Buka kamera dengan fallback berlapis
+      var constraints=[
+        { video:{ facingMode:{exact:'environment'}, width:{ideal:1280}, height:{ideal:720} }, audio:false },
+        { video:{ facingMode:'environment' }, audio:false },
+        { video:{ facingMode:'user' }, audio:false },
+        { video:true, audio:false }
       ];
-
       function tryConstraint(idx) {
-        if (idx >= constraints.length) {
-          alert("Kamera tidak dapat diakses. Pastikan browser mendapat izin kamera.");
-          return;
-        }
+        if (idx>=constraints.length) { alert("Kamera tidak dapat diakses."); return; }
         navigator.mediaDevices.getUserMedia(constraints[idx])
-          .then(function(stream) {
-            photoStream = stream;
-            document.getElementById('photoVideo').srcObject = stream;
-          })
-          .catch(function(err) {
-            console.warn('Camera constraint '+idx+' failed:', err.name, err.message);
-            tryConstraint(idx + 1);
-          });
+          .then(function(stream){ photoStream=stream; document.getElementById('photoVideo').srcObject=stream; })
+          .catch(function(){ tryConstraint(idx+1); });
       }
       tryConstraint(0);
     }
@@ -746,98 +686,119 @@
     function closePhotoPage() {
       stopPhotoStream();
       document.getElementById('photoPage').classList.add('hidden');
-      if (currentDetailHvs) {
-        openDetailPage(currentDetailHvs.no_hvs);
-      } else {
-        document.getElementById('homePage').classList.remove('hidden');
-        switchTab('OPEN'); renderList();
-      }
+      if (currentDetailHvs) openDetailPage(currentDetailHvs.no_hvs);
+      else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
     }
 
     function stopPhotoStream() {
-      if (photoStream) { photoStream.getTracks().forEach(function(t){ t.stop(); }); photoStream = null; }
+      if (photoStream) { photoStream.getTracks().forEach(function(t){ t.stop(); }); photoStream=null; }
+    }
+
+    // Kompres foto ke max lebar 1280px, kualitas 0.75
+    // Ini penting agar base64 tidak terlalu besar dan tidak timeout saat POST ke GAS
+    function compressToBase64(srcCanvas, maxWidth, quality) {
+      var w=srcCanvas.width, h=srcCanvas.height;
+      if (w>maxWidth) { h=Math.round(h*maxWidth/w); w=maxWidth; }
+      var c=document.createElement('canvas');
+      c.width=w; c.height=h;
+      c.getContext('2d').drawImage(srcCanvas,0,0,w,h);
+      return c.toDataURL('image/jpeg', quality||0.75);
     }
 
     function ambilFoto() {
-      var video  = document.getElementById('photoVideo');
-      var canvas = document.getElementById('photoCanvas');
-      var ctx    = canvas.getContext('2d');
-      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      var video=document.getElementById('photoVideo');
+      var canvas=document.getElementById('photoCanvas');
+      var ctx=canvas.getContext('2d');
+      canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-      var now = new Date();
+      // Watermark
+      var now=new Date();
       function pad(n){ return n<10?'0'+n:n; }
-      var waktu = pad(now.getDate())+'/'+pad(now.getMonth()+1)+'/'+now.getFullYear()+' '+pad(now.getHours())+':'+pad(now.getMinutes());
-      var lines = [waktu, 'Service : '+currentService, 'Tujuan  : '+currentTujuan, 'Lokasi  : '+(gpsCoords||'Mendapatkan...')];
-      var fontSize = Math.max(16, Math.floor(canvas.width/35));
-      var padding = 14, lineHeight = fontSize+8, boxW = 0;
-      ctx.font = 'bold '+fontSize+'px Arial';
+      var waktu=pad(now.getDate())+'/'+pad(now.getMonth()+1)+'/'+now.getFullYear()+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+      var lines=[waktu,'Service : '+currentService,'Tujuan  : '+currentTujuan,'Lokasi  : '+(gpsCoords||'Mendapatkan...')];
+      var fontSize=Math.max(16,Math.floor(canvas.width/35));
+      var padding=14, lineHeight=fontSize+8, boxW=0;
+      ctx.font='bold '+fontSize+'px Arial';
       lines.forEach(function(l){ var w=ctx.measureText(l).width; if(w>boxW) boxW=w; });
-      boxW += padding*2;
-      var boxH = lines.length*lineHeight+padding;
-      var x = canvas.width-boxW-12, y = canvas.height-boxH-12;
-      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      boxW+=padding*2;
+      var boxH=lines.length*lineHeight+padding;
+      var x=canvas.width-boxW-12, y=canvas.height-boxH-12;
+      ctx.fillStyle='rgba(0,0,0,0.55)';
       if (ctx.roundRect){ ctx.beginPath(); ctx.roundRect(x,y,boxW,boxH,8); ctx.fill(); }
       else { ctx.fillRect(x,y,boxW,boxH); }
-      ctx.fillStyle = 'white'; ctx.font = 'bold '+fontSize+'px Arial';
-      lines.forEach(function(line,i){ ctx.fillText(line, x+padding, y+padding+(i+1)*lineHeight-4); });
+      ctx.fillStyle='white'; ctx.font='bold '+fontSize+'px Arial';
+      lines.forEach(function(line,i){ ctx.fillText(line,x+padding,y+padding+(i+1)*lineHeight-4); });
 
-      capturedImageDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-      document.getElementById('photoPreview').src = capturedImageDataUrl;
-      document.getElementById('photoPreview').style.display = 'block';
-      document.getElementById('photoVideo').style.display = 'none';
+      // Kompres agar upload tidak timeout
+      capturedImageDataUrl = compressToBase64(canvas, 1280, 0.75);
+
+      document.getElementById('photoPreview').src=capturedImageDataUrl;
+      document.getElementById('photoPreview').style.display='block';
+      document.getElementById('photoVideo').style.display='none';
       document.getElementById('photoBottomAmbil').classList.add('hidden');
       document.getElementById('photoBottomResult').classList.remove('hidden');
     }
 
     function ulangiiFoto() {
-      capturedImageDataUrl = null;
-      document.getElementById('photoPreview').style.display = 'none';
-      document.getElementById('photoVideo').style.display = 'block';
+      capturedImageDataUrl=null;
+      document.getElementById('photoPreview').style.display='none';
+      document.getElementById('photoVideo').style.display='block';
       document.getElementById('photoBottomAmbil').classList.remove('hidden');
       document.getElementById('photoBottomResult').classList.add('hidden');
     }
 
     function simpanFoto() {
       if (!capturedImageDataUrl) return;
-      // Simpan lokal
-      var link = document.createElement('a');
-      link.href = capturedImageDataUrl;
-      link.download = 'HVS_'+currentNoHvs+'_'+Date.now()+'.jpg';
+
+      // 1. Simpan ke galeri lokal
+      var link=document.createElement('a');
+      link.href=capturedImageDataUrl;
+      link.download='HVS_'+currentNoHvs+'_'+Date.now()+'.jpg';
       link.click();
 
+      // 2. Upload ke Google Drive via GAS
       showLoading('Mengupload foto ke Drive...');
+      var base64Clean = capturedImageDataUrl.split(',')[1]; // hapus prefix data:image/jpeg;base64,
+
       gasPost('uploadFotoToDrive', {
         noHvs: currentNoHvs,
-        base64Data: capturedImageDataUrl.split(',')[1]
+        base64Data: base64Clean
       }).then(function(res) {
         hideLoading();
-        var url = res.url || null;
-        if (url && currentDetailHvs) { currentDetailHvs.foto_url = url; }
-        alert(url ? "Foto berhasil disimpan & diupload!" : "Foto tersimpan di galeri, tapi gagal upload ke Drive.");
-        stopPhotoStream();
-        document.getElementById('photoPage').classList.add('hidden');
-        if (currentDetailHvs) { openDetailPage(currentDetailHvs.no_hvs); }
-        else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
-      }).catch(function() {
+        if (res.success && res.url) {
+          // Update state lokal supaya langsung tampil di detail tanpa reload
+          if (currentDetailHvs) currentDetailHvs.foto_url = res.url;
+          var idx = rawData.findIndex(function(d){ return d.no_hvs===currentNoHvs; });
+          if (idx!==-1) rawData[idx].foto_url = res.url;
+          alert("✅ Foto berhasil disimpan & diupload ke Drive!");
+        } else {
+          alert("⚠️ Foto tersimpan di galeri, tapi gagal upload ke Drive.\n\nError: "+(res.error||'unknown'));
+        }
+        selesaiSetelahFoto();
+      }).catch(function(e) {
         hideLoading();
-        alert("Foto tersimpan di galeri, tapi gagal upload ke Drive.");
-        stopPhotoStream();
-        document.getElementById('photoPage').classList.add('hidden');
-        if (currentDetailHvs) { openDetailPage(currentDetailHvs.no_hvs); }
-        else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
+        alert("⚠️ Foto tersimpan di galeri, tapi gagal upload.\n\nError: "+e.message);
+        selesaiSetelahFoto();
       });
+    }
+
+    function selesaiSetelahFoto() {
+      stopPhotoStream();
+      document.getElementById('photoPage').classList.add('hidden');
+      if (currentDetailHvs) openDetailPage(currentDetailHvs.no_hvs);
+      else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
     }
 
     // ============================================================
     // CREATE PAGE
     // ============================================================
     function openCreatePage() {
-      currentDetailHvs = null;
-      document.getElementById('selService').selectedIndex = 0;
-      document.getElementById('selTujuan').selectedIndex  = 0;
-      var btn = document.getElementById('btnCreate');
-      btn.disabled = true; btn.style.background = '#E8EAED'; btn.style.color = '#9AA0A6';
+      currentDetailHvs=null;
+      document.getElementById('selService').selectedIndex=0;
+      document.getElementById('selTujuan').selectedIndex=0;
+      var btn=document.getElementById('btnCreate');
+      btn.disabled=true; btn.style.background='#E8EAED'; btn.style.color='#9AA0A6';
       document.getElementById('homePage').classList.add('hidden');
       document.getElementById('createPage').classList.remove('hidden');
     }
@@ -846,10 +807,9 @@
       document.getElementById('homePage').classList.remove('hidden');
     }
     function checkForm() {
-      var s = document.getElementById('selService').value;
-      var t = document.getElementById('selTujuan').value;
-      var btn = document.getElementById('btnCreate');
-      if (s && t) { btn.disabled=false; btn.style.background='var(--google-blue)'; btn.style.color='white'; }
+      var s=document.getElementById('selService').value, t=document.getElementById('selTujuan').value;
+      var btn=document.getElementById('btnCreate');
+      if (s&&t) { btn.disabled=false; btn.style.background='var(--google-blue)'; btn.style.color='white'; }
     }
   </script>
 </body>
