@@ -709,7 +709,8 @@ function bukaScanner() {
   document.getElementById('scanTitle').innerText = hvs.no_hvs;
   document.getElementById('detailPage').classList.add('hidden');
   document.getElementById('scanPage').classList.remove('hidden');
-  scannedItems=[]; updateScanListUI();
+  scannedItems=[]; scanCooldown=false; lastScannedText='';
+  updateScanListUI();
   startScanner();
 }
 
@@ -724,7 +725,8 @@ function processHvs() {
     document.getElementById('scanTitle').innerText = res.noHvs;
     document.getElementById('createPage').classList.add('hidden');
     document.getElementById('scanPage').classList.remove('hidden');
-    scannedItems=[]; updateScanListUI();
+    scannedItems=[]; scanCooldown=false; lastScannedText='';
+    updateScanListUI();
     startScanner();
   }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
 }
@@ -758,9 +760,47 @@ function startWithFacingMode(mode) {
     });
 }
 
+// Beep menggunakan Web Audio API
+function playBeep() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'square';
+    osc.frequency.value = 1200;
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.12);
+  } catch(e) {}
+}
+
+// Cooldown — setelah scan sukses, pause 2 detik sebelum bisa detect lagi
+var scanCooldown = false;
+var lastScannedText = '';
+
 function onScanSuccess(text) {
-  addAwbToList(text);
-  if (navigator.vibrate) navigator.vibrate(80);
+  if (scanCooldown) return;          // masih dalam jeda, abaikan
+  if (!text || !text.trim()) return;
+
+  var isDuplicate = scannedItems.includes(text.trim());
+  addAwbToList(text.trim());
+
+  // Beep hanya kalau bukan duplikat
+  if (!isDuplicate) {
+    playBeep();
+    if (navigator.vibrate) navigator.vibrate(80);
+  }
+
+  // Cooldown 2 detik — kamera tetap jalan tapi hasil scan diabaikan
+  scanCooldown = true;
+  lastScannedText = text;
+  setTimeout(function() {
+    scanCooldown = false;
+    lastScannedText = '';
+  }, 2000);
 }
 
 function showCameraError() {
