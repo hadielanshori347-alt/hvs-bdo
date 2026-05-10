@@ -22,8 +22,9 @@
     .tab-item { flex: 1; text-align: center; padding: 14px 0; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700; border-bottom: 3px solid transparent; text-transform: uppercase; cursor: pointer; }
     .tab-item.active { color: white; border-bottom: 3px solid white; }
     .search-container { padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .search-box { background: white; border: 1px solid #DADCE0; border-radius: 8px; padding: 8px 12px; flex: 1; display: flex; }
+    .search-box { background: white; border: 1px solid #DADCE0; border-radius: 8px; padding: 8px 12px; flex: 1; display: flex; align-items: center; gap: 6px; }
     .search-box input { border: none; outline: none; width: 100%; font-size: 14px; }
+    .search-mode-badge { font-size: 10px; font-weight: 700; color: var(--google-blue); white-space: nowrap; cursor: pointer; background: #E8F0FE; border-radius: 6px; padding: 3px 7px; flex-shrink: 0; }
 
     .hvs-card { background: white; margin: 8px 16px; padding: 14px; border-radius: 14px; border: 1px solid #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.06); cursor: pointer; }
     .hvs-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
@@ -32,6 +33,14 @@
     .hvs-card-sub { color: #777; font-size: 12px; margin-bottom: 10px; }
     .hvs-card-bottom { display: flex; gap: 8px; align-items: center; }
     .btn-card-selesai { flex: 1; padding: 8px 0; border-radius: 8px; font-size: 13px; font-weight: 700; background: #E6F4EA; color: #1E8E3E; border: none; cursor: pointer; }
+
+    /* AWB search result card */
+    .awb-result-card { background: white; margin: 8px 16px; padding: 14px; border-radius: 14px; border: 2px solid var(--google-blue); box-shadow: 0 2px 8px rgba(26,115,232,0.15); cursor: pointer; }
+    .awb-result-label { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .awb-result-value { font-size: 13px; color: #222; font-weight: 600; margin-bottom: 3px; word-break: break-all; }
+    .awb-result-hvs { color: var(--google-blue); font-size: 13px; font-weight: 700; }
+    .awb-result-meta { color: #777; font-size: 11px; margin-top: 4px; }
+    .search-result-header { padding: 6px 16px 2px; font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
 
     #reader { width: 100%; background: #1a1a1a; flex-shrink: 0; }
     #reader video { width: 100% !important; }
@@ -107,12 +116,15 @@
       <span class="material-icons" onclick="reloadData()" style="cursor:pointer;">refresh</span>
     </div>
     <div class="tabs-nav">
-      <div id="tabProses" class="tab-item active" onclick="switchTab('OPEN')">PROSES</div>
-      <div id="tabSelesai" class="tab-item" onclick="switchTab('CLOSED')">HVS SELESAI</div>
+      <!-- FIX: label tab pakai ON PROSES & SELESAI, nilai tab internal tetap untuk filter -->
+      <div id="tabProses"  class="tab-item active" onclick="switchTab('ON PROSES')">ON PROSES</div>
+      <div id="tabSelesai" class="tab-item"         onclick="switchTab('SELESAI')">SELESAI</div>
     </div>
     <div class="search-container">
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Cari HVS / Tujuan..." onkeyup="searchData()">
+        <input type="text" id="searchInput" placeholder="Cari HVS / AWB / Tujuan..." oninput="onSearchInput()">
+        <!-- Toggle mode: lokal (cepat) vs GAS (cari AWB) -->
+        <span id="searchModeBadge" class="search-mode-badge" onclick="toggleSearchMode()" title="Klik untuk ganti mode search">HVS</span>
       </div>
       <span class="material-icons" style="color:var(--google-blue);cursor:pointer;" data-bs-toggle="modal" data-bs-target="#filterModal">filter_list</span>
     </div>
@@ -222,10 +234,11 @@
         </div>
         <div class="modal-body p-4">
           <label class="fw-bold small text-muted mb-1">STATUS</label>
+          <!-- FIX: value & label pakai ON PROSES / SELESAI -->
           <select id="fStatus" class="filter-input">
             <option value="">All Status</option>
-            <option value="OPEN">PROSES</option>
-            <option value="CLOSED">SELESAI</option>
+            <option value="ON PROSES">ON PROSES</option>
+            <option value="SELESAI">SELESAI</option>
           </select>
           <label class="fw-bold small text-muted mb-1">SERVICE</label>
           <select id="fService" class="filter-input"><option value="">All Service</option></select>
@@ -244,28 +257,22 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // ============================================================
-    // GAS URL — URL terbaru
-    // ============================================================
-    var GAS_URL = "https://script.google.com/macros/s/AKfycbxj7zCo4mrui_F7wY9DI3_gizKk-gTiarGji765fKIW-Dru_Hpdld-CaDXACBTq_W-3dQ/exec";
+    var GAS_URL = "https://script.google.com/macros/s/AKfycbwedWUIJwCdLoXMLY1-CrnW7QFXCnF5ByxIsTVm4WjMjUKW4cpgoUY7z6WbiMQslCziWQ/exec";
 
-    // ============================================================
-    // API HELPER
-    // Penting: GAS Web App butuh redirect:follow dan Content-Type text/plain
-    // supaya POST tidak kena CORS preflight error
-    // ============================================================
+    // Status konstanta — harus sama dengan GAS
+    var STATUS_PROSES  = "ON PROSES";
+    var STATUS_SELESAI = "SELESAI";
+
     function gasGet(action, params) {
       var url = new URL(GAS_URL);
       url.searchParams.set('action', action);
       if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
       return fetch(url.toString(), { redirect: 'follow' }).then(function(r){ return r.json(); });
     }
-
     function gasPost(action, data) {
       data.action = action;
       return fetch(GAS_URL, {
-        method: 'POST',
-        redirect: 'follow',
+        method: 'POST', redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
       }).then(function(r){ return r.json(); });
@@ -275,7 +282,7 @@
     // STATE
     // ============================================================
     var rawData           = [];
-    var currentTab        = 'OPEN';
+    var currentTab        = STATUS_PROSES;  // FIX: default tab pakai konstanta
     var html5QrCode       = null;
     var scannedItems      = [];
     var isScannerRunning  = false;
@@ -289,6 +296,8 @@
     var flashOn           = false;
     var currentCameraId   = null;
     var allCameras        = [];
+    var searchMode        = 'local'; // 'local' = cari di rawData, 'awb' = cari via GAS
+    var searchTimer       = null;
 
     window.onload = reloadData;
 
@@ -328,17 +337,114 @@
     }
 
     // ============================================================
-    // RENDER LIST
+    // SEARCH MODE TOGGLE
+    // ============================================================
+    function toggleSearchMode() {
+      searchMode = (searchMode === 'local') ? 'awb' : 'local';
+      var badge = document.getElementById('searchModeBadge');
+      badge.innerText = (searchMode === 'awb') ? 'AWB' : 'HVS';
+      badge.style.background = (searchMode === 'awb') ? '#FFF0E0' : '#E8F0FE';
+      badge.style.color      = (searchMode === 'awb') ? '#E37400' : 'var(--google-blue)';
+      document.getElementById('searchInput').placeholder = (searchMode === 'awb')
+        ? 'Cari nomor AWB...' : 'Cari HVS / Tujuan / Service...';
+      // Reset hasil
+      var val = document.getElementById('searchInput').value.trim();
+      if (val) onSearchInput(); else renderList();
+    }
+
+    function onSearchInput() {
+      var val = document.getElementById('searchInput').value.trim();
+      if (!val) { renderList(); return; }
+      if (searchMode === 'awb') {
+        // Debounce 500ms supaya tidak spam ke GAS
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(function(){ doGasSearch(val); }, 500);
+      } else {
+        searchLocalData(val);
+      }
+    }
+
+    // ============================================================
+    // SEARCH LOKAL (no_hvs, service, tujuan)
+    // ============================================================
+    function searchLocalData(val) {
+      var v = val.toLowerCase();
+      renderList(rawData.filter(function(d){
+        return d.status === currentTab && (
+          d.no_hvs.toLowerCase().includes(v) ||
+          (d.tujuan  || '').toLowerCase().includes(v) ||
+          (d.service || '').toLowerCase().includes(v)
+        );
+      }));
+    }
+
+    // ============================================================
+    // SEARCH GAS (no_hvs, service, tujuan, AWB)
+    // ============================================================
+    function doGasSearch(keyword) {
+      showLoading('Mencari...');
+      gasGet('searchAwb', { keyword: keyword }).then(function(res) {
+        hideLoading();
+        var results = res.results || [];
+        if (!results.length) {
+          document.getElementById('listContainer').innerHTML =
+            '<p class="text-center mt-5 text-muted small">Tidak ditemukan hasil untuk "'+keyword+'"</p>';
+          return;
+        }
+        renderSearchResults(results, keyword);
+      }).catch(function(e){ hideLoading(); alert('Gagal search: '+e.message); });
+    }
+
+    function renderSearchResults(results, keyword) {
+      var container = document.getElementById('listContainer');
+      var awbResults = results.filter(function(r){ return r.type==='awb'; });
+      var hvsResults = results.filter(function(r){ return r.type==='hvs'; });
+      var html = '';
+
+      if (awbResults.length) {
+        html += '<div class="search-result-header">AWB ditemukan ('+awbResults.length+')</div>';
+        html += awbResults.map(function(r) {
+          var statusClass = r.hvs.status === STATUS_SELESAI ? 'status-selesai' : 'status-proses';
+          return '<div class="awb-result-card" onclick="openDetailPage(\''+r.hvs.no_hvs+'\')">'
+            + '<div class="awb-result-label">AWB</div>'
+            + '<div class="awb-result-value">'+r.awb+'</div>'
+            + '<div class="awb-result-hvs">'+r.hvs.no_hvs+'</div>'
+            + '<div class="awb-result-meta">'+r.hvs.service+' | '+r.hvs.tujuan
+            + ' | <span class="'+statusClass+'">'+r.hvs.status+'</span></div>'
+            + '</div>';
+        }).join('');
+      }
+
+      if (hvsResults.length) {
+        html += '<div class="search-result-header">HVS ditemukan ('+hvsResults.length+')</div>';
+        html += hvsResults.map(function(r) {
+          var d = r.hvs;
+          var isProses = d.status === STATUS_PROSES;
+          var bottomHtml = isProses
+            ? '<div class="hvs-card-bottom"><button class="btn-card-selesai" onclick="selesaikanHvs(event,\''+d.no_hvs+'\')">✓ Selesai</button></div>'
+            : '<div class="hvs-card-bottom"><span style="font-size:12px;color:#1E8E3E;font-weight:600;">✓ Selesai</span></div>';
+          return '<div class="hvs-card" onclick="openDetailPage(\''+d.no_hvs+'\')">'
+            +'<div class="hvs-card-top"><div class="hvs-card-no">'+d.no_hvs+'</div><div class="hvs-card-badge">'+d.total+' AWB</div></div>'
+            +'<div class="hvs-card-sub">'+d.service+' | '+d.tujuan+'</div>'
+            +bottomHtml+'</div>';
+        }).join('');
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ============================================================
+    // RENDER LIST (HVS tab biasa)
     // ============================================================
     function renderList(filteredData) {
       var container = document.getElementById('listContainer');
-      var data = filteredData || rawData.filter(function(d){ return d.status===currentTab; });
+      var data = filteredData || rawData.filter(function(d){ return d.status === currentTab; });
       if (!data.length) {
         container.innerHTML = '<p class="text-center mt-5 text-muted small">Tidak ada data</p>';
         return;
       }
       container.innerHTML = data.map(function(d) {
-        var isProses = d.status==='OPEN';
+        var isProses = d.status === STATUS_PROSES;
         var bottomHtml = isProses
           ? '<div class="hvs-card-bottom"><button class="btn-card-selesai" onclick="selesaikanHvs(event,\''+d.no_hvs+'\')">✓ Selesai</button></div>'
           : '<div class="hvs-card-bottom"><span style="font-size:12px;color:#1E8E3E;font-weight:600;">✓ Selesai</span></div>';
@@ -351,16 +457,10 @@
 
     function switchTab(s) {
       currentTab = s;
-      document.getElementById('tabProses').classList.toggle('active', s==='OPEN');
-      document.getElementById('tabSelesai').classList.toggle('active', s==='CLOSED');
+      document.getElementById('searchInput').value = '';
+      document.getElementById('tabProses').classList.toggle('active',  s === STATUS_PROSES);
+      document.getElementById('tabSelesai').classList.toggle('active', s === STATUS_SELESAI);
       renderList();
-    }
-
-    function searchData() {
-      var val = document.getElementById('searchInput').value.toLowerCase();
-      renderList(rawData.filter(function(d){
-        return d.status===currentTab && (d.no_hvs.toLowerCase().includes(val)||d.tujuan.toLowerCase().includes(val));
-      }));
     }
 
     function applyFilter() {
@@ -370,7 +470,6 @@
         return (!st||d.status===st)&&(!sv||d.service===sv)&&(!tj||d.tujuan===tj)&&(!dt||d.date===dt);
       }));
     }
-
     function resetFilter() {
       ['fStatus','fService','fTujuan','fDate'].forEach(function(id){ document.getElementById(id).value=''; });
       renderList();
@@ -378,15 +477,18 @@
 
     // ============================================================
     // SELESAI DARI CARD
+    // FIX: kirim STATUS_SELESAI ke GAS
     // ============================================================
     function selesaikanHvs(event, noHvs) {
       event.stopPropagation();
       if (!confirm('Tandai HVS '+noHvs+' sebagai SELESAI?')) return;
       showLoading('Mengubah status...');
-      gasPost('updateHvsStatus', { noHvs:noHvs, newStatus:'CLOSED' }).then(function(res) {
+      gasPost('updateHvsStatus', { noHvs:noHvs, newStatus: STATUS_SELESAI }).then(function(res) {
         hideLoading();
-        if (res.success) { rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; }); renderList(); }
-        else alert('Gagal: '+(res.error||''));
+        if (res.success) {
+          rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status = STATUS_SELESAI; });
+          renderList();
+        } else alert('Gagal: '+(res.error||''));
       }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
     }
 
@@ -394,22 +496,23 @@
     // DETAIL PAGE
     // ============================================================
     function openDetailPage(noHvs) {
+      // Cari di rawData; kalau tidak ada (hasil search GAS), gunakan data minimal
       var hvs = rawData.find(function(d){ return d.no_hvs===noHvs; });
-      if (!hvs) return;
+      if (!hvs) { reloadData(); return; }
       currentDetailHvs = hvs;
       document.getElementById('detailTitle').innerText = noHvs;
       document.getElementById('dService').innerText = hvs.service||'-';
       document.getElementById('dTujuan').innerText  = hvs.tujuan ||'-';
       document.getElementById('dDate').innerText    = hvs.date   ||'-';
       document.getElementById('dTotal').innerText   = hvs.total  ||0;
-      document.getElementById('dStatus').innerHTML  = hvs.status==='OPEN'
+      document.getElementById('dStatus').innerHTML  = hvs.status === STATUS_PROSES
         ? '<span class="status-proses">● On Proses</span>'
         : '<span class="status-selesai">● Selesai</span>';
       document.getElementById('dImageBox').innerHTML = hvs.foto_url
         ? '<img src="'+hvs.foto_url+'" alt="Foto HVS">'
         : '<span class="no-img">No Image</span>';
       var ab = document.getElementById('detailActionBar');
-      ab.innerHTML = hvs.status==='OPEN'
+      ab.innerHTML = hvs.status === STATUS_PROSES
         ? '<button class="btn-action-tambah" onclick="bukaScanner()">+ Tambahkan</button><button class="btn-action-view" onclick="openAwbModal()">View List</button>'
         : '<button class="btn-action-view" style="flex:1;" onclick="openAwbModal()">📋 View List</button>';
       document.getElementById('homePage').classList.add('hidden');
@@ -431,7 +534,7 @@
         var hvs = currentDetailHvs, html = '';
         html += '<div class="dropdown-item-custom" onclick="exportPdf()"><span class="material-icons">picture_as_pdf</span>Export PDF</div>';
         html += '<div class="dropdown-item-custom" onclick="exportExcel()"><span class="material-icons">table_chart</span>Export Excel</div>';
-        if (hvs && hvs.status==='OPEN') {
+        if (hvs && hvs.status === STATUS_PROSES) {
           html += '<div class="dropdown-item-custom" onclick="selesaikanDariDetail()"><span class="material-icons" style="color:#1E8E3E;">check_circle</span>Selesai</div>';
           html += '<div class="dropdown-item-custom danger" onclick="deleteHvsFromDetail()"><span class="material-icons">delete</span>Hapus HVS</div>';
         }
@@ -440,7 +543,6 @@
         document.getElementById('dropdownOverlay').classList.remove('hidden');
       } else { closeDetailMenu(); }
     }
-
     function closeDetailMenu() {
       document.getElementById('detailDropdown').classList.add('hidden');
       document.getElementById('dropdownOverlay').classList.add('hidden');
@@ -451,11 +553,12 @@
       var noHvs = currentDetailHvs.no_hvs;
       if (!confirm('Tandai HVS '+noHvs+' sebagai SELESAI?')) return;
       showLoading('Mengubah status...');
-      gasPost('updateHvsStatus', { noHvs:noHvs, newStatus:'CLOSED' }).then(function(res) {
+      gasPost('updateHvsStatus', { noHvs:noHvs, newStatus: STATUS_SELESAI }).then(function(res) {
         hideLoading();
         if (res.success) {
-          rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; });
-          currentDetailHvs.status='CLOSED'; openDetailPage(noHvs);
+          rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status = STATUS_SELESAI; });
+          currentDetailHvs.status = STATUS_SELESAI;
+          openDetailPage(noHvs);
         } else alert('Gagal: '+(res.error||''));
       }).catch(function(e){ hideLoading(); alert('Gagal: '+e.message); });
     }
@@ -490,7 +593,6 @@
         document.getElementById('awbModal').classList.remove('hidden');
       }).catch(function(){ hideLoading(); alert('Gagal memuat list AWB.'); });
     }
-
     function closeAwbModal(e) { if(e.target===document.getElementById('awbModal')) closeAwbModalDirect(); }
     function closeAwbModalDirect() { document.getElementById('awbModal').classList.add('hidden'); }
 
@@ -532,7 +634,6 @@
         startWithCameraId(currentCameraId);
       }).catch(function(){ startWithConstraint({ facingMode:'environment' }); });
     }
-
     function startWithCameraId(cameraId) {
       html5QrCode=new Html5Qrcode("reader");
       html5QrCode.start(cameraId,{ fps:10,qrbox:{width:250,height:250},aspectRatio:1.0 },
@@ -540,7 +641,6 @@
         .then(function(){ isScannerRunning=true; })
         .catch(function(){ startWithConstraint({ facingMode:'environment' }); });
     }
-
     function startWithConstraint(c) {
       if (!html5QrCode) html5QrCode=new Html5Qrcode("reader");
       html5QrCode.start(c,{ fps:10,qrbox:{width:250,height:250} },
@@ -548,9 +648,7 @@
         .then(function(){ isScannerRunning=true; })
         .catch(function(){ if(c.facingMode==='environment') startWithConstraint({facingMode:'user'}); else showCameraError(); });
     }
-
     function showCameraError() { document.getElementById('cameraError').style.display='block'; document.getElementById('reader').innerHTML=''; }
-
     function toggleFlash() {
       if (!html5QrCode) return;
       flashOn=!flashOn;
@@ -558,7 +656,6 @@
         .catch(function(){ alert('Flash tidak didukung.'); flashOn=!flashOn; });
       document.getElementById('torchBtn').innerText=flashOn?'flash_on':'flash_off';
     }
-
     function stopScanner() {
       function goBack() {
         isScannerRunning=false;
@@ -571,18 +668,15 @@
       if (html5QrCode&&isScannerRunning) html5QrCode.stop().catch(function(){}).finally(goBack);
       else goBack();
     }
-
     function handleManualInput(e) {
       if (e.key==='Enter') {
         var input=document.getElementById('manualAwb');
         if (input.value.trim()) { addAwbToList(input.value.trim()); input.value=''; }
       }
     }
-
     function addAwbToList(awb) { if(scannedItems.includes(awb)) return; scannedItems.unshift(awb); updateScanListUI(); }
     function removeAwb(i) { scannedItems.splice(i,1); updateScanListUI(); }
     function clearAllScans() { if(confirm("Hapus semua list scan?")) { scannedItems=[]; updateScanListUI(); } }
-
     function updateScanListUI() {
       var container=document.getElementById('scanList'), btn=document.getElementById('btnSaveScan');
       document.getElementById('scanCount').innerText=scannedItems.length;
@@ -601,8 +695,10 @@
     function saveAllShipments() {
       var itemsToSave=scannedItems.slice();
       showLoading('Menyimpan AWB...');
+      // FIX: kirim STATUS_PROSES ke GAS
       gasPost('saveShipmentDetails',{
-        noHvs:currentNoHvs, service:currentService, tujuan:currentTujuan, awbList:itemsToSave, status:'OPEN'
+        noHvs:currentNoHvs, service:currentService, tujuan:currentTujuan,
+        awbList:itemsToSave, status: STATUS_PROSES
       }).then(function(res) {
         if (res.success) {
           return gasGet('getMasterData').then(function(data) {
@@ -635,39 +731,24 @@
       document.getElementById('photoVideo').style.display='block';
       capturedImageDataUrl=null; gpsCoords=null;
       document.getElementById('gpsStatus').innerText='📍 Mendapatkan lokasi GPS...';
-
-      // GPS + Reverse Geocoding (nama jalan, bukan koordinat)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function(pos) {
             var lat=pos.coords.latitude, lon=pos.coords.longitude;
-            // Tampilkan koordinat sementara
             gpsCoords=lat.toFixed(6)+', '+lon.toFixed(6);
             document.getElementById('gpsStatus').innerText='📍 '+gpsCoords;
-            // Reverse geocode ke nama jalan (Nominatim OpenStreetMap, gratis, tanpa API key)
             fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json&accept-language=id')
               .then(function(r){ return r.json(); })
               .then(function(geo) {
                 var a=geo.address||{};
-                var parts=[
-                  a.road||a.pedestrian||a.footway||'',
-                  a.suburb||a.village||a.neighbourhood||'',
-                  a.city_district||'',
-                  a.city||a.town||a.county||''
-                ].filter(Boolean);
-                if (parts.length>0) {
-                  gpsCoords=parts.join(', ');
-                  document.getElementById('gpsStatus').innerText='📍 '+gpsCoords;
-                }
-              })
-              .catch(function(){ /* tetap pakai koordinat jika geocode gagal */ });
+                var parts=[a.road||a.pedestrian||a.footway||'',a.suburb||a.village||a.neighbourhood||'',a.city_district||'',a.city||a.town||a.county||''].filter(Boolean);
+                if (parts.length>0) { gpsCoords=parts.join(', '); document.getElementById('gpsStatus').innerText='📍 '+gpsCoords; }
+              }).catch(function(){});
           },
           function() { gpsCoords='Lokasi tidak tersedia'; document.getElementById('gpsStatus').innerText='📍 Lokasi tidak tersedia'; },
           { enableHighAccuracy:true, timeout:15000 }
         );
       }
-
-      // Buka kamera dengan fallback berlapis
       var constraints=[
         { video:{ facingMode:{exact:'environment'}, width:{ideal:1280}, height:{ideal:720} }, audio:false },
         { video:{ facingMode:'environment' }, audio:false },
@@ -682,20 +763,15 @@
       }
       tryConstraint(0);
     }
-
     function closePhotoPage() {
       stopPhotoStream();
       document.getElementById('photoPage').classList.add('hidden');
       if (currentDetailHvs) openDetailPage(currentDetailHvs.no_hvs);
-      else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
+      else { document.getElementById('homePage').classList.remove('hidden'); switchTab(STATUS_PROSES); renderList(); }
     }
-
     function stopPhotoStream() {
       if (photoStream) { photoStream.getTracks().forEach(function(t){ t.stop(); }); photoStream=null; }
     }
-
-    // Kompres foto ke max lebar 1280px, kualitas 0.75
-    // Ini penting agar base64 tidak terlalu besar dan tidak timeout saat POST ke GAS
     function compressToBase64(srcCanvas, maxWidth, quality) {
       var w=srcCanvas.width, h=srcCanvas.height;
       if (w>maxWidth) { h=Math.round(h*maxWidth/w); w=maxWidth; }
@@ -704,15 +780,12 @@
       c.getContext('2d').drawImage(srcCanvas,0,0,w,h);
       return c.toDataURL('image/jpeg', quality||0.75);
     }
-
     function ambilFoto() {
       var video=document.getElementById('photoVideo');
       var canvas=document.getElementById('photoCanvas');
       var ctx=canvas.getContext('2d');
       canvas.width=video.videoWidth; canvas.height=video.videoHeight;
       ctx.drawImage(video,0,0,canvas.width,canvas.height);
-
-      // Watermark
       var now=new Date();
       function pad(n){ return n<10?'0'+n:n; }
       var waktu=pad(now.getDate())+'/'+pad(now.getMonth()+1)+'/'+now.getFullYear()+' '+pad(now.getHours())+':'+pad(now.getMinutes());
@@ -729,17 +802,13 @@
       else { ctx.fillRect(x,y,boxW,boxH); }
       ctx.fillStyle='white'; ctx.font='bold '+fontSize+'px Arial';
       lines.forEach(function(line,i){ ctx.fillText(line,x+padding,y+padding+(i+1)*lineHeight-4); });
-
-      // Kompres agar upload tidak timeout
       capturedImageDataUrl = compressToBase64(canvas, 1280, 0.75);
-
       document.getElementById('photoPreview').src=capturedImageDataUrl;
       document.getElementById('photoPreview').style.display='block';
       document.getElementById('photoVideo').style.display='none';
       document.getElementById('photoBottomAmbil').classList.add('hidden');
       document.getElementById('photoBottomResult').classList.remove('hidden');
     }
-
     function ulangiiFoto() {
       capturedImageDataUrl=null;
       document.getElementById('photoPreview').style.display='none';
@@ -747,27 +816,17 @@
       document.getElementById('photoBottomAmbil').classList.remove('hidden');
       document.getElementById('photoBottomResult').classList.add('hidden');
     }
-
     function simpanFoto() {
       if (!capturedImageDataUrl) return;
-
-      // 1. Simpan ke galeri lokal
       var link=document.createElement('a');
       link.href=capturedImageDataUrl;
       link.download='HVS_'+currentNoHvs+'_'+Date.now()+'.jpg';
       link.click();
-
-      // 2. Upload ke Google Drive via GAS
       showLoading('Mengupload foto ke Drive...');
-      var base64Clean = capturedImageDataUrl.split(',')[1]; // hapus prefix data:image/jpeg;base64,
-
-      gasPost('uploadFotoToDrive', {
-        noHvs: currentNoHvs,
-        base64Data: base64Clean
-      }).then(function(res) {
+      var base64Clean = capturedImageDataUrl.split(',')[1];
+      gasPost('uploadFotoToDrive', { noHvs: currentNoHvs, base64Data: base64Clean }).then(function(res) {
         hideLoading();
         if (res.success && res.url) {
-          // Update state lokal supaya langsung tampil di detail tanpa reload
           if (currentDetailHvs) currentDetailHvs.foto_url = res.url;
           var idx = rawData.findIndex(function(d){ return d.no_hvs===currentNoHvs; });
           if (idx!==-1) rawData[idx].foto_url = res.url;
@@ -782,12 +841,11 @@
         selesaiSetelahFoto();
       });
     }
-
     function selesaiSetelahFoto() {
       stopPhotoStream();
       document.getElementById('photoPage').classList.add('hidden');
       if (currentDetailHvs) openDetailPage(currentDetailHvs.no_hvs);
-      else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
+      else { document.getElementById('homePage').classList.remove('hidden'); switchTab(STATUS_PROSES); renderList(); }
     }
 
     // ============================================================
