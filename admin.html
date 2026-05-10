@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monitoring Peta - HVS BDO</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 100vh; width: 100%; }
+        .list-panel { position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; padding: 10px; border-radius: 8px; width: 200px; box-shadow: 0 0 10px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
+        .driver-card { border-bottom: 1px solid #eee; padding: 5px; cursor: pointer; font-size: 13px; }
+        .driver-card:hover { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <div class="list-panel">
+        <h4 style="margin:0 0 10px 0;">Daftar Driver</h4>
+        <div id="driver-list">Loading...</div>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDA4Pj6_IPWtwKwFW1lSMTgbJPgEdSj_eFzDc1Nsi6ZruJV6STOJ1iYEHfzfCB3aj1/exec";
+        
+        var map = L.map('map').setView([-6.9147, 107.6098], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var markers = {};
+
+        async function refreshData() {
+            try {
+                const res = await fetch(SCRIPT_URL + "?action=getLocations");
+                const data = await res.json();
+                let html = "";
+
+                data.forEach(d => {
+                    const pos = [d.lat, d.lng];
+                    const gmaps = `https://www.google.com/maps?q=${d.lat},${d.lng}`;
+
+                    if (markers[d.id]) {
+                        markers[d.id].setLatLng(pos);
+                    } else {
+                        markers[d.id] = L.marker(pos).addTo(map)
+                            .bindPopup(`<b>${d.id}</b><br>Update: ${d.time}<br><a href="${gmaps}" target="_blank">Buka Gmaps</a>`);
+                    }
+
+                    html += `<div class="driver-card" onclick="map.flyTo([${d.lat}, ${d.lng}], 16)">
+                                <b>${d.id}</b><br><small>Jam: ${d.time}</small>
+                             </div>`;
+                });
+                document.getElementById('driver-list').innerHTML = html;
+            } catch (e) { console.error("Update Gagal", e); }
+        }
+
+        setInterval(refreshData, 5000); // Update setiap 5 detik
+        refreshData();
+    </script>
+</body>
+</html>
