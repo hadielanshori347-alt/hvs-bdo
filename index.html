@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <!-- Izin kamera penuh di GitHub Pages (HTTPS) -->
+  <meta http-equiv="Permissions-Policy" content="camera=*, microphone=*, geolocation=*">
+  <title>HVS BDO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <style>
+    :root { --google-blue: #1A73E8; --bg-gray: #F8F9FA; }
+    * { box-sizing: border-box; }
+    body { background-color: var(--bg-gray); margin: 0; font-family: 'Roboto', sans-serif; height: 100dvh; overflow: hidden; }
+    .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; background: var(--bg-gray); z-index: 10; }
+    .hidden { display: none !important; }
+    .app-bar { background-color: var(--google-blue); height: 56px; display: flex; align-items: center; padding: 0 16px; color: white; flex-shrink: 0; gap: 8px; }
+    .app-title { font-size: 18px; font-weight: 500; flex-grow: 1; text-align: center; }
+    .tabs-nav { background-color: var(--google-blue); display: flex; flex-shrink: 0; }
+    .tab-item { flex: 1; text-align: center; padding: 14px 0; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700; border-bottom: 3px solid transparent; text-transform: uppercase; cursor: pointer; }
+    .tab-item.active { color: white; border-bottom: 3px solid white; }
+    .search-container { padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .search-box { background: white; border: 1px solid #DADCE0; border-radius: 8px; padding: 8px 12px; flex: 1; display: flex; }
+    .search-box input { border: none; outline: none; width: 100%; font-size: 14px; }
+
+    .hvs-card { background: white; margin: 8px 16px; padding: 14px; border-radius: 14px; border: 1px solid #eee; box-shadow: 0 2px 6px rgba(0,0,0,0.06); cursor: pointer; }
+    .hvs-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .hvs-card-no { color: var(--google-blue); font-size: 14px; font-weight: 700; }
+    .hvs-card-badge { font-size: 12px; font-weight: 700; background: #E8F0FE; color: var(--google-blue); padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+    .hvs-card-sub { color: #777; font-size: 12px; margin-bottom: 10px; }
+    .hvs-card-bottom { display: flex; gap: 8px; align-items: center; }
+    .btn-card-selesai { flex: 1; padding: 8px 0; border-radius: 8px; font-size: 13px; font-weight: 700; background: #E6F4EA; color: #1E8E3E; border: none; cursor: pointer; }
+
+    /* SCAN PAGE */
+    #reader { width: 100%; background: #1a1a1a; flex-shrink: 0; }
+    #reader video { width: 100% !important; }
+    #reader img { width: 100% !important; }
+    .scanner-bottom { padding: 15px; background: white; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .scan-list-container { flex: 1; overflow-y: auto; margin-top: 10px; }
+    .scan-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; }
+
+    .fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background-color: var(--google-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 100; cursor: pointer; }
+    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; gap: 12px; }
+    #loadingText { font-size: 14px; color: #555; font-weight: 500; }
+    .filter-input { background: #f1f3f4; border: none; border-radius: 10px; padding: 10px; width: 100%; margin-bottom: 15px; font-size: 14px; }
+
+    /* PHOTO PAGE */
+    #photoPage { background: #000; }
+    #photoContainer { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #photoVideo { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #photoCanvas { display: none; }
+    #photoPreview { width: 100%; height: 100%; object-fit: contain; display: none; }
+    .photo-bottom { padding: 20px 16px; background: #111; display: flex; gap: 12px; flex-shrink: 0; }
+    .btn-photo-action { flex: 1; padding: 14px; border-radius: 30px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; }
+    .btn-ambil { background: var(--google-blue); color: white; }
+    .btn-ulangi { background: #444; color: white; }
+    .btn-simpan-foto { background: #34A853; color: white; }
+    #gpsStatus { color: #aaa; font-size: 11px; text-align: center; padding: 6px 0; flex-shrink: 0; background: #111; }
+
+    /* DETAIL PAGE */
+    #detailPage { background: var(--bg-gray); }
+    .detail-scroll { flex: 1; overflow-y: auto; padding-bottom: 16px; }
+    .detail-section { background: white; margin-top: 10px; }
+    .detail-field { padding: 13px 16px; border-bottom: 1px solid #f2f2f2; }
+    .detail-field:last-child { border-bottom: none; }
+    .detail-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .detail-value { font-size: 15px; color: #222; font-weight: 500; }
+    .status-proses { color: #F9AB00; font-weight: 700; }
+    .status-selesai { color: #1E8E3E; font-weight: 700; }
+    .detail-image-box { margin: 12px 16px; border-radius: 12px; overflow: hidden; background: #e8eaed; min-height: 160px; display: flex; align-items: center; justify-content: center; }
+    .detail-image-box img { width: 100%; display: block; }
+    .detail-image-box .no-img { color: #aaa; font-size: 13px; }
+    .detail-action-bar { display: flex; gap: 10px; padding: 12px 16px; background: white; border-top: 1px solid #eee; flex-shrink: 0; }
+    .btn-action-tambah { flex: 1; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 14px; background: var(--google-blue); color: white; border: none; cursor: pointer; }
+    .btn-action-view { flex: 1; padding: 13px; border-radius: 12px; font-weight: 700; font-size: 14px; background: #F1F3F4; color: #444; border: 1px solid #ddd; cursor: pointer; }
+
+    /* AWB MODAL */
+    .awb-modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.45); z-index: 9000; display: flex; align-items: flex-end; }
+    .awb-modal-sheet { background: white; border-radius: 20px 20px 0 0; width: 100%; max-height: 75vh; display: flex; flex-direction: column; padding-bottom: 24px; }
+    .awb-modal-header { padding: 16px 16px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; flex-shrink: 0; }
+    .awb-modal-header .title { font-weight: 700; font-size: 15px; }
+    .awb-modal-list { flex: 1; overflow-y: auto; }
+    .awb-row { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; font-size: 14px; color: #333; display: flex; align-items: center; gap: 8px; }
+    .awb-row:before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--google-blue); flex-shrink: 0; }
+
+    /* DROPDOWN */
+    .dropdown-menu-custom { position: fixed; top: 50px; right: 12px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.18); z-index: 500; min-width: 175px; overflow: hidden; }
+    .dropdown-item-custom { padding: 13px 18px; font-size: 14px; color: #333; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .dropdown-item-custom:active { background: #f5f5f5; }
+    .dropdown-item-custom.danger { color: #D93025; }
+    .dropdown-item-custom .material-icons { font-size: 18px; color: #888; }
+    .dropdown-item-custom.danger .material-icons { color: #D93025; }
+    .dropdown-overlay { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 499; }
+
+    /* Kamera error info */
+    #cameraError { display:none; padding:16px; background:#fff3cd; border-radius:8px; margin:12px; font-size:13px; color:#856404; }
+  </style>
+</head>
+<body>
+
+  <div id="loading">
+    <div class="spinner-border text-primary"></div>
+    <div id="loadingText">Memuat data...</div>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div id="homePage" class="page">
+    <div class="app-bar">
+      <div style="width:24px;"></div>
+      <div class="app-title">HVS BDO</div>
+      <span class="material-icons" onclick="reloadData()" style="cursor:pointer;">refresh</span>
+    </div>
+    <div class="tabs-nav">
+      <div id="tabProses" class="tab-item active" onclick="switchTab('OPEN')">PROSES</div>
+      <div id="tabSelesai" class="tab-item" onclick="switchTab('CLOSED')">HVS SELESAI</div>
+    </div>
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari HVS / Tujuan..." onkeyup="searchData()">
+      </div>
+      <span class="material-icons" style="color:var(--google-blue);cursor:pointer;" data-bs-toggle="modal" data-bs-target="#filterModal">filter_list</span>
+    </div>
+    <div id="listContainer" style="flex:1;overflow-y:auto;padding-bottom:80px;">
+      <p class="text-center mt-5 text-muted small">Loading data...</p>
+    </div>
+    <div class="fab" onclick="openCreatePage()"><span class="material-icons" style="font-size:32px;">add</span></div>
+  </div>
+
+  <!-- CREATE PAGE -->
+  <div id="createPage" class="page hidden">
+    <div class="app-bar">
+      <span class="material-icons" onclick="closeCreatePage()" style="cursor:pointer;">arrow_back</span>
+      <div class="app-title" style="text-align:left;margin-left:15px;">Create HVS</div>
+    </div>
+    <div style="padding:20px;">
+      <label class="fw-bold small text-muted mb-2">SERVICE</label>
+      <select id="selService" class="form-select border-0 shadow-sm py-3 mb-4" style="border-radius:12px;" onchange="checkForm()"></select>
+      <label class="fw-bold small text-muted mb-2">TUJUAN</label>
+      <select id="selTujuan" class="form-select border-0 shadow-sm py-3 mb-4" style="border-radius:12px;" onchange="checkForm()"></select>
+      <button id="btnCreate" class="btn w-100 py-3 fw-bold mt-4" style="border-radius:12px;background:#E8EAED;color:#9AA0A6;" disabled onclick="processHvs()">CREATE HVS</button>
+    </div>
+  </div>
+
+  <!-- SCAN PAGE -->
+  <div id="scanPage" class="page hidden">
+    <div class="app-bar">
+      <span class="material-icons" onclick="stopScanner()" style="cursor:pointer;">arrow_back</span>
+      <div id="scanTitle" class="app-title">HVS-SCANNER</div>
+      <span id="torchBtn" class="material-icons" onclick="toggleFlash()" style="cursor:pointer;">flash_off</span>
+    </div>
+    <div id="reader"></div>
+    <div id="cameraError">⚠️ Kamera tidak dapat diakses. Pastikan browser mengizinkan kamera atau gunakan input manual di bawah.</div>
+    <div class="scanner-bottom">
+      <small class="fw-bold text-muted">Input Manual AWB</small>
+      <input type="text" id="manualAwb" class="form-control border-0 bg-light py-3 mt-1" style="border-radius:12px;" placeholder="Ketik AWB & tekan Enter" onkeypress="handleManualInput(event)">
+      <div class="d-flex justify-content-between align-items-center mt-3 px-1">
+        <span class="fw-bold small">LIST SCANNED (<span id="scanCount">0</span>)</span>
+        <span class="text-primary small fw-bold" onclick="clearAllScans()" style="cursor:pointer;">Clear All</span>
+      </div>
+      <div class="scan-list-container" id="scanList"></div>
+      <button id="btnSaveScan" class="btn w-100 py-3 fw-bold mt-2" style="border-radius:30px;background:#E8EAED;color:#9AA0A6;" disabled onclick="saveAllShipments()">SIMPAN & FOTO</button>
+    </div>
+  </div>
+
+  <!-- PHOTO PAGE -->
+  <div id="photoPage" class="page hidden">
+    <div class="app-bar">
+      <span class="material-icons" onclick="closePhotoPage()" style="cursor:pointer;">arrow_back</span>
+      <div class="app-title">Ambil Foto</div>
+    </div>
+    <div id="photoContainer">
+      <video id="photoVideo" autoplay playsinline muted></video>
+      <canvas id="photoCanvas"></canvas>
+      <img id="photoPreview" alt="Preview Foto">
+    </div>
+    <div id="gpsStatus">📍 Mendapatkan lokasi GPS...</div>
+    <div class="photo-bottom" id="photoBottomAmbil">
+      <button class="btn-photo-action btn-ambil" onclick="ambilFoto()">📷 Ambil Foto</button>
+    </div>
+    <div class="photo-bottom hidden" id="photoBottomResult">
+      <button class="btn-photo-action btn-ulangi" onclick="ulangiiFoto()">🔄 Ulangi</button>
+      <button class="btn-photo-action btn-simpan-foto" onclick="simpanFoto()">✅ Simpan</button>
+    </div>
+  </div>
+
+  <!-- DETAIL PAGE -->
+  <div id="detailPage" class="page hidden">
+    <div class="app-bar">
+      <span class="material-icons" onclick="closeDetailPage()" style="cursor:pointer;">arrow_back</span>
+      <div id="detailTitle" class="app-title" style="font-size:15px;">Detail HVS</div>
+      <span class="material-icons" onclick="toggleDetailMenu()" style="cursor:pointer;">more_vert</span>
+    </div>
+    <div id="dropdownOverlay" class="dropdown-overlay hidden" onclick="closeDetailMenu()"></div>
+    <div id="detailDropdown" class="dropdown-menu-custom hidden"></div>
+    <div class="detail-scroll">
+      <div class="detail-section">
+        <div class="detail-field"><div class="detail-label">SERVICE</div><div class="detail-value" id="dService">-</div></div>
+        <div class="detail-field"><div class="detail-label">TUJUAN</div><div class="detail-value" id="dTujuan">-</div></div>
+        <div class="detail-field"><div class="detail-label">Created Date</div><div class="detail-value" id="dDate">-</div></div>
+        <div class="detail-field"><div class="detail-label">Status</div><div class="detail-value" id="dStatus">-</div></div>
+        <div class="detail-field"><div class="detail-label">Total Shipments</div><div class="detail-value" id="dTotal">0</div></div>
+      </div>
+      <div class="detail-image-box" id="dImageBox"><span class="no-img">No Image</span></div>
+    </div>
+    <div class="detail-action-bar" id="detailActionBar"></div>
+  </div>
+
+  <!-- AWB MODAL -->
+  <div id="awbModal" class="awb-modal-overlay hidden" onclick="closeAwbModal(event)">
+    <div class="awb-modal-sheet" onclick="event.stopPropagation()">
+      <div class="awb-modal-header">
+        <span class="title">List AWB (<span id="awbModalCount">0</span>)</span>
+        <span class="material-icons" onclick="closeAwbModalDirect()" style="cursor:pointer;color:#888;">close</span>
+      </div>
+      <div class="awb-modal-list" id="awbModalList"></div>
+    </div>
+  </div>
+
+  <!-- FILTER MODAL -->
+  <div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down" style="align-items:flex-end;margin:0;">
+      <div class="modal-content" style="border-radius:24px 24px 0 0;">
+        <div class="modal-header border-0 pb-0">
+          <h6 class="fw-bold">Filter HVS</h6>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <label class="fw-bold small text-muted mb-1">STATUS</label>
+          <select id="fStatus" class="filter-input">
+            <option value="">All Status</option>
+            <option value="OPEN">PROSES</option>
+            <option value="CLOSED">SELESAI</option>
+          </select>
+          <label class="fw-bold small text-muted mb-1">SERVICE</label>
+          <select id="fService" class="filter-input"><option value="">All Service</option></select>
+          <label class="fw-bold small text-muted mb-1">TUJUAN</label>
+          <select id="fTujuan" class="filter-input"><option value="">All Tujuan</option></select>
+          <label class="fw-bold small text-muted mb-1">CREATED AT</label>
+          <input type="date" id="fDate" class="filter-input">
+          <div class="row g-2 mt-2">
+            <div class="col-6"><button class="btn w-100 fw-bold" style="color:var(--google-blue);" onclick="resetFilter()">RESET</button></div>
+            <div class="col-6"><button class="btn w-100 text-white fw-bold" style="background:var(--google-blue);border-radius:10px;" data-bs-dismiss="modal" onclick="applyFilter()">APPLY</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ============================================================
+    // ⚠️ GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+    // Cara dapat URL: GAS → Deploy → Manage deployments → copy URL
+    // ============================================================
+    var GAS_URL = "https://script.google.com/macros/s/AKfycbz54Jji9xZjR8n-SOX9tKmTOMUurstPbYPtKl9u5ZvKQvSpe0hkM8Lu22LDUnhkurRv/exec";
+
+    // ============================================================
+    // API HELPER — menggantikan google.script.run
+    // ============================================================
+    function gasGet(action, params) {
+      var url = new URL(GAS_URL);
+      url.searchParams.set('action', action);
+      if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
+      return fetch(url.toString()).then(function(r){ return r.json(); });
+    }
+
+    function gasPost(action, data) {
+      data.action = action;
+      return fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      }).then(function(r){ return r.json(); });
+    }
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    var rawData        = [];
+    var currentTab     = 'OPEN';
+    var html5QrCode    = null;
+    var scannedItems   = [];
+    var isScannerRunning = false;
+    var photoStream    = null;
+    var capturedImageDataUrl = null;
+    var currentNoHvs   = '';
+    var currentService = '';
+    var currentTujuan  = '';
+    var gpsCoords      = null;
+    var currentDetailHvs = null;
+    var flashOn        = false;
+    var currentCameraId = null;
+    var allCameras     = [];
+
+    window.onload = reloadData;
+
+    function showLoading(text) {
+      document.getElementById('loadingText').innerText = text || 'Memuat data...';
+      document.getElementById('loading').style.display = 'flex';
+    }
+    function hideLoading() { document.getElementById('loading').style.display = 'none'; }
+
+    // ============================================================
+    // DATA
+    // ============================================================
+    function reloadData() {
+      showLoading('Memuat data...');
+      gasGet('getMasterData').then(function(data) {
+        rawData = data.hvsList || [];
+        populateSelects(data);
+        renderList();
+        hideLoading();
+      }).catch(function(err) {
+        hideLoading();
+        alert("Gagal memuat data. Pastikan GAS_URL sudah diisi dengan benar.\n\nError: " + err.message);
+      });
+    }
+
+    function populateSelects(data) {
+      var sOpt = '<option value="" disabled selected>Select Service</option>';
+      var tOpt = '<option value="" disabled selected>Select Tujuan</option>';
+      var fsOpt = '<option value="">All Service</option>';
+      var ftOpt = '<option value="">All Tujuan</option>';
+      (data.services || []).forEach(function(v) { sOpt += '<option>'+v+'</option>'; fsOpt += '<option>'+v+'</option>'; });
+      (data.tujuans  || []).forEach(function(v) { tOpt += '<option>'+v+'</option>'; ftOpt += '<option>'+v+'</option>'; });
+      document.getElementById('selService').innerHTML = sOpt;
+      document.getElementById('selTujuan').innerHTML  = tOpt;
+      document.getElementById('fService').innerHTML   = fsOpt;
+      document.getElementById('fTujuan').innerHTML    = ftOpt;
+    }
+
+    // ============================================================
+    // RENDER LIST
+    // ============================================================
+    function renderList(filteredData) {
+      var container = document.getElementById('listContainer');
+      var data = filteredData || rawData.filter(function(d){ return d.status === currentTab; });
+      if (!data.length) {
+        container.innerHTML = '<p class="text-center mt-5 text-muted small">Tidak ada data</p>';
+        return;
+      }
+      container.innerHTML = data.map(function(d) {
+        var isProses = d.status === 'OPEN';
+        var bottomHtml = isProses
+          ? '<div class="hvs-card-bottom"><button class="btn-card-selesai" onclick="selesaikanHvs(event,\''+d.no_hvs+'\')">✓ Selesai</button></div>'
+          : '<div class="hvs-card-bottom"><span style="font-size:12px;color:#1E8E3E;font-weight:600;">✓ Selesai</span></div>';
+        return '<div class="hvs-card" onclick="openDetailPage(\''+d.no_hvs+'\')">'
+          + '<div class="hvs-card-top"><div class="hvs-card-no">'+d.no_hvs+'</div><div class="hvs-card-badge">'+d.total+' AWB</div></div>'
+          + '<div class="hvs-card-sub">'+d.service+' | '+d.tujuan+'</div>'
+          + bottomHtml + '</div>';
+      }).join('');
+    }
+
+    function switchTab(s) {
+      currentTab = s;
+      document.getElementById('tabProses').classList.toggle('active', s==='OPEN');
+      document.getElementById('tabSelesai').classList.toggle('active', s==='CLOSED');
+      renderList();
+    }
+
+    function searchData() {
+      var val = document.getElementById('searchInput').value.toLowerCase();
+      renderList(rawData.filter(function(d){
+        return d.status===currentTab && (d.no_hvs.toLowerCase().includes(val)||d.tujuan.toLowerCase().includes(val));
+      }));
+    }
+
+    function applyFilter() {
+      var st=document.getElementById('fStatus').value, sv=document.getElementById('fService').value;
+      var tj=document.getElementById('fTujuan').value, dt=document.getElementById('fDate').value;
+      renderList(rawData.filter(function(d){
+        return (!st||d.status===st)&&(!sv||d.service===sv)&&(!tj||d.tujuan===tj)&&(!dt||d.date===dt);
+      }));
+    }
+
+    function resetFilter() {
+      ['fStatus','fService','fTujuan','fDate'].forEach(function(id){ document.getElementById(id).value=''; });
+      renderList();
+    }
+
+    // ============================================================
+    // SELESAI DARI CARD
+    // ============================================================
+    function selesaikanHvs(event, noHvs) {
+      event.stopPropagation();
+      if (!confirm('Tandai HVS '+noHvs+' sebagai SELESAI?')) return;
+      showLoading('Mengubah status...');
+      gasPost('updateHvsStatus', { noHvs: noHvs, newStatus: 'CLOSED' }).then(function(res) {
+        hideLoading();
+        if (res.success) {
+          rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; });
+          renderList();
+        } else { alert('Gagal mengubah status.'); }
+      }).catch(function(){ hideLoading(); alert('Gagal mengubah status.'); });
+    }
+
+    // ============================================================
+    // DETAIL PAGE
+    // ============================================================
+    function openDetailPage(noHvs) {
+      var hvs = rawData.find(function(d){ return d.no_hvs===noHvs; });
+      if (!hvs) return;
+      currentDetailHvs = hvs;
+      document.getElementById('detailTitle').innerText = noHvs;
+      document.getElementById('dService').innerText = hvs.service || '-';
+      document.getElementById('dTujuan').innerText  = hvs.tujuan  || '-';
+      document.getElementById('dDate').innerText    = hvs.date    || '-';
+      document.getElementById('dTotal').innerText   = hvs.total   || 0;
+      var statusEl = document.getElementById('dStatus');
+      statusEl.innerHTML = hvs.status==='OPEN'
+        ? '<span class="status-proses">● On Proses</span>'
+        : '<span class="status-selesai">● Selesai</span>';
+      var imgBox = document.getElementById('dImageBox');
+      imgBox.innerHTML = hvs.foto_url
+        ? '<img src="'+hvs.foto_url+'" alt="Foto HVS">'
+        : '<span class="no-img">No Image</span>';
+      var actionBar = document.getElementById('detailActionBar');
+      if (hvs.status === 'OPEN') {
+        actionBar.innerHTML =
+          '<button class="btn-action-tambah" onclick="bukaScanner()">+ Tambahkan</button>'
+          +'<button class="btn-action-view" onclick="openAwbModal()">View List</button>';
+      } else {
+        actionBar.innerHTML = '<button class="btn-action-view" style="flex:1;" onclick="openAwbModal()">📋 View List</button>';
+      }
+      document.getElementById('homePage').classList.add('hidden');
+      document.getElementById('detailPage').classList.remove('hidden');
+    }
+
+    function closeDetailPage() {
+      closeDetailMenu();
+      document.getElementById('detailPage').classList.add('hidden');
+      document.getElementById('homePage').classList.remove('hidden');
+    }
+
+    // ============================================================
+    // DROPDOWN TITIK 3
+    // ============================================================
+    function toggleDetailMenu() {
+      var dd = document.getElementById('detailDropdown');
+      if (dd.classList.contains('hidden')) {
+        var hvs = currentDetailHvs;
+        var html = '';
+        html += '<div class="dropdown-item-custom" onclick="exportPdf()"><span class="material-icons">picture_as_pdf</span>Export PDF</div>';
+        html += '<div class="dropdown-item-custom" onclick="exportExcel()"><span class="material-icons">table_chart</span>Export Excel</div>';
+        if (hvs && hvs.status === 'OPEN') {
+          html += '<div class="dropdown-item-custom" onclick="selesaikanDariDetail()"><span class="material-icons" style="color:#1E8E3E;">check_circle</span>Selesai</div>';
+          html += '<div class="dropdown-item-custom danger" onclick="deleteHvsFromDetail()"><span class="material-icons">delete</span>Hapus HVS</div>';
+        }
+        dd.innerHTML = html;
+        dd.classList.remove('hidden');
+        document.getElementById('dropdownOverlay').classList.remove('hidden');
+      } else { closeDetailMenu(); }
+    }
+
+    function closeDetailMenu() {
+      document.getElementById('detailDropdown').classList.add('hidden');
+      document.getElementById('dropdownOverlay').classList.add('hidden');
+    }
+
+    function selesaikanDariDetail() {
+      closeDetailMenu();
+      var noHvs = currentDetailHvs.no_hvs;
+      if (!confirm('Tandai HVS '+noHvs+' sebagai SELESAI?')) return;
+      showLoading('Mengubah status...');
+      gasPost('updateHvsStatus', { noHvs: noHvs, newStatus: 'CLOSED' }).then(function(res) {
+        hideLoading();
+        if (res.success) {
+          rawData.forEach(function(d){ if(d.no_hvs===noHvs) d.status='CLOSED'; });
+          currentDetailHvs.status = 'CLOSED';
+          openDetailPage(noHvs);
+        } else { alert('Gagal mengubah status.'); }
+      }).catch(function(){ hideLoading(); alert('Gagal mengubah status.'); });
+    }
+
+    function deleteHvsFromDetail() {
+      closeDetailMenu();
+      var noHvs = currentDetailHvs.no_hvs;
+      if (!confirm('Hapus HVS '+noHvs+'? Tindakan ini tidak bisa dibatalkan.')) return;
+      showLoading('Menghapus HVS...');
+      gasPost('deleteHvs', { noHvs: noHvs }).then(function(res) {
+        hideLoading();
+        if (res.success) {
+          rawData = rawData.filter(function(d){ return d.no_hvs!==noHvs; });
+          closeDetailPage(); renderList();
+        } else { alert('Gagal menghapus HVS.'); }
+      }).catch(function(){ hideLoading(); alert('Gagal menghapus HVS.'); });
+    }
+
+    function exportPdf()   { closeDetailMenu(); alert('Export PDF: ' + currentDetailHvs.no_hvs); }
+    function exportExcel() { closeDetailMenu(); alert('Export Excel: ' + currentDetailHvs.no_hvs); }
+
+    // ============================================================
+    // AWB MODAL
+    // ============================================================
+    function openAwbModal() {
+      showLoading('Memuat list AWB...');
+      gasGet('getAwbList', { noHvs: currentDetailHvs.no_hvs }).then(function(res) {
+        hideLoading();
+        var list = res.list || [];
+        document.getElementById('awbModalCount').innerText = list.length;
+        document.getElementById('awbModalList').innerHTML = list.length
+          ? list.map(function(awb){ return '<div class="awb-row">'+awb+'</div>'; }).join('')
+          : '<p class="text-center text-muted small mt-4">Belum ada AWB</p>';
+        document.getElementById('awbModal').classList.remove('hidden');
+      }).catch(function(){ hideLoading(); alert('Gagal memuat list AWB.'); });
+    }
+
+    function closeAwbModal(e) { if (e.target === document.getElementById('awbModal')) closeAwbModalDirect(); }
+    function closeAwbModalDirect() { document.getElementById('awbModal').classList.add('hidden'); }
+
+    // ============================================================
+    // SCANNER — Html5Qrcode (bukan Scanner) agar kamera bebas
+    // ============================================================
+    function bukaScanner() {
+      var hvs = currentDetailHvs;
+      currentNoHvs = hvs.no_hvs; currentService = hvs.service; currentTujuan = hvs.tujuan;
+      document.getElementById('scanTitle').innerText = hvs.no_hvs;
+      document.getElementById('detailPage').classList.add('hidden');
+      document.getElementById('scanPage').classList.remove('hidden');
+      scannedItems = []; updateScanListUI(); startScanner();
+    }
+
+    function processHvs() {
+      var s = document.getElementById('selService').value;
+      var t = document.getElementById('selTujuan').value;
+      showLoading('Membuat HVS...');
+      gasPost('saveNewHvs', { service: s, tujuan: t }).then(function(res) {
+        hideLoading();
+        var noHvs = res.noHvs;
+        currentNoHvs = noHvs; currentService = s; currentTujuan = t;
+        document.getElementById('scanTitle').innerText = noHvs;
+        document.getElementById('createPage').classList.add('hidden');
+        document.getElementById('scanPage').classList.remove('hidden');
+        scannedItems = []; updateScanListUI(); startScanner();
+      }).catch(function(){ hideLoading(); alert('Gagal membuat HVS.'); });
+    }
+
+    function startScanner() {
+      document.getElementById('cameraError').style.display = 'none';
+      if (html5QrCode) {
+        try { html5QrCode.stop().catch(function(){}); } catch(e){}
+        html5QrCode = null;
+      }
+      document.getElementById('reader').innerHTML = '';
+
+      // Cek kamera yang tersedia
+      Html5Qrcode.getCameras().then(function(cameras) {
+        if (!cameras || cameras.length === 0) {
+          showCameraError();
+          return;
+        }
+        allCameras = cameras;
+        // Prefer kamera belakang
+        var backCam = cameras.find(function(c){ return /back|rear|environment/i.test(c.label); });
+        currentCameraId = backCam ? backCam.id : cameras[cameras.length - 1].id;
+        startWithCameraId(currentCameraId);
+      }).catch(function(err) {
+        console.error('getCameras error:', err);
+        // Coba langsung pakai environment
+        startWithConstraint({ facingMode: 'environment' });
+      });
+    }
+
+    function startWithCameraId(cameraId) {
+      html5QrCode = new Html5Qrcode("reader");
+      var config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+      html5QrCode.start(
+        cameraId, config,
+        function(text) { addAwbToList(text); if (navigator.vibrate) navigator.vibrate(100); },
+        function(msg) { /* scan error normal, abaikan */ }
+      ).then(function(){
+        isScannerRunning = true;
+      }).catch(function(err) {
+        console.error('start cameraId error:', err);
+        startWithConstraint({ facingMode: 'environment' });
+      });
+    }
+
+    function startWithConstraint(constraint) {
+      if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+      var config = { fps: 10, qrbox: { width: 250, height: 250 } };
+      html5QrCode.start(
+        constraint, config,
+        function(text) { addAwbToList(text); if (navigator.vibrate) navigator.vibrate(100); },
+        function() {}
+      ).then(function(){
+        isScannerRunning = true;
+      }).catch(function(err) {
+        console.error('start constraint error:', err);
+        // Coba kamera depan sebagai fallback terakhir
+        if (constraint.facingMode === 'environment') {
+          startWithConstraint({ facingMode: 'user' });
+        } else {
+          showCameraError();
+        }
+      });
+    }
+
+    function showCameraError() {
+      document.getElementById('cameraError').style.display = 'block';
+      document.getElementById('reader').innerHTML = '';
+    }
+
+    function toggleFlash() {
+      if (!html5QrCode) return;
+      flashOn = !flashOn;
+      html5QrCode.applyVideoConstraints({ advanced: [{ torch: flashOn }] })
+        .catch(function(){ alert('Flash tidak didukung di perangkat ini.'); flashOn = !flashOn; });
+      document.getElementById('torchBtn').innerText = flashOn ? 'flash_on' : 'flash_off';
+    }
+
+    function flipCamera() {
+      if (allCameras.length < 2) { alert('Hanya ada 1 kamera.'); return; }
+      var idx = allCameras.findIndex(function(c){ return c.id === currentCameraId; });
+      currentCameraId = allCameras[(idx + 1) % allCameras.length].id;
+      if (html5QrCode && isScannerRunning) {
+        html5QrCode.stop().then(function(){ startWithCameraId(currentCameraId); }).catch(function(){ startWithCameraId(currentCameraId); });
+      }
+    }
+
+    function stopScanner() {
+      function goBack() {
+        isScannerRunning = false;
+        document.getElementById('scanPage').classList.add('hidden');
+        document.getElementById('cameraError').style.display = 'none';
+        if (currentDetailHvs) {
+          document.getElementById('detailPage').classList.remove('hidden');
+        } else {
+          document.getElementById('homePage').classList.remove('hidden');
+        }
+        html5QrCode = null;
+        document.getElementById('reader').innerHTML = '';
+      }
+      if (html5QrCode && isScannerRunning) {
+        html5QrCode.stop().catch(function(){}).finally(goBack);
+      } else { goBack(); }
+    }
+
+    function handleManualInput(e) {
+      if (e.key === 'Enter') {
+        var input = document.getElementById('manualAwb');
+        if (input.value.trim()) { addAwbToList(input.value.trim()); input.value = ''; }
+      }
+    }
+
+    function addAwbToList(awb) { if (scannedItems.includes(awb)) return; scannedItems.unshift(awb); updateScanListUI(); }
+    function removeAwb(i) { scannedItems.splice(i, 1); updateScanListUI(); }
+    function clearAllScans() { if (confirm("Hapus semua list scan?")) { scannedItems = []; updateScanListUI(); } }
+
+    function updateScanListUI() {
+      var container = document.getElementById('scanList');
+      var btn = document.getElementById('btnSaveScan');
+      document.getElementById('scanCount').innerText = scannedItems.length;
+      if (scannedItems.length === 0) {
+        btn.disabled = true; btn.style.background = '#E8EAED'; btn.style.color = '#9AA0A6';
+        container.innerHTML = '<p class="text-center text-muted small mt-3">Belum ada data di scan</p>';
+      } else {
+        btn.disabled = false; btn.style.background = 'var(--google-blue)'; btn.style.color = 'white';
+        container.innerHTML = scannedItems.map(function(awb, i) {
+          return '<div class="scan-item"><span>'+awb+'</span>'
+            +'<span class="material-icons text-danger" style="cursor:pointer;font-size:20px;" onclick="removeAwb('+i+')">delete</span></div>';
+        }).join('');
+      }
+    }
+
+    function saveAllShipments() {
+      var itemsToSave = scannedItems.slice();
+      showLoading('Menyimpan AWB...');
+      gasPost('saveShipmentDetails', {
+        noHvs: currentNoHvs, service: currentService, tujuan: currentTujuan,
+        awbList: itemsToSave, status: 'OPEN'
+      }).then(function(res) {
+        if (res.success) {
+          return gasGet('getMasterData').then(function(data) {
+            rawData = data.hvsList || [];
+            if (currentDetailHvs) {
+              var updated = rawData.find(function(d){ return d.no_hvs===currentDetailHvs.no_hvs; });
+              if (updated) currentDetailHvs = updated;
+            }
+            hideLoading();
+            scannedItems = [];
+            function goToPhoto() {
+              isScannerRunning = false; html5QrCode = null;
+              document.getElementById('reader').innerHTML = '';
+              openPhotoPage();
+            }
+            if (html5QrCode && isScannerRunning) { html5QrCode.stop().catch(function(){}).finally(goToPhoto); }
+            else { goToPhoto(); }
+          });
+        } else { hideLoading(); alert("Gagal menyimpan data."); }
+      }).catch(function(){ hideLoading(); alert("Terjadi kesalahan saat menyimpan."); });
+    }
+
+    // ============================================================
+    // PHOTO PAGE — kamera dengan fallback berlapis
+    // ============================================================
+    function openPhotoPage() {
+      document.getElementById('scanPage').classList.add('hidden');
+      document.getElementById('photoPage').classList.remove('hidden');
+      document.getElementById('photoBottomAmbil').classList.remove('hidden');
+      document.getElementById('photoBottomResult').classList.add('hidden');
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('photoVideo').style.display = 'block';
+      capturedImageDataUrl = null; gpsCoords = null;
+      document.getElementById('gpsStatus').innerText = '📍 Mendapatkan lokasi GPS...';
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(pos) {
+            gpsCoords = pos.coords.latitude.toFixed(6)+', '+pos.coords.longitude.toFixed(6);
+            document.getElementById('gpsStatus').innerText = '📍 '+gpsCoords;
+          },
+          function() { gpsCoords='Lokasi tidak tersedia'; document.getElementById('gpsStatus').innerText='📍 Lokasi tidak tersedia'; },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      }
+
+      // Coba kamera belakang → kamera depan → tanpa constraint
+      var constraints = [
+        { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+        { video: { facingMode: 'environment' }, audio: false },
+        { video: { facingMode: 'user' }, audio: false },
+        { video: true, audio: false }
+      ];
+
+      function tryConstraint(idx) {
+        if (idx >= constraints.length) {
+          alert("Kamera tidak dapat diakses. Pastikan browser mendapat izin kamera.");
+          return;
+        }
+        navigator.mediaDevices.getUserMedia(constraints[idx])
+          .then(function(stream) {
+            photoStream = stream;
+            document.getElementById('photoVideo').srcObject = stream;
+          })
+          .catch(function(err) {
+            console.warn('Camera constraint '+idx+' failed:', err.name, err.message);
+            tryConstraint(idx + 1);
+          });
+      }
+      tryConstraint(0);
+    }
+
+    function closePhotoPage() {
+      stopPhotoStream();
+      document.getElementById('photoPage').classList.add('hidden');
+      if (currentDetailHvs) {
+        openDetailPage(currentDetailHvs.no_hvs);
+      } else {
+        document.getElementById('homePage').classList.remove('hidden');
+        switchTab('OPEN'); renderList();
+      }
+    }
+
+    function stopPhotoStream() {
+      if (photoStream) { photoStream.getTracks().forEach(function(t){ t.stop(); }); photoStream = null; }
+    }
+
+    function ambilFoto() {
+      var video  = document.getElementById('photoVideo');
+      var canvas = document.getElementById('photoCanvas');
+      var ctx    = canvas.getContext('2d');
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      var now = new Date();
+      function pad(n){ return n<10?'0'+n:n; }
+      var waktu = pad(now.getDate())+'/'+pad(now.getMonth()+1)+'/'+now.getFullYear()+' '+pad(now.getHours())+':'+pad(now.getMinutes());
+      var lines = [waktu, 'Service : '+currentService, 'Tujuan  : '+currentTujuan, 'Lokasi  : '+(gpsCoords||'Mendapatkan...')];
+      var fontSize = Math.max(16, Math.floor(canvas.width/35));
+      var padding = 14, lineHeight = fontSize+8, boxW = 0;
+      ctx.font = 'bold '+fontSize+'px Arial';
+      lines.forEach(function(l){ var w=ctx.measureText(l).width; if(w>boxW) boxW=w; });
+      boxW += padding*2;
+      var boxH = lines.length*lineHeight+padding;
+      var x = canvas.width-boxW-12, y = canvas.height-boxH-12;
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      if (ctx.roundRect){ ctx.beginPath(); ctx.roundRect(x,y,boxW,boxH,8); ctx.fill(); }
+      else { ctx.fillRect(x,y,boxW,boxH); }
+      ctx.fillStyle = 'white'; ctx.font = 'bold '+fontSize+'px Arial';
+      lines.forEach(function(line,i){ ctx.fillText(line, x+padding, y+padding+(i+1)*lineHeight-4); });
+
+      capturedImageDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      document.getElementById('photoPreview').src = capturedImageDataUrl;
+      document.getElementById('photoPreview').style.display = 'block';
+      document.getElementById('photoVideo').style.display = 'none';
+      document.getElementById('photoBottomAmbil').classList.add('hidden');
+      document.getElementById('photoBottomResult').classList.remove('hidden');
+    }
+
+    function ulangiiFoto() {
+      capturedImageDataUrl = null;
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('photoVideo').style.display = 'block';
+      document.getElementById('photoBottomAmbil').classList.remove('hidden');
+      document.getElementById('photoBottomResult').classList.add('hidden');
+    }
+
+    function simpanFoto() {
+      if (!capturedImageDataUrl) return;
+      // Simpan lokal
+      var link = document.createElement('a');
+      link.href = capturedImageDataUrl;
+      link.download = 'HVS_'+currentNoHvs+'_'+Date.now()+'.jpg';
+      link.click();
+
+      showLoading('Mengupload foto ke Drive...');
+      gasPost('uploadFotoToDrive', {
+        noHvs: currentNoHvs,
+        base64Data: capturedImageDataUrl.split(',')[1]
+      }).then(function(res) {
+        hideLoading();
+        var url = res.url || null;
+        if (url && currentDetailHvs) { currentDetailHvs.foto_url = url; }
+        alert(url ? "Foto berhasil disimpan & diupload!" : "Foto tersimpan di galeri, tapi gagal upload ke Drive.");
+        stopPhotoStream();
+        document.getElementById('photoPage').classList.add('hidden');
+        if (currentDetailHvs) { openDetailPage(currentDetailHvs.no_hvs); }
+        else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
+      }).catch(function() {
+        hideLoading();
+        alert("Foto tersimpan di galeri, tapi gagal upload ke Drive.");
+        stopPhotoStream();
+        document.getElementById('photoPage').classList.add('hidden');
+        if (currentDetailHvs) { openDetailPage(currentDetailHvs.no_hvs); }
+        else { document.getElementById('homePage').classList.remove('hidden'); switchTab('OPEN'); renderList(); }
+      });
+    }
+
+    // ============================================================
+    // CREATE PAGE
+    // ============================================================
+    function openCreatePage() {
+      currentDetailHvs = null;
+      document.getElementById('selService').selectedIndex = 0;
+      document.getElementById('selTujuan').selectedIndex  = 0;
+      var btn = document.getElementById('btnCreate');
+      btn.disabled = true; btn.style.background = '#E8EAED'; btn.style.color = '#9AA0A6';
+      document.getElementById('homePage').classList.add('hidden');
+      document.getElementById('createPage').classList.remove('hidden');
+    }
+    function closeCreatePage() {
+      document.getElementById('createPage').classList.add('hidden');
+      document.getElementById('homePage').classList.remove('hidden');
+    }
+    function checkForm() {
+      var s = document.getElementById('selService').value;
+      var t = document.getElementById('selTujuan').value;
+      var btn = document.getElementById('btnCreate');
+      if (s && t) { btn.disabled=false; btn.style.background='var(--google-blue)'; btn.style.color='white'; }
+    }
+  </script>
+</body>
+</html>
