@@ -405,7 +405,7 @@ td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;
       <div><div class="pg-title">🚚 Outbound BDO</div><div class="pg-sub">Log pengiriman keluar dari hub</div></div>
       <div class="pg-actions">
         <button class="tb-btn green" onclick="showAddForm('ob')">＋ Tambah Data</button>
-        <button class="tb-btn" onclick="exportCSV(obData,'outbound')">⬇️ Export CSV</button>
+        <button class="tb-btn" onclick="exportCSV(obData,'outbound')">⬇ Export CSV</button>
       </div>
     </div>
 
@@ -453,7 +453,7 @@ td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;
             </div>
             <div class="gsheet-actions">
               <button class="gsheet-btn" onclick="toggleGsheet('ob')"><span id="ob-gsheet-toggle-ico">▲</span> Sembunyikan</button>
-              <button class="gsheet-btn red" onclick="delSelectedGsheet('ob')">🗑️ Hapus Terpilih</button>
+              <button class="gsheet-btn red" onclick="delSelectedGsheet('ob')">🗑 Hapus Terpilih</button>
             </div>
           </div>
           <div id="ob-gsheet-body">
@@ -551,7 +551,7 @@ td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;
       <div><div class="pg-title">💎 Outbound HVS</div><div class="pg-sub">Log paket High Value keluar dari hub</div></div>
       <div class="pg-actions">
         <button class="tb-btn green" onclick="showAddForm('ho')">＋ Tambah Data</button>
-        <button class="tb-btn" onclick="exportCSV(hoData,'outbound-hvs')">⬇️ Export CSV</button>
+        <button class="tb-btn" onclick="exportCSV(hoData,'outbound-hvs')">⬇ Export CSV</button>
       </div>
     </div>
     <div class="stats-row">
@@ -595,7 +595,7 @@ td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;
             <div class="gsheet-title"><span>📊</span> Google Sheets View — Outbound HVS</div>
             <div class="gsheet-actions">
               <button class="gsheet-btn" onclick="toggleGsheet('ho')"><span id="ho-gsheet-toggle-ico">▲</span> Sembunyikan</button>
-              <button class="gsheet-btn red" onclick="delSelectedGsheet('ho')">🗑️ Hapus Terpilih</button>
+              <button class="gsheet-btn red" onclick="delSelectedGsheet('ho')">🗑 Hapus Terpilih</button>
             </div>
           </div>
           <div id="ho-gsheet-body">
@@ -641,7 +641,7 @@ td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;
       <div><div class="pg-title">📥 Inbound HVS</div><div class="pg-sub">Log paket High Value masuk ke hub</div></div>
       <div class="pg-actions">
         <button class="tb-btn green" onclick="showAddForm('hi')">＋ Tambah Data</button>
-        <button class="tb-btn" onclick="exportCSV(hiData,'inbound-hvs')">⬇️ Export CSV</button>
+        <button class="tb-btn" onclick="exportCSV(hiData,'inbound-hvs')">⬇ Export CSV</button>
       </div>
     </div>
     <div class="stats-row">
@@ -685,7 +685,7 @@ td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;
             <div class="gsheet-title"><span>📊</span> Google Sheets View — Inbound HVS</div>
             <div class="gsheet-actions">
               <button class="gsheet-btn" onclick="toggleGsheet('hi')"><span id="hi-gsheet-toggle-ico">▲</span> Sembunyikan</button>
-              <button class="gsheet-btn red" onclick="delSelectedGsheet('hi')">🗑️ Hapus Terpilih</button>
+              <button class="gsheet-btn red" onclick="delSelectedGsheet('hi')">🗑 Hapus Terpilih</button>
             </div>
           </div>
           <div id="hi-gsheet-body">
@@ -811,12 +811,12 @@ function closeSidebar(){
 const bdoOpts=['BDO-01','BDO-02','BDO-03','BDO-04','BDO-05','BDO-06','BDO-07','BDO-08','BDO-09','BDO-10'];
 function renderDD(list){
   const el=document.getElementById('ddList');
-  el.innerHTML=list.length?list.map(b=><div class="dd-item" onclick="pickBDO('${b}')">${b}</div>).join(''):'<div class="dd-none">Tidak ditemukan</div>';
+  el.innerHTML=list.length?list.map(b=>`<div class="dd-item" onclick="pickBDO('${b}')">${b}</div>`).join(''):'<div class="dd-none">Tidak ditemukan</div>';
 }
 function openDD(){document.getElementById('ddList').classList.add('show');document.getElementById('ddArrow').classList.add('open');renderDD(bdoOpts);}
 function closeDD(){document.getElementById('ddList').classList.remove('show');document.getElementById('ddArrow').classList.remove('open');}
 function filterDD(v){openDD();renderDD(bdoOpts.filter(b=>b.toLowerCase().includes(v.toLowerCase())));}
-function pickBDO(v){document.getElementById('incInput').value=v;closeDD();showToast(📍 Incharge: ${v});}
+function pickBDO(v){document.getElementById('incInput').value=v;closeDD();showToast(`📍 Incharge: ${v}`);}
 document.addEventListener('click',e=>{if(!e.target.closest('#ddOuter'))closeDD();});
 
 // ══ ADD FORM ══
@@ -874,7 +874,7 @@ function addRow(key){
   hideAddForm(key);
   rerender(key);
   renderGsheet(key);
-  showToast(✅ AWB ${awb} ditambahkan!);
+  showToast(`✅ AWB ${awb} ditambahkan!`);
 }
 
 // ══ GSHEET RENDER ══
@@ -889,7 +889,7 @@ function renderGsheet(key){
   // Header
   thead.innerHTML=`<tr>
     <th class="col-hdr row-num hdr">  </th>
-    ${cols.map((c,i)=><th class="col-hdr">${String.fromCharCode(65+i)} — ${c}</th>).join('')}
+    ${cols.map((c,i)=>`<th class="col-hdr">${String.fromCharCode(65+i)} — ${c}</th>`).join('')}
   </tr>`;
 
   // Rows
@@ -924,19 +924,19 @@ function clearSelectionGsheet(key){gsheetSelected[key].clear();renderGsheet(key)
 function updateGsheetSelInfo(key){
   const n=gsheetSelected[key].size;
   const el=document.getElementById(key+'-gsheet-selinfo');
-  el.textContent=n>0?${n} baris dipilih:'Klik baris untuk memilih · Klik sel untuk edit';
+  el.textContent=n>0?`${n} baris dipilih`:'Klik baris untuk memilih · Klik sel untuk edit';
 }
 function delSelectedGsheet(key){
   const sel=gsheetSelected[key];
   if(!sel.size){showToast('⚠️ Tidak ada baris dipilih');return;}
-  if(!confirm(Hapus ${sel.size} baris terpilih?))return;
+  if(!confirm(`Hapus ${sel.size} baris terpilih?`))return;
   if(key==='ob')obData=obData.filter(r=>!sel.has(r.id));
   else if(key==='ho')hoData=hoData.filter(r=>!sel.has(r.id));
   else hiData=hiData.filter(r=>!sel.has(r.id));
   sel.clear();
   renderGsheet(key);
   rerender(key);
-  showToast('🗑️ Baris dihapus dari GSheet');
+  showToast('🗑 Baris dihapus dari GSheet');
 }
 function gsheetEdit(key,id,field,val){
   const data=key==='ob'?obData:key==='ho'?hoData:hiData;
@@ -959,7 +959,7 @@ function toggleGsheet(key){
   body.style.display=gsheetVisible[key]?'':'none';
   ico.textContent=gsheetVisible[key]?'▲':'▼';
   const btn=ico.closest('.gsheet-btn');
-  btn.innerHTML=<span id="${key}-gsheet-toggle-ico">${gsheetVisible[key]?'▲':'▼'}</span> ${gsheetVisible[key]?'Sembunyikan':'Tampilkan'};
+  btn.innerHTML=`<span id="${key}-gsheet-toggle-ico">${gsheetVisible[key]?'▲':'▼'}</span> ${gsheetVisible[key]?'Sembunyikan':'Tampilkan'}`;
 }
 
 // ══ SEARCH AWB ══
@@ -972,7 +972,7 @@ function searchAWB(key){
   const found=data.find(r=>r.awb===val||r.awb.includes(val));
 
   if(!found){
-    result.innerHTML=<div class="awb-notfound">❌ AWB tidak ditemukan</div>;
+    result.innerHTML=`<div class="awb-notfound">❌ AWB tidak ditemukan</div>`;
     result.className='awb-found show';
     return;
   }
@@ -983,16 +983,16 @@ function searchAWB(key){
     ['BDO',found.bdo],
     ...(found.asal?[['Asal',found.asal]]:[]),
     ['Tujuan',found.tujuan],
-    ['Koli / Berat',${found.koli} koli · ${found.berat} kg],
+    ['Koli / Berat',`${found.koli} koli · ${found.berat} kg`],
     ...(found.bag&&found.bag!=='—'?[['Bag ID',found.bag]]:[]),
-    ['Tgl / Jam',${found.tgl} ${found.jam}],
+    ['Tgl / Jam',`${found.tgl} ${found.jam}`],
     ...(found.nilai?[['Nilai','Rp '+found.nilai.toLocaleString('id')]]:[]),
     ['Status',''],
   ];
 
   result.innerHTML=rows.map((r,i)=>{
-    if(r[0]==='Status') return <div class="awb-found-row"><span class="awb-fkey">Status</span><span class="pill ${statusCls}" style="font-size:11px">${found.status==='selesai'?'● Selesai':'● Proses'}</span></div>;
-    return <div class="awb-found-row"><span class="awb-fkey">${r[0]}</span><span class="awb-fval">${r[1]}</span></div>;
+    if(r[0]==='Status') return `<div class="awb-found-row"><span class="awb-fkey">Status</span><span class="pill ${statusCls}" style="font-size:11px">${found.status==='selesai'?'● Selesai':'● Proses'}</span></div>`;
+    return `<div class="awb-found-row"><span class="awb-fkey">${r[0]}</span><span class="awb-fval">${r[1]}</span></div>`;
   }).join('');
   result.className='awb-found show';
 
@@ -1011,7 +1011,7 @@ function highlightInTable(key,id){
 function highlightInGsheet(key,id){
   // Scroll gsheet to highlighted row
   setTimeout(()=>{
-    const tr=document.querySelector(#${key}-gsheet-tbody tr[data-id="${id}"]);
+    const tr=document.querySelector(`#${key}-gsheet-tbody tr[data-id="${id}"]`);
     if(tr){tr.classList.add('found-hl');tr.scrollIntoView({behavior:'smooth',block:'nearest'});setTimeout(()=>tr.classList.remove('found-hl'),2500);}
   },100);
 }
@@ -1043,8 +1043,8 @@ function rowOB(r,i,start,hid){
     <td>${r.tgl}</td><td style="font-family:var(--mono);font-size:11px">${r.jam}</td>
     <td>${pill(r.status)}</td>
     <td><div class="act-wrap">
-      ${r.status==='proses'?<button class="act act-ok" onclick="mark('ob',${r.id})">✓ Selesai</button>:''}
-      <button class="act act-del" onclick="del('ob',${r.id})">🗑️</button>
+      ${r.status==='proses'?`<button class="act act-ok" onclick="mark('ob',${r.id})">✓ Selesai</button>`:''}
+      <button class="act act-del" onclick="del('ob',${r.id})">🗑</button>
     </div></td></tr>`;
 }
 function rowHO(r,i,start,hid){
@@ -1059,8 +1059,8 @@ function rowHO(r,i,start,hid){
     <td style="font-family:var(--mono);font-size:11px;color:#7c3aed">Rp ${r.nilai.toLocaleString('id')}</td>
     <td>${pill(r.status)}</td>
     <td><div class="act-wrap">
-      ${r.status==='proses'?<button class="act act-ok" onclick="mark('ho',${r.id})">✓ Selesai</button>:''}
-      <button class="act act-del" onclick="del('ho',${r.id})">🗑️</button>
+      ${r.status==='proses'?`<button class="act act-ok" onclick="mark('ho',${r.id})">✓ Selesai</button>`:''}
+      <button class="act act-del" onclick="del('ho',${r.id})">🗑</button>
     </div></td></tr>`;
 }
 function rowHI(r,i,start,hid){
@@ -1074,8 +1074,8 @@ function rowHI(r,i,start,hid){
     <td style="font-family:var(--mono);font-size:11px;color:#7c3aed">Rp ${r.nilai.toLocaleString('id')}</td>
     <td>${pill(r.status)}</td>
     <td><div class="act-wrap">
-      ${r.status==='proses'?<button class="act act-ok" onclick="mark('hi',${r.id})">✓ Selesai</button>:''}
-      <button class="act act-del" onclick="del('hi',${r.id})">🗑️</button>
+      ${r.status==='proses'?`<button class="act act-ok" onclick="mark('hi',${r.id})">✓ Selesai</button>`:''}
+      <button class="act act-del" onclick="del('hi',${r.id})">🗑</button>
     </div></td></tr>`;
 }
 
@@ -1098,7 +1098,7 @@ function renderGeneric(key,filtered,rowFn,highlightId){
   const body=document.getElementById(key+'-body');
   body.innerHTML=pageRows.length
     ?pageRows.map((r,i)=>rowFn(r,i,start,highlightId)).join('')
-    :<tr><td colspan="15"><div class="empty"><div class="e-ico">📭</div><div class="e-txt">Tidak ada data</div></div></td></tr>;
+    :`<tr><td colspan="15"><div class="empty"><div class="e-ico">📭</div><div class="e-txt">Tidak ada data</div></div></td></tr>`;
 
   const total=Math.ceil(filtered.length/PER)||1;
   const pgbtns=document.getElementById(key+'-pgbtns');
@@ -1119,7 +1119,7 @@ function renderGeneric(key,filtered,rowFn,highlightId){
   for(let i=1;i<=total;i++)makeBtn(i);
   makeBtn('›');
   document.getElementById(key+'-pginfo').textContent=
-    Menampilkan ${Math.min(start+1,filtered.length)}–${Math.min(start+PER,filtered.length)} dari ${filtered.length} data;
+    `Menampilkan ${Math.min(start+1,filtered.length)}–${Math.min(start+PER,filtered.length)} dari ${filtered.length} data`;
 }
 
 function renderOB(hid){renderGeneric('ob',getFiltered('ob'),rowOB,hid);}
@@ -1131,7 +1131,7 @@ function rerender(key){if(key==='ob')renderOB();else if(key==='ho')renderHO();el
 function mark(key,id){
   const data=key==='ob'?obData:key==='ho'?hoData:hiData;
   const r=data.find(x=>x.id===id);
-  if(r){r.status='selesai';rerender(key);renderGsheet(key);showToast(✅ ${r.awb} → Selesai);}
+  if(r){r.status='selesai';rerender(key);renderGsheet(key);showToast(`✅ ${r.awb} → Selesai`);}
 }
 function del(key,id){
   if(!confirm('Hapus baris ini?'))return;
@@ -1139,7 +1139,7 @@ function del(key,id){
   if(key==='ob'){r=obData.find(x=>x.id===id);obData=obData.filter(x=>x.id!==id);}
   else if(key==='ho'){r=hoData.find(x=>x.id===id);hoData=hoData.filter(x=>x.id!==id);}
   else{r=hiData.find(x=>x.id===id);hiData=hiData.filter(x=>x.id!==id);}
-  rerender(key);renderGsheet(key);showToast(🗑️ ${r?.awb} dihapus);
+  rerender(key);renderGsheet(key);showToast(`🗑 ${r?.awb} dihapus`);
 }
 function resetFilter(key){
   ['search','status','bdo'].forEach(f=>{const el=document.getElementById(key+'-'+f);if(el)el.value='';});
@@ -1200,7 +1200,7 @@ function exportCSV(data,name){
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download=name+'-'+new Date().toISOString().slice(0,10)+'.csv';
-  a.click();showToast('⬇️ CSV diunduh!');
+  a.click();showToast('⬇ CSV diunduh!');
 }
 
 // ══ TOAST ══
