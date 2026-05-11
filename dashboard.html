@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outbound BDO</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --b9:#0a1f5c;--b7:#1740a6;--b5:#2563eb;--b4:#3b82f6;--b2:#bfdbfe;--b1:#eff6ff;
+  --green:#15803d;--green-bg:#dcfce7;
+  --amber:#b45309;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;
+  --gray-bg:#f0f4fa;--gray-100:#e8edf5;--gray-200:#d1d9e6;
+  --gray-400:#8898b8;--gray-600:#475569;--gray-900:#0f172a;
+  --white:#ffffff;
+  --sb-full:220px;--sb-thin:0px;
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+  --trans:.24s cubic-bezier(.4,0,.2,1);
+  --sheet-h:340px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--gray-bg);color:var(--gray-900);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sb-full);min-width:var(--sb-full);
+  background:var(--b9);
+  display:flex;flex-direction:column;
+  position:fixed;left:0;top:0;bottom:0;z-index:200;
+  transition:width var(--trans),min-width var(--trans),transform var(--trans);
+  overflow:hidden;
+  box-shadow:4px 0 24px rgba(10,31,92,.28);
+}
+.sidebar.collapsed{
+  width:0;min-width:0;
+  transform:translateX(-100%);
+  pointer-events:none;
+}
+.sb-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;height:56px;background:var(--b7);
+  flex-shrink:0;
+}
+.sb-logo-row{display:flex;align-items:center;gap:10px;overflow:hidden;}
+.sb-logo-ico{font-size:22px;flex-shrink:0;}
+.sb-logo-txt{font-size:13px;font-weight:800;color:white;white-space:nowrap;}
+.sb-close{
+  color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;
+  flex-shrink:0;padding:4px 6px;border-radius:6px;
+  line-height:1;user-select:none;transition:background .15s;
+}
+.sb-close:hover{background:rgba(255,255,255,.15);}
+
+.sb-nav{display:flex;flex-direction:column;gap:3px;padding:10px 8px;flex:1;}
+.sb-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border-radius:10px;cursor:pointer;
+  transition:background .15s;border:2px solid transparent;
+  white-space:nowrap;
+}
+.sb-item:hover{background:rgba(255,255,255,.09);}
+.sb-item.active{background:var(--b5);border-color:rgba(255,255,255,.18);}
+.sb-ico{font-size:18px;flex-shrink:0;line-height:1;}
+.sb-lbl{font-size:12px;font-weight:600;color:rgba(255,255,255,.8);}
+.sb-item.active .sb-lbl{color:white;}
+.sb-divider{width:calc(100% - 16px);height:1px;background:rgba(255,255,255,.1);margin:4px 8px;}
+
+/* ══ MAIN ══ */
+.main{
+  margin-left:var(--sb-full);flex:1;display:flex;flex-direction:column;min-height:100vh;
+  transition:margin-left var(--trans);
+}
+.main.sb-hidden{margin-left:0;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  background:linear-gradient(135deg,var(--b9) 0%,var(--b7) 55%,var(--b5) 100%);
+  height:56px;display:flex;align-items:center;
+  padding:0 16px;gap:10px;
+  position:sticky;top:0;z-index:150;
+  box-shadow:0 2px 16px rgba(10,31,92,.22);
+}
+.topbar-menu{
+  color:white;font-size:20px;cursor:pointer;padding:4px 8px;
+  border-radius:7px;line-height:1;user-select:none;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-menu:hover{background:rgba(255,255,255,.15);}
+.topbar-title{color:white;font-size:15px;font-weight:800;letter-spacing:.3px;flex:1;}
+.topbar-title span{font-size:11px;font-weight:500;opacity:.6;margin-left:6px;}
+
+.inc-wrap{display:flex;align-items:center;gap:7px;}
+.inc-lbl{color:rgba(255,255,255,.65);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.dd-outer{
+  position:relative;background:rgba(255,255,255,.13);
+  border:1.5px solid rgba(255,255,255,.25);border-radius:9px;
+  display:flex;align-items:center;padding:5px 10px;gap:6px;cursor:text;min-width:120px;
+}
+.dd-outer input{background:transparent;border:none;outline:none;color:white;font-family:var(--font);font-size:13px;font-weight:700;width:100%;}
+.dd-outer input::placeholder{color:rgba(255,255,255,.45);font-weight:500;}
+.dd-arrow{color:rgba(255,255,255,.7);font-size:10px;transition:transform .18s;flex-shrink:0;}
+.dd-arrow.open{transform:rotate(180deg);}
+.dd-list{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border-radius:10px;box-shadow:0 8px 30px rgba(10,31,92,.2);z-index:300;max-height:200px;overflow-y:auto;border:1.5px solid var(--b2);}
+.dd-list.show{display:block;}
+.dd-item{padding:9px 13px;font-size:13px;font-weight:600;color:var(--gray-900);cursor:pointer;border-bottom:1px solid var(--gray-100);transition:background .1s;}
+.dd-item:last-child{border-bottom:none;}
+.dd-item:hover{background:var(--b1);color:var(--b7);}
+.dd-none{padding:10px 13px;font-size:12px;color:var(--gray-400);}
+
+.tog-wrap{display:flex;align-items:center;gap:6px;}
+.tog-lbl{font-size:10px;color:rgba(255,255,255,.6);font-weight:600;}
+.tog{width:42px;height:23px;border-radius:99px;background:rgba(255,255,255,.25);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.tog.on{background:#22c55e;}
+.tog::after{content:'';position:absolute;width:17px;height:17px;border-radius:50%;background:white;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.tog.on::after{left:22px;}
+
+/* ══ PAGE ══ */
+.page{display:none;padding:16px 18px 32px;flex:1;}
+.page.active{display:block;}
+.pg-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap;}
+.pg-title{font-size:19px;font-weight:800;color:var(--b9);}
+.pg-sub{font-size:12px;color:var(--gray-400);font-weight:500;margin-top:2px;}
+.pg-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* Stats */
+.stats-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.stat-card{background:white;border-radius:12px;padding:12px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 10px rgba(37,99,235,.07);flex:1;min-width:90px;border-left:4px solid var(--b4);}
+.stat-card.green{border-left-color:#22c55e;}
+.stat-card.amber{border-left-color:#f59e0b;}
+.stat-card.navy{border-left-color:var(--b9);}
+.stat-num{font-size:24px;font-weight:800;color:var(--b9);line-height:1;}
+.stat-lbl{font-size:10px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+/* ══ DASHBOARD SPLIT LAYOUT ══ */
+.dash-layout{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:14px;}
+.dash-layout.full{grid-template-columns:1fr;}
+
+/* AWB SEARCH SIDEBAR PANEL */
+.awb-panel{
+  background:white;border-radius:13px;
+  box-shadow:0 2px 14px rgba(37,99,235,.09);
+  border:1.5px solid var(--b2);
+  overflow:hidden;
+  position:sticky;top:72px;align-self:start;
+}
+.awb-panel-head{
+  background:linear-gradient(135deg,var(--b9),var(--b7));
+  padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.awb-panel-title{font-size:12px;font-weight:800;color:white;letter-spacing:.3px;}
+.awb-panel-ico{font-size:16px;}
+.awb-panel-body{padding:12px 14px;}
+.awb-inp-row{display:flex;gap:6px;margin-bottom:10px;}
+.awb-inp{
+  flex:1;border:1.5px solid var(--gray-200);border-radius:8px;
+  padding:8px 11px;font-family:var(--mono);font-size:12px;
+  color:var(--gray-900);outline:none;transition:border-color .15s;
+  background:var(--gray-bg);
+}
+.awb-inp:focus{border-color:var(--b4);background:white;}
+.awb-btn{
+  background:var(--b5);color:white;border:none;border-radius:8px;
+  padding:8px 12px;font-size:11px;font-weight:700;font-family:var(--font);
+  cursor:pointer;white-space:nowrap;transition:background .15s;
+}
+.awb-btn:hover{background:var(--b7);}
+.awb-found{border-radius:9px;border:1.5px solid var(--b2);background:var(--b1);overflow:hidden;display:none;}
+.awb-found.show{display:block;}
+.awb-found-row{display:flex;justify-content:space-between;align-items:center;padding:7px 11px;border-bottom:1px solid var(--b2);}
+.awb-found-row:last-child{border-bottom:none;}
+.awb-fkey{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px;}
+.awb-fval{font-size:12px;font-weight:700;color:var(--b9);font-family:var(--mono);}
+.awb-notfound{padding:12px;text-align:center;font-size:12px;font-weight:700;color:var(--red);}
+
+/* ══ GSHEETS PANEL ══ */
+.gsheet-wrap{
+  background:white;border-radius:13px;
+  box-shadow:0 2px 16px rgba(37,99,235,.1);
+  border:1.5px solid var(--gray-200);
+  overflow:hidden;margin-bottom:14px;
+}
+.gsheet-head{
+  background:#1d6f42;
+  padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.gsheet-title{font-size:12px;font-weight:800;color:white;display:flex;align-items:center;gap:7px;}
+.gsheet-actions{display:flex;gap:6px;}
+.gsheet-btn{
+  border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);
+  color:white;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;
+  font-family:var(--font);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;
+}
+.gsheet-btn:hover{background:rgba(255,255,255,.25);}
+.gsheet-btn.red{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.15);}
+.gsheet-btn.red:hover{background:rgba(239,68,68,.3);}
+
+/* Sheet row selector bar */
+.gsheet-toolbar{
+  background:#f8fdf9;border-bottom:1px solid #d0e8d5;
+  padding:7px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.gsheet-sel-info{font-size:11px;color:#1d6f42;font-weight:700;}
+.gsb{border:1.5px solid #c8e6c9;background:white;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:600;font-family:var(--font);color:#1d6f42;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s;}
+.gsb:hover{background:#e8f5e9;border-color:#1d6f42;}
+
+/* Spreadsheet table */
+.gsheet-scroll{overflow-x:auto;overflow-y:auto;max-height:var(--sheet-h);}
+.gsheet-tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:700px;}
+.gsheet-tbl .col-hdr{background:#e8f0fe;color:#1a56db;font-size:10px;font-weight:700;padding:6px 10px;border:1px solid #c7d7f5;text-align:center;position:sticky;top:0;z-index:5;user-select:none;letter-spacing:.3px;}
+.gsheet-tbl .row-num{background:#f8fdf9;color:#1d6f42;font-size:10px;font-weight:700;text-align:center;padding:5px 7px;border:1px solid #d0e8d5;width:36px;min-width:36px;position:sticky;left:0;z-index:4;}
+.gsheet-tbl .row-num.hdr{position:sticky;top:0;left:0;z-index:6;background:#e8f0fe;}
+.gsheet-tbl td.cell{
+  border:1px solid #e2e8f0;padding:5px 9px;
+  font-size:12px;color:var(--gray-900);
+  cursor:cell;white-space:nowrap;
+  transition:background .1s;
+  min-width:100px;
+}
+.gsheet-tbl td.cell:focus{outline:2px solid var(--b5);outline-offset:-2px;background:#fff9e0;z-index:2;}
+.gsheet-tbl td.cell.awb-cell{font-family:var(--mono);color:var(--b7);font-size:11px;}
+.gsheet-tbl td.cell.status-selesai{background:#dcfce7;color:#15803d;font-weight:700;}
+.gsheet-tbl td.cell.status-proses{background:#eff6ff;color:#2563eb;font-weight:700;}
+.gsheet-tbl tbody tr:hover td{background:#fafcff;}
+.gsheet-tbl tbody tr.selected-row td{background:#e8f0fe !important;outline:1px solid #3b82f6;}
+.gsheet-tbl tbody tr.found-hl td{background:#fef9c3 !important;outline:2px solid #f59e0b;}
+.new-row-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;font-size:12px;font-weight:700;color:#1d6f42;
+  cursor:pointer;background:#f0fdf4;border-top:1px solid #d0e8d5;
+  transition:background .15s;user-select:none;
+}
+.new-row-btn:hover{background:#dcfce7;}
+
+/* Add form */
+.add-form-panel{
+  background:white;border-radius:13px;margin-bottom:14px;
+  box-shadow:0 2px 14px rgba(37,99,235,.09);
+  border:1.5px solid var(--gray-200);
+  overflow:hidden;display:none;
+}
+.add-form-panel.show{display:block;}
+.add-form-head{
+  background:linear-gradient(135deg,#1d6f42,#16a34a);
+  padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
+}
+.add-form-title{font-size:12px;font-weight:800;color:white;}
+.add-form-close{color:rgba(255,255,255,.8);cursor:pointer;font-size:18px;line-height:1;padding:2px;}
+.add-form-body{padding:14px 16px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.fg label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px;}
+.fg input,.fg select{
+  border:1.5px solid var(--gray-200);border-radius:7px;
+  padding:8px 10px;font-family:var(--font);font-size:12px;font-weight:600;
+  color:var(--gray-900);outline:none;transition:border-color .15s;background:var(--gray-bg);
+}
+.fg input:focus,.fg select:focus{border-color:var(--b4);background:white;}
+.fg input.mono{font-family:var(--mono);font-size:12px;}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;}
+.btn-save{background:var(--b5);color:white;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background .15s;}
+.btn-save:hover{background:var(--b7);}
+.btn-cancel{background:white;color:var(--gray-600);border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;}
+
+/* ══ TOOLBAR ══ */
+.toolbar{background:white;border-radius:10px;padding:9px 13px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px;box-shadow:0 1px 6px rgba(37,99,235,.05);}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--gray-bg);border:1.5px solid var(--gray-200);border-radius:7px;padding:6px 11px;flex:1;min-width:140px;max-width:240px;}
+.search-box input{border:none;outline:none;background:transparent;font-family:var(--font);font-size:13px;color:var(--gray-900);width:100%;}
+.search-box input::placeholder{color:var(--gray-400);}
+.fsel{border:1.5px solid var(--gray-200);border-radius:7px;padding:6px 9px;font-size:12px;font-weight:600;font-family:var(--font);color:var(--gray-600);background:white;cursor:pointer;outline:none;}
+.fsel:focus{border-color:var(--b4);}
+.tbdiv{width:1px;height:20px;background:var(--gray-200);}
+.tb-btn{border:1.5px solid var(--gray-200);background:white;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font);color:var(--gray-600);cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap;}
+.tb-btn:hover{border-color:var(--b4);color:var(--b5);background:var(--b1);}
+.tb-btn.green{border-color:#22c55e;color:#15803d;background:#f0fdf4;}
+.tb-btn.green:hover{background:#dcfce7;}
+
+/* Legend */
+.legend{background:white;border-radius:10px;padding:11px 14px;margin-bottom:12px;border:1.5px solid var(--gray-200);}
+.legend-ttl{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:4px;}
+.leg-item{font-size:11px;}.leg-col{font-weight:700;color:var(--b7);}.leg-desc{color:var(--gray-400);}
+
+/* ══ TABLE ══ */
+.tbl-wrap{background:white;border-radius:13px;overflow:hidden;box-shadow:0 2px 16px rgba(37,99,235,.08);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:650px;}
+thead tr{background:var(--b9);}
+thead th{padding:10px 12px;font-size:10px;font-weight:700;color:white;text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;border-right:1px solid rgba(255,255,255,.07);cursor:pointer;user-select:none;}
+thead th:last-child{border-right:none;cursor:default;}
+th.nc{background:#08174a;width:36px;text-align:center;cursor:default;}
+tbody tr{border-bottom:1px solid var(--gray-100);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--b1);}
+tbody tr.found-row{background:#fefce8 !important;outline:2px solid #f59e0b;}
+td{padding:8px 12px;color:var(--gray-600);border-right:1px solid var(--gray-100);vertical-align:middle;white-space:nowrap;}
+td:last-child{border-right:none;}
+td.nc{background:#f8fafc;color:var(--gray-400);font-size:10px;text-align:center;}
+.awb{font-family:var(--mono);font-size:11.5px;color:var(--b7);font-weight:500;}
+.bag-id{font-family:var(--mono);font-size:11px;color:#7c3aed;font-weight:500;}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:99px;font-size:11px;font-weight:700;padding:3px 9px;}
+.pill-selesai{background:var(--green-bg);color:var(--green);}
+.pill-proses{background:var(--b1);color:var(--b5);}
+.act-wrap{display:flex;gap:4px;}
+.act{border:none;border-radius:5px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .15s;}
+.act:hover{opacity:.75;}
+.act-ok{background:var(--green-bg);color:var(--green);}
+.act-del{background:#fee2e2;color:#dc2626;}
+
+/* Pagination */
+.pg-row{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:white;border-top:1.5px solid var(--gray-100);font-size:11px;color:var(--gray-400);font-weight:500;}
+.pg-btns{display:flex;gap:3px;}
+.pg-btn{border:1.5px solid var(--gray-200);background:white;border-radius:5px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-600);transition:all .15s;}
+.pg-btn:hover{border-color:var(--b4);color:var(--b5);}
+.pg-btn.active{background:var(--b5);border-color:var(--b5);color:white;}
+
+/* Summary */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px;}
+.sum-card{background:white;border-radius:13px;padding:16px;box-shadow:0 2px 12px rgba(37,99,235,.08);border-top:3px solid var(--b4);}
+.sum-bdo{font-size:16px;font-weight:800;color:var(--b9);margin-bottom:10px;}
+.sum-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--gray-100);}
+.sum-row:last-child{border-bottom:none;}
+.sum-key{color:var(--gray-400);font-weight:600;}
+.sum-val{font-weight:700;color:var(--gray-900);}
+
+.empty{text-align:center;padding:40px 20px;color:var(--gray-400);}
+.empty .e-ico{font-size:36px;margin-bottom:8px;}
+.empty .e-txt{font-size:13px;font-weight:600;}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--b9);color:white;border-radius:10px;padding:10px 17px;font-size:13px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.2);opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* Overlay for mobile */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:190;}
+.sb-overlay.show{display:block;}
+
+@media(max-width:700px){
+  .dash-layout{grid-template-columns:1fr;}
+  .awb-panel{position:static;}
+  .form-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- Overlay for mobile -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-logo-row">
+      <span class="sb-logo-ico">📦</span>
+      <span class="sb-logo-txt">Outbound BDO</span>
+    </div>
+    <span class="sb-close" onclick="closeSidebar()" title="Tutup sidebar">✕</span>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-item active" onclick="goPage('outbound',this)" title="Outbound">
+      <span class="sb-ico">🚚</span><span class="sb-lbl">Outbound</span>
+    </div>
+    <div class="sb-item" onclick="goPage('outbound-hvs',this)" title="Outbound HVS">
+      <span class="sb-ico">💎</span><span class="sb-lbl">Outbound HVS</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-item" onclick="goPage('inbound-hvs',this)" title="Inbound HVS">
+      <span class="sb-ico">📥</span><span class="sb-lbl">Inbound HVS</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-item" onclick="goPage('summary',this)" title="Summary">
+      <span class="sb-ico">📊</span><span class="sb-lbl">Summary</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main" id="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <!-- Titik 3 / hamburger toggle -->
+    <span class="topbar-menu" id="menuBtn" onclick="toggleSidebar()" title="Toggle sidebar">⋮</span>
+    <div class="topbar-title" id="topTitle">Outbound BDO <span id="topSub">— Outbound</span></div>
+    <div class="inc-wrap">
+      <span class="inc-lbl">Incharge</span>
+      <div class="dd-outer" id="ddOuter">
+        <input type="text" id="incInput" placeholder="Pilih BDO..." oninput="filterDD(this.value)" onfocus="openDD()" autocomplete="off">
+        <span class="dd-arrow" id="ddArrow">▼</span>
+        <div class="dd-list" id="ddList"></div>
+      </div>
+    </div>
+    <div class="tog-wrap">
+      <span class="tog-lbl">Aktif</span>
+      <div class="tog on" onclick="this.classList.toggle('on')"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: OUTBOUND
+  ══════════════════════════════════════ -->
+  <div class="page active" id="page-outbound">
+    <div class="pg-header">
+      <div><div class="pg-title">🚚 Outbound BDO</div><div class="pg-sub">Log pengiriman keluar dari hub</div></div>
+      <div class="pg-actions">
+        <button class="tb-btn green" onclick="showAddForm('ob')">＋ Tambah Data</button>
+        <button class="tb-btn" onclick="exportCSV(obData,'outbound')">⬇️ Export CSV</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div><div class="stat-num" id="ob-total">0</div><div class="stat-lbl">Total AWB</div></div></div>
+      <div class="stat-card green"><div><div class="stat-num" id="ob-selesai">0</div><div class="stat-lbl">Selesai</div></div></div>
+      <div class="stat-card amber"><div><div class="stat-num" id="ob-proses">0</div><div class="stat-lbl">Proses</div></div></div>
+      <div class="stat-card navy"><div><div class="stat-num" id="ob-koli">0</div><div class="stat-lbl">Total Koli</div></div></div>
+    </div>
+
+    <!-- ADD FORM -->
+    <div class="add-form-panel" id="ob-add-form">
+      <div class="add-form-head">
+        <span class="add-form-title">＋ Tambah Data Outbound</span>
+        <span class="add-form-close" onclick="hideAddForm('ob')">✕</span>
+      </div>
+      <div class="add-form-body">
+        <div class="form-grid">
+          <div class="fg"><label>No AWB *</label><input class="mono" id="ob-f-awb" placeholder="PXL2026xxxxxx" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="fg"><label>BDO *</label><select id="ob-f-bdo"><option value="">Pilih BDO</option><option>BDO-01</option><option>BDO-02</option><option>BDO-03</option><option>BDO-04</option><option>BDO-05</option><option>BDO-06</option><option>BDO-07</option></select></div>
+          <div class="fg"><label>Tujuan *</label><input id="ob-f-tujuan" placeholder="Kota tujuan"></div>
+          <div class="fg"><label>Koli *</label><input type="number" id="ob-f-koli" placeholder="1" min="1"></div>
+          <div class="fg"><label>Berat (kg) *</label><input type="number" id="ob-f-berat" placeholder="0.0" step="0.1" min="0.1"></div>
+          <div class="fg"><label>Bag ID</label><input class="mono" id="ob-f-bag" placeholder="BAG-xxx" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="fg"><label>Tanggal</label><input type="date" id="ob-f-tgl"></div>
+          <div class="fg"><label>Jam</label><input type="time" id="ob-f-jam"></div>
+          <div class="fg"><label>Status</label><select id="ob-f-status"><option value="proses">Proses</option><option value="selesai">Selesai</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-cancel" onclick="hideAddForm('ob')">Batal</button>
+          <button class="btn-save" onclick="addRow('ob')">💾 Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD LAYOUT with AWB search panel -->
+    <div class="dash-layout" id="ob-dash-layout">
+      <!-- LEFT: main content -->
+      <div>
+        <!-- GSHEET PANEL -->
+        <div class="gsheet-wrap">
+          <div class="gsheet-head">
+            <div class="gsheet-title">
+              <span>📊</span> Google Sheets View — Outbound
+            </div>
+            <div class="gsheet-actions">
+              <button class="gsheet-btn" onclick="toggleGsheet('ob')"><span id="ob-gsheet-toggle-ico">▲</span> Sembunyikan</button>
+              <button class="gsheet-btn red" onclick="delSelectedGsheet('ob')">🗑️ Hapus Terpilih</button>
+            </div>
+          </div>
+          <div id="ob-gsheet-body">
+            <div class="gsheet-toolbar">
+              <span class="gsheet-sel-info" id="ob-gsheet-selinfo">Klik baris untuk memilih · Klik sel untuk edit</span>
+              <button class="gsb" onclick="clearSelectionGsheet('ob')">✕ Clear Pilihan</button>
+            </div>
+            <div class="gsheet-scroll" id="ob-gsheet-scroll">
+              <table class="gsheet-tbl" id="ob-gsheet-tbl">
+                <thead id="ob-gsheet-thead"></thead>
+                <tbody id="ob-gsheet-tbody"></tbody>
+              </table>
+              <div class="new-row-btn" onclick="showAddForm('ob')">＋ Baris baru</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Filter tujuan, BDO, AWB..." id="ob-search" oninput="renderOB()">
+          </div>
+          <select class="fsel" id="ob-bdo" onchange="renderOB()">
+            <option value="">Semua BDO</option>
+            <option>BDO-01</option><option>BDO-02</option><option>BDO-03</option><option>BDO-04</option><option>BDO-05</option>
+          </select>
+          <select class="fsel" id="ob-status" onchange="renderOB()">
+            <option value="">Semua Status</option>
+            <option value="proses">Proses</option>
+            <option value="selesai">Selesai</option>
+          </select>
+          <div class="tbdiv"></div>
+          <button class="tb-btn" onclick="resetFilter('ob')">✕ Reset</button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th class="nc">#</th>
+              <th onclick="sortD('ob','awb')">No AWB ⇅</th>
+              <th onclick="sortD('ob','bdo')">BDO ⇅</th>
+              <th onclick="sortD('ob','tujuan')">Tujuan ⇅</th>
+              <th onclick="sortD('ob','koli')">Koli ⇅</th>
+              <th onclick="sortD('ob','berat')">Berat(kg) ⇅</th>
+              <th>Bag ID</th>
+              <th onclick="sortD('ob','tgl')">Tgl Scan ⇅</th>
+              <th>Jam</th>
+              <th onclick="sortD('ob','status')">Status ⇅</th>
+              <th>Aksi</th>
+            </tr></thead>
+            <tbody id="ob-body"></tbody>
+          </table>
+          <div class="pg-row"><span id="ob-pginfo">—</span><div class="pg-btns" id="ob-pgbtns"></div></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: AWB Search Panel -->
+      <div class="awb-panel" id="ob-awb-panel">
+        <div class="awb-panel-head">
+          <span class="awb-panel-title">🔎 Cari AWB</span>
+          <span class="awb-panel-ico">📦</span>
+        </div>
+        <div class="awb-panel-body">
+          <div class="awb-inp-row">
+            <input class="awb-inp" id="ob-awb-input" type="text" placeholder="No AWB..." onkeydown="if(event.key==='Enter')searchAWB('ob')">
+            <button class="awb-btn" onclick="searchAWB('ob')">Cari</button>
+          </div>
+          <div class="awb-found" id="ob-awb-result"></div>
+          <!-- Legend inside panel -->
+          <div style="margin-top:14px;">
+            <div class="legend-ttl" style="font-size:9px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;">📌 Keterangan Kolom</div>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div class="leg-item"><span class="leg-col">No AWB</span> — <span class="leg-desc">Nomor resi</span></div>
+              <div class="leg-item"><span class="leg-col">BDO</span> — <span class="leg-desc">Kode drop-off</span></div>
+              <div class="leg-item"><span class="leg-col">Tujuan</span> — <span class="leg-desc">Kota tujuan</span></div>
+              <div class="leg-item"><span class="leg-col">Koli</span> — <span class="leg-desc">Jumlah colly</span></div>
+              <div class="leg-item"><span class="leg-col">Berat</span> — <span class="leg-desc">Berat total (kg)</span></div>
+              <div class="leg-item"><span class="leg-col">Bag ID</span> — <span class="leg-desc">ID kantong manifest</span></div>
+              <div class="leg-item"><span class="leg-col">Tgl/Jam</span> — <span class="leg-desc">Waktu scan keluar</span></div>
+              <div class="leg-item"><span class="leg-col">Status</span> — <span class="leg-desc">Proses / Selesai</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: OUTBOUND HVS
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-outbound-hvs">
+    <div class="pg-header">
+      <div><div class="pg-title">💎 Outbound HVS</div><div class="pg-sub">Log paket High Value keluar dari hub</div></div>
+      <div class="pg-actions">
+        <button class="tb-btn green" onclick="showAddForm('ho')">＋ Tambah Data</button>
+        <button class="tb-btn" onclick="exportCSV(hoData,'outbound-hvs')">⬇️ Export CSV</button>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div><div class="stat-num" id="ho-total">0</div><div class="stat-lbl">Total AWB</div></div></div>
+      <div class="stat-card green"><div><div class="stat-num" id="ho-selesai">0</div><div class="stat-lbl">Selesai</div></div></div>
+      <div class="stat-card amber"><div><div class="stat-num" id="ho-proses">0</div><div class="stat-lbl">Proses</div></div></div>
+      <div class="stat-card navy"><div><div class="stat-num" id="ho-koli">0</div><div class="stat-lbl">Total Koli</div></div></div>
+    </div>
+
+    <!-- ADD FORM HO -->
+    <div class="add-form-panel" id="ho-add-form">
+      <div class="add-form-head">
+        <span class="add-form-title">＋ Tambah Data Outbound HVS</span>
+        <span class="add-form-close" onclick="hideAddForm('ho')">✕</span>
+      </div>
+      <div class="add-form-body">
+        <div class="form-grid">
+          <div class="fg"><label>No AWB *</label><input class="mono" id="ho-f-awb" placeholder="PXL2026HVSxxx" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="fg"><label>BDO *</label><select id="ho-f-bdo"><option value="">Pilih BDO</option><option>BDO-01</option><option>BDO-02</option><option>BDO-03</option><option>BDO-04</option><option>BDO-05</option></select></div>
+          <div class="fg"><label>Tujuan *</label><input id="ho-f-tujuan" placeholder="Kota tujuan"></div>
+          <div class="fg"><label>Koli *</label><input type="number" id="ho-f-koli" placeholder="1" min="1"></div>
+          <div class="fg"><label>Berat (kg) *</label><input type="number" id="ho-f-berat" placeholder="0.0" step="0.1"></div>
+          <div class="fg"><label>Bag ID</label><input class="mono" id="ho-f-bag" placeholder="BAG-HVS-xx" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="fg"><label>Nilai (Rp)</label><input type="number" id="ho-f-nilai" placeholder="0"></div>
+          <div class="fg"><label>Tanggal</label><input type="date" id="ho-f-tgl"></div>
+          <div class="fg"><label>Jam</label><input type="time" id="ho-f-jam"></div>
+          <div class="fg"><label>Status</label><select id="ho-f-status"><option value="proses">Proses</option><option value="selesai">Selesai</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-cancel" onclick="hideAddForm('ho')">Batal</button>
+          <button class="btn-save" onclick="addRow('ho')">💾 Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-layout">
+      <div>
+        <!-- GSHEET HO -->
+        <div class="gsheet-wrap">
+          <div class="gsheet-head">
+            <div class="gsheet-title"><span>📊</span> Google Sheets View — Outbound HVS</div>
+            <div class="gsheet-actions">
+              <button class="gsheet-btn" onclick="toggleGsheet('ho')"><span id="ho-gsheet-toggle-ico">▲</span> Sembunyikan</button>
+              <button class="gsheet-btn red" onclick="delSelectedGsheet('ho')">🗑️ Hapus Terpilih</button>
+            </div>
+          </div>
+          <div id="ho-gsheet-body">
+            <div class="gsheet-toolbar"><span class="gsheet-sel-info" id="ho-gsheet-selinfo">Klik baris untuk memilih · Klik sel untuk edit</span><button class="gsb" onclick="clearSelectionGsheet('ho')">✕ Clear</button></div>
+            <div class="gsheet-scroll"><table class="gsheet-tbl" id="ho-gsheet-tbl"><thead id="ho-gsheet-thead"></thead><tbody id="ho-gsheet-tbody"></tbody></table><div class="new-row-btn" onclick="showAddForm('ho')">＋ Baris baru</div></div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box"><span>🔍</span><input type="text" placeholder="Filter tujuan, BDO..." id="ho-search" oninput="renderHO()"></div>
+          <select class="fsel" id="ho-status" onchange="renderHO()"><option value="">Semua Status</option><option value="proses">Proses</option><option value="selesai">Selesai</option></select>
+          <div class="tbdiv"></div>
+          <button class="tb-btn" onclick="resetFilter('ho')">✕ Reset</button>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th class="nc">#</th><th>No AWB</th><th>BDO</th><th>Tujuan</th><th>Koli</th><th>Berat(kg)</th><th>Bag ID</th><th>Tgl Scan</th><th>Jam</th><th>Nilai (Rp)</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody id="ho-body"></tbody>
+          </table>
+          <div class="pg-row"><span id="ho-pginfo">—</span><div class="pg-btns" id="ho-pgbtns"></div></div>
+        </div>
+      </div>
+
+      <div class="awb-panel" id="ho-awb-panel">
+        <div class="awb-panel-head"><span class="awb-panel-title">🔎 Cari AWB HVS</span><span class="awb-panel-ico">💎</span></div>
+        <div class="awb-panel-body">
+          <div class="awb-inp-row">
+            <input class="awb-inp" id="ho-awb-input" type="text" placeholder="No AWB HVS..." onkeydown="if(event.key==='Enter')searchAWB('ho')">
+            <button class="awb-btn" onclick="searchAWB('ho')">Cari</button>
+          </div>
+          <div class="awb-found" id="ho-awb-result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: INBOUND HVS
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-inbound-hvs">
+    <div class="pg-header">
+      <div><div class="pg-title">📥 Inbound HVS</div><div class="pg-sub">Log paket High Value masuk ke hub</div></div>
+      <div class="pg-actions">
+        <button class="tb-btn green" onclick="showAddForm('hi')">＋ Tambah Data</button>
+        <button class="tb-btn" onclick="exportCSV(hiData,'inbound-hvs')">⬇️ Export CSV</button>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div><div class="stat-num" id="hi-total">0</div><div class="stat-lbl">Total AWB</div></div></div>
+      <div class="stat-card green"><div><div class="stat-num" id="hi-selesai">0</div><div class="stat-lbl">Selesai</div></div></div>
+      <div class="stat-card amber"><div><div class="stat-num" id="hi-proses">0</div><div class="stat-lbl">Proses</div></div></div>
+      <div class="stat-card navy"><div><div class="stat-num" id="hi-koli">0</div><div class="stat-lbl">Total Koli</div></div></div>
+    </div>
+
+    <!-- ADD FORM HI -->
+    <div class="add-form-panel" id="hi-add-form">
+      <div class="add-form-head">
+        <span class="add-form-title">＋ Tambah Data Inbound HVS</span>
+        <span class="add-form-close" onclick="hideAddForm('hi')">✕</span>
+      </div>
+      <div class="add-form-body">
+        <div class="form-grid">
+          <div class="fg"><label>No AWB *</label><input class="mono" id="hi-f-awb" placeholder="PXL2026HVSxxx" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="fg"><label>BDO *</label><select id="hi-f-bdo"><option value="">Pilih BDO</option><option>BDO-01</option><option>BDO-02</option><option>BDO-03</option><option>BDO-04</option><option>BDO-05</option></select></div>
+          <div class="fg"><label>Asal *</label><input id="hi-f-asal" placeholder="Kota asal"></div>
+          <div class="fg"><label>Tujuan *</label><input id="hi-f-tujuan" placeholder="Kota tujuan"></div>
+          <div class="fg"><label>Koli *</label><input type="number" id="hi-f-koli" placeholder="1" min="1"></div>
+          <div class="fg"><label>Berat (kg) *</label><input type="number" id="hi-f-berat" placeholder="0.0" step="0.1"></div>
+          <div class="fg"><label>Nilai (Rp)</label><input type="number" id="hi-f-nilai" placeholder="0"></div>
+          <div class="fg"><label>Tanggal</label><input type="date" id="hi-f-tgl"></div>
+          <div class="fg"><label>Jam</label><input type="time" id="hi-f-jam"></div>
+          <div class="fg"><label>Status</label><select id="hi-f-status"><option value="proses">Proses</option><option value="selesai">Selesai</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-cancel" onclick="hideAddForm('hi')">Batal</button>
+          <button class="btn-save" onclick="addRow('hi')">💾 Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-layout">
+      <div>
+        <!-- GSHEET HI -->
+        <div class="gsheet-wrap">
+          <div class="gsheet-head">
+            <div class="gsheet-title"><span>📊</span> Google Sheets View — Inbound HVS</div>
+            <div class="gsheet-actions">
+              <button class="gsheet-btn" onclick="toggleGsheet('hi')"><span id="hi-gsheet-toggle-ico">▲</span> Sembunyikan</button>
+              <button class="gsheet-btn red" onclick="delSelectedGsheet('hi')">🗑️ Hapus Terpilih</button>
+            </div>
+          </div>
+          <div id="hi-gsheet-body">
+            <div class="gsheet-toolbar"><span class="gsheet-sel-info" id="hi-gsheet-selinfo">Klik baris untuk memilih · Klik sel untuk edit</span><button class="gsb" onclick="clearSelectionGsheet('hi')">✕ Clear</button></div>
+            <div class="gsheet-scroll"><table class="gsheet-tbl" id="hi-gsheet-tbl"><thead id="hi-gsheet-thead"></thead><tbody id="hi-gsheet-tbody"></tbody></table><div class="new-row-btn" onclick="showAddForm('hi')">＋ Baris baru</div></div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box"><span>🔍</span><input type="text" placeholder="Filter asal, tujuan, BDO..." id="hi-search" oninput="renderHI()"></div>
+          <select class="fsel" id="hi-status" onchange="renderHI()"><option value="">Semua Status</option><option value="proses">Proses</option><option value="selesai">Selesai</option></select>
+          <div class="tbdiv"></div>
+          <button class="tb-btn" onclick="resetFilter('hi')">✕ Reset</button>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th class="nc">#</th><th>No AWB</th><th>BDO</th><th>Asal</th><th>Tujuan</th><th>Koli</th><th>Berat(kg)</th><th>Tgl Terima</th><th>Jam</th><th>Nilai (Rp)</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody id="hi-body"></tbody>
+          </table>
+          <div class="pg-row"><span id="hi-pginfo">—</span><div class="pg-btns" id="hi-pgbtns"></div></div>
+        </div>
+      </div>
+
+      <div class="awb-panel" id="hi-awb-panel">
+        <div class="awb-panel-head"><span class="awb-panel-title">🔎 Cari AWB Inbound</span><span class="awb-panel-ico">📥</span></div>
+        <div class="awb-panel-body">
+          <div class="awb-inp-row">
+            <input class="awb-inp" id="hi-awb-input" type="text" placeholder="No AWB..." onkeydown="if(event.key==='Enter')searchAWB('hi')">
+            <button class="awb-btn" onclick="searchAWB('hi')">Cari</button>
+          </div>
+          <div class="awb-found" id="hi-awb-result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: SUMMARY
+  ══════════════════════════════════════ -->
+  <div class="page" id="page-summary">
+    <div class="pg-header"><div><div class="pg-title">📊 Summary BDO</div><div class="pg-sub">Rekap keseluruhan per BDO</div></div></div>
+    <div class="summary-grid" id="sum-grid"></div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ DATA ══
+let obData=[
+  {id:1,awb:'PXL2026001001',bdo:'BDO-01',tujuan:'Jakarta Barat',koli:3,berat:4.5,bag:'BAG-001',tgl:'2026-05-11',jam:'07:12',status:'selesai'},
+  {id:2,awb:'PXL2026001002',bdo:'BDO-02',tujuan:'Bandung Utara',koli:1,berat:1.2,bag:'BAG-002',tgl:'2026-05-11',jam:'07:30',status:'proses'},
+  {id:3,awb:'PXL2026001003',bdo:'BDO-01',tujuan:'Surabaya',koli:5,berat:12.0,bag:'BAG-001',tgl:'2026-05-11',jam:'08:00',status:'proses'},
+  {id:4,awb:'PXL2026001004',bdo:'BDO-03',tujuan:'Medan',koli:2,berat:3.3,bag:'BAG-003',tgl:'2026-05-11',jam:'08:15',status:'selesai'},
+  {id:5,awb:'PXL2026001005',bdo:'BDO-04',tujuan:'Bali',koli:4,berat:8.0,bag:'BAG-004',tgl:'2026-05-11',jam:'08:45',status:'proses'},
+  {id:6,awb:'PXL2026001006',bdo:'BDO-05',tujuan:'Makassar',koli:6,berat:15.5,bag:'BAG-005',tgl:'2026-05-11',jam:'09:00',status:'selesai'},
+  {id:7,awb:'PXL2026001007',bdo:'BDO-02',tujuan:'Yogyakarta',koli:1,berat:0.8,bag:'BAG-002',tgl:'2026-05-11',jam:'09:20',status:'selesai'},
+  {id:8,awb:'PXL2026001008',bdo:'BDO-01',tujuan:'Semarang',koli:3,berat:5.2,bag:'BAG-001',tgl:'2026-05-11',jam:'09:35',status:'proses'},
+  {id:9,awb:'PXL2026001009',bdo:'BDO-03',tujuan:'Palembang',koli:2,berat:2.6,bag:'BAG-003',tgl:'2026-05-10',jam:'14:00',status:'selesai'},
+  {id:10,awb:'PXL2026001010',bdo:'BDO-04',tujuan:'Pekanbaru',koli:7,berat:18.3,bag:'BAG-004',tgl:'2026-05-10',jam:'14:30',status:'proses'},
+  {id:11,awb:'PXL2026001011',bdo:'BDO-02',tujuan:'Lampung',koli:3,berat:6.2,bag:'BAG-002',tgl:'2026-05-10',jam:'15:00',status:'selesai'},
+  {id:12,awb:'PXL2026001012',bdo:'BDO-05',tujuan:'Pontianak',koli:4,berat:9.0,bag:'BAG-005',tgl:'2026-05-10',jam:'15:45',status:'proses'},
+  {id:13,awb:'PXL2026001013',bdo:'BDO-03',tujuan:'Balikpapan',koli:2,berat:4.1,bag:'BAG-003',tgl:'2026-05-10',jam:'16:20',status:'selesai'},
+  {id:14,awb:'PXL2026001014',bdo:'BDO-01',tujuan:'Manado',koli:1,berat:2.0,bag:'BAG-001',tgl:'2026-05-09',jam:'08:30',status:'proses'},
+  {id:15,awb:'PXL2026001015',bdo:'BDO-04',tujuan:'Samarinda',koli:5,berat:11.5,bag:'BAG-004',tgl:'2026-05-09',jam:'09:00',status:'selesai'},
+];
+
+let hoData=[
+  {id:1,awb:'PXL2026HVS001',bdo:'BDO-01',tujuan:'Jakarta Pusat',koli:1,berat:2.0,bag:'BAG-HVS-01',tgl:'2026-05-11',jam:'08:00',nilai:5000000,status:'selesai'},
+  {id:2,awb:'PXL2026HVS002',bdo:'BDO-02',tujuan:'Surabaya',koli:2,berat:3.5,bag:'BAG-HVS-01',tgl:'2026-05-11',jam:'09:00',nilai:12000000,status:'proses'},
+  {id:3,awb:'PXL2026HVS003',bdo:'BDO-03',tujuan:'Bandung',koli:1,berat:1.0,bag:'BAG-HVS-02',tgl:'2026-05-11',jam:'10:30',nilai:8500000,status:'selesai'},
+  {id:4,awb:'PXL2026HVS004',bdo:'BDO-01',tujuan:'Medan',koli:1,berat:1.5,bag:'BAG-HVS-02',tgl:'2026-05-10',jam:'11:00',nilai:22000000,status:'proses'},
+  {id:5,awb:'PXL2026HVS005',bdo:'BDO-04',tujuan:'Bali',koli:2,berat:3.0,bag:'BAG-HVS-03',tgl:'2026-05-10',jam:'13:30',nilai:15000000,status:'selesai'},
+  {id:6,awb:'PXL2026HVS006',bdo:'BDO-02',tujuan:'Semarang',koli:1,berat:0.8,bag:'BAG-HVS-03',tgl:'2026-05-09',jam:'09:15',nilai:7500000,status:'proses'},
+];
+
+let hiData=[
+  {id:1,awb:'PXL2026HVS901',bdo:'BDO-01',asal:'Surabaya',tujuan:'Jakarta',koli:1,berat:1.5,tgl:'2026-05-11',jam:'11:00',nilai:7000000,status:'selesai'},
+  {id:2,awb:'PXL2026HVS902',bdo:'BDO-02',asal:'Bandung',tujuan:'Jakarta',koli:2,berat:4.0,tgl:'2026-05-11',jam:'12:30',nilai:15000000,status:'proses'},
+  {id:3,awb:'PXL2026HVS903',bdo:'BDO-01',asal:'Medan',tujuan:'Jakarta',koli:1,berat:2.0,tgl:'2026-05-10',jam:'16:00',nilai:9000000,status:'selesai'},
+  {id:4,awb:'PXL2026HVS904',bdo:'BDO-03',asal:'Makassar',tujuan:'Jakarta',koli:3,berat:5.5,tgl:'2026-05-10',jam:'14:00',nilai:32000000,status:'proses'},
+  {id:5,awb:'PXL2026HVS905',bdo:'BDO-04',asal:'Bali',tujuan:'Jakarta',koli:1,berat:1.2,tgl:'2026-05-09',jam:'10:30',nilai:18500000,status:'selesai'},
+];
+
+let nextId={ob:100,ho:100,hi:100};
+const PER=8;
+let pages={ob:1,ho:1,hi:1};
+let sorts={};
+let gsheetVisible={ob:true,ho:true,hi:true};
+let gsheetSelected={ob:new Set(),ho:new Set(),hi:new Set()};
+
+// GSheet column defs
+const COLS={
+  ob:['AWB','BDO','Tujuan','Koli','Berat','Bag ID','Tanggal','Jam','Status'],
+  ob_keys:['awb','bdo','tujuan','koli','berat','bag','tgl','jam','status'],
+  ho:['AWB','BDO','Tujuan','Koli','Berat','Bag ID','Tanggal','Jam','Nilai','Status'],
+  ho_keys:['awb','bdo','tujuan','koli','berat','bag','tgl','jam','nilai','status'],
+  hi:['AWB','BDO','Asal','Tujuan','Koli','Berat','Tanggal','Jam','Nilai','Status'],
+  hi_keys:['awb','bdo','asal','tujuan','koli','berat','tgl','jam','nilai','status'],
+};
+
+// ══ SIDEBAR TOGGLE ══
+let sbOpen = true;
+function toggleSidebar(){
+  sbOpen ? closeSidebar() : openSidebar();
+}
+function openSidebar(){
+  document.getElementById('sidebar').classList.remove('collapsed');
+  document.getElementById('main').classList.remove('sb-hidden');
+  document.getElementById('sbOverlay').classList.remove('show');
+  sbOpen=true;
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.add('collapsed');
+  document.getElementById('main').classList.add('sb-hidden');
+  document.getElementById('sbOverlay').classList.remove('show');
+  sbOpen=false;
+}
+
+// ══ INCHARGE DROPDOWN ══
+const bdoOpts=['BDO-01','BDO-02','BDO-03','BDO-04','BDO-05','BDO-06','BDO-07','BDO-08','BDO-09','BDO-10'];
+function renderDD(list){
+  const el=document.getElementById('ddList');
+  el.innerHTML=list.length?list.map(b=><div class="dd-item" onclick="pickBDO('${b}')">${b}</div>).join(''):'<div class="dd-none">Tidak ditemukan</div>';
+}
+function openDD(){document.getElementById('ddList').classList.add('show');document.getElementById('ddArrow').classList.add('open');renderDD(bdoOpts);}
+function closeDD(){document.getElementById('ddList').classList.remove('show');document.getElementById('ddArrow').classList.remove('open');}
+function filterDD(v){openDD();renderDD(bdoOpts.filter(b=>b.toLowerCase().includes(v.toLowerCase())));}
+function pickBDO(v){document.getElementById('incInput').value=v;closeDD();showToast(📍 Incharge: ${v});}
+document.addEventListener('click',e=>{if(!e.target.closest('#ddOuter'))closeDD();});
+
+// ══ ADD FORM ══
+function showAddForm(key){
+  const el=document.getElementById(key+'-add-form');
+  el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Set today
+  const now=new Date();
+  const tgl=now.toISOString().slice(0,10);
+  const jam=now.toTimeString().slice(0,5);
+  const tglEl=document.getElementById(key+'-f-tgl');
+  const jamEl=document.getElementById(key+'-f-jam');
+  if(tglEl&&!tglEl.value)tglEl.value=tgl;
+  if(jamEl&&!jamEl.value)jamEl.value=jam;
+}
+function hideAddForm(key){
+  document.getElementById(key+'-add-form').classList.remove('show');
+  clearForm(key);
+}
+function clearForm(key){
+  ['awb','bdo','tujuan','koli','berat','bag','tgl','jam','status','nilai','asal'].forEach(f=>{
+    const el=document.getElementById(key+'-f-'+f);
+    if(el){el.value=el.tagName==='SELECT'?(f==='status'?'proses':''):'';}
+  });
+}
+
+function addRow(key){
+  const g=id=>document.getElementById(key+'-f-'+id)?.value?.trim();
+  const awb=g('awb'),bdo=g('bdo'),tujuan=g('tujuan');
+  const koli=parseInt(g('koli')||'0');
+  const berat=parseFloat(g('berat')||'0');
+
+  if(!awb||!bdo||!tujuan||!koli||!berat){showToast('⚠️ Isi field wajib (*)');return;}
+
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  if(data.find(r=>r.awb===awb)){showToast('⚠️ AWB sudah ada!');return;}
+
+  const now=new Date();
+  const newRow={
+    id:nextId[key]++,
+    awb,bdo,tujuan,koli,berat,
+    bag:g('bag')||'—',
+    tgl:g('tgl')||now.toISOString().slice(0,10),
+    jam:g('jam')||now.toTimeString().slice(0,5),
+    status:g('status')||'proses',
+  };
+  if(key==='ho'||key==='hi'){newRow.nilai=parseInt(g('nilai')||'0');}
+  if(key==='hi'){newRow.asal=g('asal')||'—';}
+
+  if(key==='ob')obData.unshift(newRow);
+  else if(key==='ho')hoData.unshift(newRow);
+  else hiData.unshift(newRow);
+
+  hideAddForm(key);
+  rerender(key);
+  renderGsheet(key);
+  showToast(✅ AWB ${awb} ditambahkan!);
+}
+
+// ══ GSHEET RENDER ══
+function renderGsheet(key){
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  const cols=COLS[key];
+  const keys=COLS[key+'_keys'];
+  const thead=document.getElementById(key+'-gsheet-thead');
+  const tbody=document.getElementById(key+'-gsheet-tbody');
+  const sel=gsheetSelected[key];
+
+  // Header
+  thead.innerHTML=`<tr>
+    <th class="col-hdr row-num hdr">  </th>
+    ${cols.map((c,i)=><th class="col-hdr">${String.fromCharCode(65+i)} — ${c}</th>).join('')}
+  </tr>`;
+
+  // Rows
+  tbody.innerHTML=data.map((r,ri)=>{
+    const isSelected=sel.has(r.id);
+    return `<tr class="${isSelected?'selected-row':''}" onclick="toggleGsheetRow('${key}',${r.id},event)" data-id="${r.id}">
+      <td class="row-num">${ri+1}</td>
+      ${keys.map(k=>{
+        const val=r[k]??'';
+        const isStatus=k==='status';
+        const isAWB=k==='awb';
+        const cls=isStatus?(val==='selesai'?'cell status-selesai':'cell status-proses'):(isAWB?'cell awb-cell':'cell');
+        const display=k==='nilai'&&val?'Rp '+Number(val).toLocaleString('id'):val;
+        return `<td class="${cls}" contenteditable="true" spellcheck="false"
+          onblur="gsheetEdit('${key}',${r.id},'${k}',this.textContent.trim())"
+          onclick="event.stopPropagation()">${display}</td>`;
+      }).join('')}
+    </tr>`;
+  }).join('');
+
+  updateGsheetSelInfo(key);
+}
+
+function toggleGsheetRow(key,id,e){
+  if(e.target.getAttribute('contenteditable'))return;
+  const sel=gsheetSelected[key];
+  if(sel.has(id))sel.delete(id);
+  else sel.add(id);
+  renderGsheet(key);
+}
+function clearSelectionGsheet(key){gsheetSelected[key].clear();renderGsheet(key);}
+function updateGsheetSelInfo(key){
+  const n=gsheetSelected[key].size;
+  const el=document.getElementById(key+'-gsheet-selinfo');
+  el.textContent=n>0?${n} baris dipilih:'Klik baris untuk memilih · Klik sel untuk edit';
+}
+function delSelectedGsheet(key){
+  const sel=gsheetSelected[key];
+  if(!sel.size){showToast('⚠️ Tidak ada baris dipilih');return;}
+  if(!confirm(Hapus ${sel.size} baris terpilih?))return;
+  if(key==='ob')obData=obData.filter(r=>!sel.has(r.id));
+  else if(key==='ho')hoData=hoData.filter(r=>!sel.has(r.id));
+  else hiData=hiData.filter(r=>!sel.has(r.id));
+  sel.clear();
+  renderGsheet(key);
+  rerender(key);
+  showToast('🗑️ Baris dihapus dari GSheet');
+}
+function gsheetEdit(key,id,field,val){
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  const r=data.find(x=>x.id===id);
+  if(!r)return;
+  // Parse nilai types
+  if(field==='koli')r[field]=parseInt(val)||r[field];
+  else if(field==='berat')r[field]=parseFloat(val)||r[field];
+  else if(field==='nilai'){
+    // strip "Rp " and dots
+    r[field]=parseInt(val.replace(/[^0-9]/g,''))||r[field];
+  }
+  else r[field]=val;
+  rerender(key);
+}
+function toggleGsheet(key){
+  gsheetVisible[key]=!gsheetVisible[key];
+  const body=document.getElementById(key+'-gsheet-body');
+  const ico=document.getElementById(key+'-gsheet-toggle-ico');
+  body.style.display=gsheetVisible[key]?'':'none';
+  ico.textContent=gsheetVisible[key]?'▲':'▼';
+  const btn=ico.closest('.gsheet-btn');
+  btn.innerHTML=<span id="${key}-gsheet-toggle-ico">${gsheetVisible[key]?'▲':'▼'}</span> ${gsheetVisible[key]?'Sembunyikan':'Tampilkan'};
+}
+
+// ══ SEARCH AWB ══
+function searchAWB(key){
+  const val=(document.getElementById(key+'-awb-input').value||'').trim().toUpperCase();
+  const result=document.getElementById(key+'-awb-result');
+  if(!val){result.className='awb-found';return;}
+
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  const found=data.find(r=>r.awb===val||r.awb.includes(val));
+
+  if(!found){
+    result.innerHTML=<div class="awb-notfound">❌ AWB tidak ditemukan</div>;
+    result.className='awb-found show';
+    return;
+  }
+
+  const statusCls=found.status==='selesai'?'pill-selesai':'pill-proses';
+  const rows=[
+    ['No AWB',found.awb],
+    ['BDO',found.bdo],
+    ...(found.asal?[['Asal',found.asal]]:[]),
+    ['Tujuan',found.tujuan],
+    ['Koli / Berat',${found.koli} koli · ${found.berat} kg],
+    ...(found.bag&&found.bag!=='—'?[['Bag ID',found.bag]]:[]),
+    ['Tgl / Jam',${found.tgl} ${found.jam}],
+    ...(found.nilai?[['Nilai','Rp '+found.nilai.toLocaleString('id')]]:[]),
+    ['Status',''],
+  ];
+
+  result.innerHTML=rows.map((r,i)=>{
+    if(r[0]==='Status') return <div class="awb-found-row"><span class="awb-fkey">Status</span><span class="pill ${statusCls}" style="font-size:11px">${found.status==='selesai'?'● Selesai':'● Proses'}</span></div>;
+    return <div class="awb-found-row"><span class="awb-fkey">${r[0]}</span><span class="awb-fval">${r[1]}</span></div>;
+  }).join('');
+  result.className='awb-found show';
+
+  // Highlight in table + gsheet
+  highlightInTable(key,found.id);
+  highlightInGsheet(key,found.id);
+}
+function highlightInTable(key,id){
+  const filtered=getFiltered(key);
+  const idx=filtered.findIndex(r=>r.id===id);
+  if(idx>=0){pages[key]=Math.floor(idx/PER)+1;}
+  if(key==='ob')renderOB(id);
+  else if(key==='ho')renderHO(id);
+  else renderHI(id);
+}
+function highlightInGsheet(key,id){
+  // Scroll gsheet to highlighted row
+  setTimeout(()=>{
+    const tr=document.querySelector(#${key}-gsheet-tbody tr[data-id="${id}"]);
+    if(tr){tr.classList.add('found-hl');tr.scrollIntoView({behavior:'smooth',block:'nearest'});setTimeout(()=>tr.classList.remove('found-hl'),2500);}
+  },100);
+}
+
+// ══ FILTER ══
+function getFiltered(key){
+  let data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  const q=(document.getElementById(key+'-search')?.value||'').toLowerCase();
+  const status=document.getElementById(key+'-status')?.value||'';
+  const bdo=document.getElementById(key+'-bdo')?.value||'';
+  return data.filter(r=>{
+    const qOk=!q||[r.awb,r.tujuan,r.bag||'',r.asal||'',r.bdo].some(v=>(v||'').toLowerCase().includes(q));
+    const sOk=!status||r.status===status;
+    const bOk=!bdo||r.bdo===bdo;
+    return qOk&&sOk&&bOk;
+  });
+}
+function pill(s){return s==='selesai'?'<span class="pill pill-selesai">● Selesai</span>':'<span class="pill pill-proses">● Proses</span>';}
+
+// ══ ROW RENDERERS ══
+function rowOB(r,i,start,hid){
+  const hl=hid&&r.id===hid?' class="found-row"':'';
+  return `<tr${hl}><td class="nc">${start+i+1}</td>
+    <td><span class="awb">${r.awb}</span></td>
+    <td><b>${r.bdo}</b></td><td>${r.tujuan}</td>
+    <td style="text-align:center"><b>${r.koli}</b></td>
+    <td style="text-align:center">${r.berat.toFixed(1)}</td>
+    <td><span class="bag-id">${r.bag}</span></td>
+    <td>${r.tgl}</td><td style="font-family:var(--mono);font-size:11px">${r.jam}</td>
+    <td>${pill(r.status)}</td>
+    <td><div class="act-wrap">
+      ${r.status==='proses'?<button class="act act-ok" onclick="mark('ob',${r.id})">✓ Selesai</button>:''}
+      <button class="act act-del" onclick="del('ob',${r.id})">🗑️</button>
+    </div></td></tr>`;
+}
+function rowHO(r,i,start,hid){
+  const hl=hid&&r.id===hid?' class="found-row"':'';
+  return `<tr${hl}><td class="nc">${start+i+1}</td>
+    <td><span class="awb">${r.awb}</span></td>
+    <td><b>${r.bdo}</b></td><td>${r.tujuan}</td>
+    <td style="text-align:center"><b>${r.koli}</b></td>
+    <td style="text-align:center">${r.berat.toFixed(1)}</td>
+    <td><span class="bag-id">${r.bag}</span></td>
+    <td>${r.tgl}</td><td style="font-family:var(--mono);font-size:11px">${r.jam}</td>
+    <td style="font-family:var(--mono);font-size:11px;color:#7c3aed">Rp ${r.nilai.toLocaleString('id')}</td>
+    <td>${pill(r.status)}</td>
+    <td><div class="act-wrap">
+      ${r.status==='proses'?<button class="act act-ok" onclick="mark('ho',${r.id})">✓ Selesai</button>:''}
+      <button class="act act-del" onclick="del('ho',${r.id})">🗑️</button>
+    </div></td></tr>`;
+}
+function rowHI(r,i,start,hid){
+  const hl=hid&&r.id===hid?' class="found-row"':'';
+  return `<tr${hl}><td class="nc">${start+i+1}</td>
+    <td><span class="awb">${r.awb}</span></td>
+    <td><b>${r.bdo}</b></td><td>${r.asal}</td><td>${r.tujuan}</td>
+    <td style="text-align:center"><b>${r.koli}</b></td>
+    <td style="text-align:center">${r.berat.toFixed(1)}</td>
+    <td>${r.tgl}</td><td style="font-family:var(--mono);font-size:11px">${r.jam}</td>
+    <td style="font-family:var(--mono);font-size:11px;color:#7c3aed">Rp ${r.nilai.toLocaleString('id')}</td>
+    <td>${pill(r.status)}</td>
+    <td><div class="act-wrap">
+      ${r.status==='proses'?<button class="act act-ok" onclick="mark('hi',${r.id})">✓ Selesai</button>:''}
+      <button class="act act-del" onclick="del('hi',${r.id})">🗑️</button>
+    </div></td></tr>`;
+}
+
+// ══ GENERIC RENDER ══
+function renderGeneric(key,filtered,rowFn,highlightId){
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  document.getElementById(key+'-total').textContent=data.length;
+  document.getElementById(key+'-selesai').textContent=data.filter(r=>r.status==='selesai').length;
+  document.getElementById(key+'-proses').textContent=data.filter(r=>r.status==='proses').length;
+  document.getElementById(key+'-koli').textContent=data.reduce((a,r)=>a+r.koli,0);
+
+  if(highlightId){
+    const idx=filtered.findIndex(r=>r.id===highlightId);
+    if(idx>=0)pages[key]=Math.floor(idx/PER)+1;
+  }
+
+  const pg=pages[key];
+  const start=(pg-1)*PER;
+  const pageRows=filtered.slice(start,start+PER);
+  const body=document.getElementById(key+'-body');
+  body.innerHTML=pageRows.length
+    ?pageRows.map((r,i)=>rowFn(r,i,start,highlightId)).join('')
+    :<tr><td colspan="15"><div class="empty"><div class="e-ico">📭</div><div class="e-txt">Tidak ada data</div></div></td></tr>;
+
+  const total=Math.ceil(filtered.length/PER)||1;
+  const pgbtns=document.getElementById(key+'-pgbtns');
+  pgbtns.innerHTML='';
+  const makeBtn=(v)=>{
+    const btn=document.createElement('div');
+    btn.className='pg-btn'+(v===pg?' active':'');
+    btn.textContent=v;
+    btn.onclick=()=>{
+      if(v==='‹'&&pages[key]>1)pages[key]--;
+      else if(v==='›'&&pages[key]<total)pages[key]++;
+      else if(typeof v==='number')pages[key]=v;
+      rerender(key);
+    };
+    pgbtns.appendChild(btn);
+  };
+  makeBtn('‹');
+  for(let i=1;i<=total;i++)makeBtn(i);
+  makeBtn('›');
+  document.getElementById(key+'-pginfo').textContent=
+    Menampilkan ${Math.min(start+1,filtered.length)}–${Math.min(start+PER,filtered.length)} dari ${filtered.length} data;
+}
+
+function renderOB(hid){renderGeneric('ob',getFiltered('ob'),rowOB,hid);}
+function renderHO(hid){renderGeneric('ho',getFiltered('ho'),rowHO,hid);}
+function renderHI(hid){renderGeneric('hi',getFiltered('hi'),rowHI,hid);}
+function rerender(key){if(key==='ob')renderOB();else if(key==='ho')renderHO();else renderHI();}
+
+// ══ ACTIONS ══
+function mark(key,id){
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  const r=data.find(x=>x.id===id);
+  if(r){r.status='selesai';rerender(key);renderGsheet(key);showToast(✅ ${r.awb} → Selesai);}
+}
+function del(key,id){
+  if(!confirm('Hapus baris ini?'))return;
+  let r;
+  if(key==='ob'){r=obData.find(x=>x.id===id);obData=obData.filter(x=>x.id!==id);}
+  else if(key==='ho'){r=hoData.find(x=>x.id===id);hoData=hoData.filter(x=>x.id!==id);}
+  else{r=hiData.find(x=>x.id===id);hiData=hiData.filter(x=>x.id!==id);}
+  rerender(key);renderGsheet(key);showToast(🗑️ ${r?.awb} dihapus);
+}
+function resetFilter(key){
+  ['search','status','bdo'].forEach(f=>{const el=document.getElementById(key+'-'+f);if(el)el.value='';});
+  const inp=document.getElementById(key+'-awb-input');
+  if(inp)inp.value='';
+  const res=document.getElementById(key+'-awb-result');
+  if(res)res.className='awb-found';
+  rerender(key);
+}
+
+// ══ SORT ══
+function sortD(key,col){
+  const k=key+col;sorts[k]=!sorts[k];
+  const asc=sorts[k];
+  const data=key==='ob'?obData:key==='ho'?hoData:hiData;
+  data.sort((a,b)=>asc?(a[col]>b[col]?1:-1):(a[col]<b[col]?1:-1));
+  rerender(key);
+  renderGsheet(key);
+}
+
+// ══ SUMMARY ══
+function renderSummary(){
+  const all=[...obData,...hoData,...hiData];
+  const byBdo={};
+  all.forEach(r=>{
+    if(!byBdo[r.bdo])byBdo[r.bdo]={total:0,selesai:0,proses:0,koli:0};
+    byBdo[r.bdo].total++;byBdo[r.bdo][r.status]++;byBdo[r.bdo].koli+=r.koli;
+  });
+  document.getElementById('sum-grid').innerHTML=Object.entries(byBdo).sort().map(([bdo,d])=>`
+    <div class="sum-card">
+      <div class="sum-bdo">📍 ${bdo}</div>
+      <div class="sum-row"><span class="sum-key">Total AWB</span><span class="sum-val">${d.total}</span></div>
+      <div class="sum-row"><span class="sum-key">Selesai</span><span class="sum-val" style="color:var(--green)">${d.selesai}</span></div>
+      <div class="sum-row"><span class="sum-key">Proses</span><span class="sum-val" style="color:var(--b5)">${d.proses}</span></div>
+      <div class="sum-row"><span class="sum-key">Total Koli</span><span class="sum-val">${d.koli}</span></div>
+    </div>
+  `).join('');
+}
+
+// ══ NAVIGATION ══
+const pageMap={'outbound':'— Outbound','outbound-hvs':'— Outbound HVS','inbound-hvs':'— Inbound HVS','summary':'— Summary'};
+function goPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('topSub').textContent=pageMap[id]||'';
+  if(id==='summary')renderSummary();
+  // On mobile close sidebar after nav
+  if(window.innerWidth<768)closeSidebar();
+}
+
+// ══ EXPORT ══
+function exportCSV(data,name){
+  if(!data.length){showToast('⚠️ Tidak ada data');return;}
+  const keys=Object.keys(data[0]).filter(k=>k!=='id');
+  const csv=[keys.join(','),...data.map(r=>keys.map(k=>r[k]??'').join(','))].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=name+'-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();showToast('⬇️ CSV diunduh!');
+}
+
+// ══ TOAST ══
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ══ INIT ══
+renderOB();renderHO();renderHI();
+renderGsheet('ob');renderGsheet('ho');renderGsheet('hi');
+</script>
+</body>
+</html>
