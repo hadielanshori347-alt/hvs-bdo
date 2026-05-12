@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OUTBOUND GTW BDO — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+:root{
+  --blue:#1565C0;--blue2:#1976D2;--blue-light:#E3F2FD;--blue-mid:#BBDEFB;
+  --green:#2E7D32;--green-light:#E8F5E9;
+  --orange:#E65100;--orange-light:#FFF3E0;
+  --red:#C62828;--red-light:#FFEBEE;
+  --gray0:#FAFAFA;--gray1:#F5F5F5;--gray2:#EEEEEE;--gray3:#E0E0E0;
+  --gray4:#BDBDBD;--gray5:#9E9E9E;--gray6:#757575;--gray7:#424242;--gray8:#212121;
+  --white:#fff;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --sidebar:220px;--topbar:56px;
+  --radius:10px;--shadow:0 2px 8px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:100vh;overflow:hidden;display:flex}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--blue);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto}
+.sidebar-brand{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.15)}
+.brand-label{color:rgba(255,255,255,.6);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.brand-title{color:#fff;font-size:15px;font-weight:700;margin-top:3px;line-height:1.3}
+.sidebar-nav{padding:10px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;color:rgba(255,255,255,.75);font-size:13px;font-weight:500;cursor:pointer;transition:.15s;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.18);color:#fff;border-left:3px solid #fff}
+.nav-item .material-icons-round{font-size:18px}
+.sidebar-bottom{padding:12px 16px;border-top:1px solid rgba(255,255,255,.15)}
+.sidebar-bottom .version{color:rgba(255,255,255,.4);font-size:10px;font-family:var(--mono)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOPBAR */
+.topbar{height:var(--topbar);background:var(--white);border-bottom:1px solid var(--gray3);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.topbar-title{font-size:16px;font-weight:700;color:var(--gray8);flex:1}
+.topbar-sub{font-size:12px;color:var(--gray5);font-weight:400}
+
+/* INCHARGE TOPBAR WIDGET */
+.topbar-incharge{display:flex;align-items:center;gap:8px;background:var(--blue-light);border:1.5px solid var(--blue-mid);border-radius:9px;padding:5px 10px 5px 12px}
+.topbar-incharge-label{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.topbar-incharge select{border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:var(--blue2);font-family:var(--font);cursor:pointer;min-width:130px}
+.topbar-incharge select option{color:var(--gray8);background:#fff}
+.topbar-incharge-dot{width:8px;height:8px;border-radius:50%;background:var(--gray4);flex-shrink:0;transition:.3s}
+.topbar-incharge-dot.active{background:#4CAF50;box-shadow:0 0 0 2px #C8E6C9}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:var(--font)}
+.btn-primary{background:var(--blue2);color:#fff}.btn-primary:hover{background:var(--blue)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{filter:brightness(.92)}
+.btn-outline{background:transparent;border:1.5px solid var(--gray3);color:var(--gray7)}.btn-outline:hover{background:var(--gray1)}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{filter:brightness(.9)}
+.btn-sm{padding:5px 11px;font-size:12px;border-radius:6px}
+.btn .material-icons-round{font-size:16px}
+
+/* CONTENT */
+.content{flex:1;overflow:auto;padding:20px}
+
+/* STATS */
+.stats-row{display:flex;gap:12px;margin-bottom:18px}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:14px 18px;flex:1;border:1px solid var(--gray3);box-shadow:var(--shadow)}
+.stat-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.stat-value{font-size:26px;font-weight:700;color:var(--gray8);font-family:var(--mono)}
+.stat-sub{font-size:11px;color:var(--gray5);margin-top:3px}
+.stat-card.blue .stat-value{color:var(--blue2)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.orange .stat-value{color:var(--orange)}
+
+/* ADD FORM PANEL */
+.form-panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--gray3);margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow)}
+.form-panel-header{background:var(--blue2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.form-panel-title{color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.form-panel-title .material-icons-round{font-size:18px}
+.form-panel-body{padding:16px 18px;display:none}
+.form-panel-body.open{display:block}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px}
+.form-group label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
+.form-group select,.form-group input{width:100%;padding:9px 12px;border:1.5px solid var(--gray3);border-radius:8px;font-size:13px;font-family:var(--font);color:var(--gray8);outline:none;background:var(--white);transition:.15s}
+.form-group select:focus,.form-group input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light)}
+
+/* INCHARGE BADGE IN FORM (read-only info) */
+.incharge-info-bar{display:flex;align-items:center;gap:8px;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:8px;padding:9px 14px;margin-bottom:14px;font-size:13px;font-weight:600;color:var(--blue2)}
+.incharge-info-bar .material-icons-round{font-size:16px;color:var(--blue)}
+.incharge-info-bar span.hint{font-size:11px;color:var(--blue);font-weight:400;margin-left:2px;opacity:.7}
+
+/* SCAN SECTION */
+.scan-section{border-top:1px solid var(--gray2);padding-top:14px;margin-top:2px}
+.scan-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.scan-input{flex:1;padding:10px 14px;border:1.5px solid var(--blue2);border-radius:8px;font-size:14px;font-family:var(--mono);color:var(--gray8);outline:none}
+.scan-input:focus{box-shadow:0 0 0 3px var(--blue-light)}
+.scan-list{background:var(--gray0);border-radius:8px;border:1px solid var(--gray3);max-height:160px;overflow-y:auto}
+.scan-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--gray2);font-size:13px;font-family:var(--mono)}
+.scan-item:last-child{border-bottom:none}
+.scan-item-awb{color:var(--gray8);font-weight:500}
+.scan-item-del{color:var(--red);cursor:pointer;font-size:18px;padding:2px}
+.scan-item-del:hover{background:var(--red-light);border-radius:4px}
+.scan-empty{padding:20px;text-align:center;color:var(--gray5);font-size:12px}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+
+/* TABLE */
+.table-panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
+.table-toolbar{padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray2)}
+.table-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1}
+.search-box{display:flex;align-items:center;background:var(--gray1);border:1px solid var(--gray3);border-radius:7px;padding:6px 10px;gap:6px}
+.search-box input{border:none;outline:none;background:transparent;font-size:13px;width:180px;font-family:var(--font)}
+.search-box .material-icons-round{font-size:16px;color:var(--gray5)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:var(--gray1)}
+th{padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;border-bottom:1px solid var(--gray3)}
+td{padding:9px 12px;border-bottom:1px solid var(--gray2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray0)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge-proses{background:var(--orange-light);color:var(--orange)}
+.badge-selesai{background:var(--green-light);color:var(--green)}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.mono{font-family:var(--mono);font-size:12px}
+.action-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:6px;color:var(--gray5);transition:.15s;display:inline-flex;align-items:center}
+.action-btn:hover{background:var(--gray2);color:var(--gray8)}
+.action-btn.danger:hover{background:var(--red-light);color:var(--red)}
+.action-btn .material-icons-round{font-size:17px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:14px;width:500px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-weight:700;font-size:15px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--gray5);padding:4px;border-radius:6px;display:flex}.modal-close:hover{color:var(--gray8);background:var(--gray2)}
+.modal-body{padding:20px;flex:1;overflow-y:auto}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--gray3);display:flex;justify-content:flex-end;gap:10px}
+.awb-list-modal{background:var(--gray0);border-radius:8px;border:1px solid var(--gray3);max-height:300px;overflow-y:auto}
+.awb-row{padding:8px 12px;border-bottom:1px solid var(--gray2);font-size:13px;font-family:var(--mono);color:var(--gray7)}
+.awb-row:last-child{border-bottom:none}
+
+/* DETAIL MODAL GRID */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.detail-field .d-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.detail-field .d-value{font-size:14px;color:var(--gray8);font-weight:500}
+.photo-box{border-radius:10px;overflow:hidden;background:var(--gray2);min-height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.photo-box img{width:100%;display:block}
+.photo-box .no-img{color:var(--gray5);font-size:13px}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:rgba(255,255,255,.8);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.spinner{width:36px;height:36px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadingText{font-size:14px;color:var(--gray6);font-weight:500}
+
+/* TABS */
+.tab-bar{display:flex;gap:2px;background:var(--gray2);padding:3px;border-radius:9px;margin-bottom:16px;width:fit-content}
+.tab-btn{padding:7px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray6);border:none;background:none;transition:.15s}
+.tab-btn.active{background:var(--white);color:var(--blue2);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+
+/* MANIFEST */
+.manifest-info{background:var(--blue-light);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;font-size:13px;color:var(--blue);display:flex;gap:8px;align-items:flex-start}
+.manifest-info .material-icons-round{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* FOTO UPDATE BUTTON */
+.btn-foto{background:var(--gray1);border:1.5px solid var(--gray3);color:var(--gray7);font-size:12px;padding:5px 10px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:var(--font);font-weight:600;transition:.15s}
+.btn-foto:hover{background:var(--gray2)}
+
+/* CSV EXPORT */
+.export-chip{background:var(--green-light);color:var(--green);border:1.5px solid #A5D6A7;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--font);transition:.15s}
+.export-chip:hover{filter:brightness(.95)}
+
+/* EMPTY */
+.empty-state{padding:40px;text-align:center;color:var(--gray5)}
+.empty-state .material-icons-round{font-size:40px;margin-bottom:8px;color:var(--gray4)}
+
+/* NO INCHARGE WARNING */
+.no-incharge-warn{background:#FFF8E1;border:1.5px solid #FFE082;border-radius:8px;padding:12px 16px;font-size:13px;color:#F57F17;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.no-incharge-warn .material-icons-round{font-size:18px}
+
+/* RESP */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .stats-row{flex-wrap:wrap}
+  .form-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-label">GTW BDO</div>
+    <div class="brand-title">OUTBOUND GTW BDO</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-item active" onclick="switchPage('ob')" id="nav-ob">
+      <span class="material-icons-round">local_shipping</span> Outbound BDO
+    </div>
+    <div class="nav-item" onclick="switchPage('hvs')" id="nav-hvs">
+      <span class="material-icons-round">inventory_2</span> Outbound HVS
+    </div>
+    <div class="nav-item" onclick="switchPage('ib')" id="nav-ib">
+      <span class="material-icons-round">move_to_inbox</span> Inbound HVS
+    </div>
+    <div class="nav-item" onclick="switchPage('manifest')" id="nav-manifest">
+      <span class="material-icons-round">description</span> Manifest
+    </div>
+    <div class="nav-item" onclick="switchPage('obib')" id="nav-obib">
+      <span class="material-icons-round">table_view</span> OB &amp; IB
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="version">v1.0.0 — GTW BDO</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span></div>
+
+    <!-- INCHARGE GLOBAL SELECTOR — hanya di sini -->
+    <div class="topbar-incharge">
+      <span class="material-icons-round" style="font-size:16px;color:var(--blue)">person</span>
+      <span class="topbar-incharge-label">Incharge</span>
+      <select id="globalIncharge" onchange="onGlobalInchargeChange()">
+        <option value="">— Pilih —</option>
+      </select>
+      <span class="topbar-incharge-dot" id="inchargeDot"></span>
+    </div>
+
+    <button class="btn btn-outline" onclick="reloadAll()"><span class="material-icons-round">refresh</span> Refresh</button>
+    <button class="export-chip" onclick="exportCSV()"><span class="material-icons-round">file_download</span> Export CSV</button>
+  </div>
+
+  <div class="content" id="mainContent">
+
+    <!-- ===== OB PAGE ===== -->
+    <div id="page-ob">
+      <!-- Stats -->
+      <div class="stats-row" id="obStats">
+        <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="obTotalAwb">0</div></div>
+        <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="obSelesai">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="obProses">0</div></div>
+      </div>
+
+      <!-- Add Form -->
+      <div class="form-panel">
+        <div class="form-panel-header" onclick="toggleForm('ob')" style="cursor:pointer">
+          <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Outbound BDO</div>
+          <span class="material-icons-round" id="obFormIcon" style="color:#fff;font-size:20px">expand_more</span>
+        </div>
+        <div class="form-panel-body" id="obFormBody">
+          <!-- Incharge dari topbar (read-only info) -->
+          <div id="obInchargeInfo" class="incharge-info-bar" style="display:none">
+            <span class="material-icons-round">badge</span>
+            <span>Incharge: <strong id="obInchargeDisplay">—</strong></span>
+            <span class="hint">(ubah di topbar kanan atas)</span>
+          </div>
+          <div id="obNoInchargeWarn" class="no-incharge-warn">
+            <span class="material-icons-round">warning</span>
+            Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
+          </div>
+
+          <div class="form-grid" id="obFormGrid" style="display:none">
+            <div class="form-group">
+              <label>SERVICE</label>
+              <select id="obService" onchange="checkObForm()">
+                <option value="">— Pilih Service —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>TUJUAN</label>
+              <select id="obTujuan" onchange="checkObForm()">
+                <option value="">— Pilih Tujuan —</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Scan AWB -->
+          <div class="scan-section" id="obScanSection" style="display:none">
+            <div class="scan-row">
+              <input class="scan-input" id="obScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'ob')">
+              <span style="font-size:12px;color:var(--gray5);white-space:nowrap" id="obScanCount">0 AWB</span>
+            </div>
+            <div class="scan-list" id="obScanList"><div class="scan-empty">Belum ada AWB di-scan</div></div>
+          </div>
+          <div class="form-actions" id="obFormActions" style="display:none">
+            <button class="btn btn-outline" onclick="resetObForm()">Batal</button>
+            <button class="btn btn-primary" id="btnSaveOb" disabled onclick="saveOb()"><span class="material-icons-round">save</span> Simpan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-panel">
+        <div class="table-toolbar">
+          <div class="table-toolbar-title">Google Sheets View — Outbound BDO</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="obSearch" placeholder="Cari AWB, Tujuan..." oninput="filterObTable()"></div>
+        </div>
+        <div class="table-wrap">
+          <table id="obTable">
+            <thead><tr>
+              <th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th>
+            </tr></thead>
+            <tbody id="obTbody"><tr><td colspan="10" class="empty-state"><span class="material-icons-round">hourglass_empty</span><br>Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HVS PAGE ===== -->
+    <div id="page-hvs" style="display:none">
+      <div class="stats-row">
+        <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="hvsTotalAwb">0</div></div>
+        <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="hvsSelesai">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="hvsProses">0</div></div>
+      </div>
+      <div class="form-panel">
+        <div class="form-panel-header" onclick="toggleForm('hvs')" style="cursor:pointer">
+          <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Outbound HVS</div>
+          <span class="material-icons-round" id="hvsFormIcon" style="color:#fff;font-size:20px">expand_more</span>
+        </div>
+        <div class="form-panel-body" id="hvsFormBody">
+          <div id="hvsInchargeInfo" class="incharge-info-bar" style="display:none">
+            <span class="material-icons-round">badge</span>
+            <span>Incharge: <strong id="hvsInchargeDisplay">—</strong></span>
+            <span class="hint">(ubah di topbar kanan atas)</span>
+          </div>
+          <div id="hvsNoInchargeWarn" class="no-incharge-warn">
+            <span class="material-icons-round">warning</span>
+            Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
+          </div>
+          <div class="form-grid" id="hvsFormGrid" style="display:none">
+            <div class="form-group"><label>SERVICE</label>
+              <select id="hvsService" onchange="checkHvsForm()"><option value="">— Pilih Service —</option></select>
+            </div>
+            <div class="form-group"><label>TUJUAN</label>
+              <select id="hvsTujuan" onchange="checkHvsForm()"><option value="">— Pilih Tujuan —</option></select>
+            </div>
+          </div>
+          <div class="scan-section" id="hvsScanSection" style="display:none">
+            <div class="scan-row">
+              <input class="scan-input" id="hvsScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'hvs')">
+              <span style="font-size:12px;color:var(--gray5);white-space:nowrap" id="hvsScanCount">0 AWB</span>
+            </div>
+            <div class="scan-list" id="hvsScanList"><div class="scan-empty">Belum ada AWB di-scan</div></div>
+          </div>
+          <div class="form-actions" id="hvsFormActions" style="display:none">
+            <button class="btn btn-outline" onclick="resetHvsForm()">Batal</button>
+            <button class="btn btn-primary" id="btnSaveHvs" disabled onclick="saveHvs()"><span class="material-icons-round">save</span> Simpan</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+        <div class="table-toolbar">
+          <div class="table-toolbar-title">Google Sheets View — Outbound HVS</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="hvsSearch" placeholder="Cari..." oninput="filterHvsTable()"></div>
+        </div>
+        <div class="table-wrap">
+          <table id="hvsTable">
+            <thead><tr><th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th></tr></thead>
+            <tbody id="hvsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== IB PAGE ===== -->
+    <div id="page-ib" style="display:none">
+      <div class="stats-row">
+        <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="ibTotalAwb">0</div></div>
+        <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="ibSelesai">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="ibProses">0</div></div>
+      </div>
+      <div class="form-panel">
+        <div class="form-panel-header" onclick="toggleForm('ib')" style="cursor:pointer">
+          <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Inbound HVS</div>
+          <span class="material-icons-round" id="ibFormIcon" style="color:#fff;font-size:20px">expand_more</span>
+        </div>
+        <div class="form-panel-body" id="ibFormBody">
+          <div id="ibInchargeInfo" class="incharge-info-bar" style="display:none">
+            <span class="material-icons-round">badge</span>
+            <span>Incharge: <strong id="ibInchargeDisplay">—</strong></span>
+            <span class="hint">(ubah di topbar kanan atas)</span>
+          </div>
+          <div id="ibNoInchargeWarn" class="no-incharge-warn">
+            <span class="material-icons-round">warning</span>
+            Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
+          </div>
+          <div class="form-grid" id="ibFormGrid" style="display:none">
+            <div class="form-group"><label>SERVICE</label>
+              <select id="ibService" onchange="checkIbForm()"><option value="">— Pilih Service —</option></select>
+            </div>
+            <div class="form-group"><label>FROM</label>
+              <select id="ibFrom" onchange="checkIbForm()"><option value="">— Pilih From —</option></select>
+            </div>
+            <div class="form-group"><label>TUJUAN</label>
+              <select id="ibTujuan" onchange="checkIbForm()"><option value="">— Pilih Tujuan —</option></select>
+            </div>
+          </div>
+          <div class="scan-section" id="ibScanSection" style="display:none">
+            <div class="scan-row">
+              <input class="scan-input" id="ibScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'ib')">
+              <span style="font-size:12px;color:var(--gray5);white-space:nowrap" id="ibScanCount">0 AWB</span>
+            </div>
+            <div class="scan-list" id="ibScanList"><div class="scan-empty">Belum ada AWB di-scan</div></div>
+          </div>
+          <div class="form-actions" id="ibFormActions" style="display:none">
+            <button class="btn btn-outline" onclick="resetIbForm()">Batal</button>
+            <button class="btn btn-primary" id="btnSaveIb" disabled onclick="saveIb()"><span class="material-icons-round">save</span> Simpan</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel">
+        <div class="table-toolbar">
+          <div class="table-toolbar-title">Google Sheets View — Inbound HVS</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="ibSearch" placeholder="Cari..." oninput="filterIbTable()"></div>
+        </div>
+        <div class="table-wrap">
+          <table id="ibTable">
+            <thead><tr><th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>FROM</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th></tr></thead>
+            <tbody id="ibTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MANIFEST PAGE ===== -->
+    <div id="page-manifest" style="display:none">
+      <div class="manifest-info">
+        <span class="material-icons-round">info</span>
+        Manifest menampilkan data dari SCAN_OB dan SCAN_HVS — berisi incharge, service, tujuan, dan list AWB per track.
+      </div>
+      <div class="table-panel">
+        <div class="table-toolbar">
+          <div class="table-toolbar-title">Manifest — OB &amp; HVS</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="manifestSearch" placeholder="Cari..." oninput="filterManifest()"></div>
+          <button class="export-chip" onclick="exportManifestCSV()"><span class="material-icons-round">file_download</span> Export</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>AWB</th><th>NO TRACK</th><th>TYPE</th></tr></thead>
+            <tbody id="manifestTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== OB&IB PAGE ===== -->
+    <div id="page-obib" style="display:none">
+      <div class="table-panel">
+        <div class="table-toolbar">
+          <div class="table-toolbar-title">OB &amp; IB — Combined View</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="obibSearch" placeholder="Cari..." oninput="filterObib()"></div>
+          <button class="export-chip" onclick="exportObibCSV()"><span class="material-icons-round">file_download</span> Export</button>
+        </div>
+        <div class="table-wrap" id="obibTableWrap">
+          <div class="empty-state"><span class="material-icons-round">table_view</span><p>Loading OB &amp; IB data...</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<!-- LOADING -->
+<div id="loading"><div class="spinner"></div><div id="loadingText">Memuat data...</div></div>
+
+<!-- AWB MODAL -->
+<div class="modal-overlay" id="awbModal">
+  <div class="modal" style="width:420px">
+    <div class="modal-header">
+      <div class="modal-title" id="awbModalTitle">List AWB</div>
+      <button class="modal-close" onclick="closeModal('awbModal')"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="awb-list-modal" id="awbModalList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('awbModal')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" style="width:520px">
+    <div class="modal-header">
+      <div class="modal-title" id="detailModalTitle">Detail</div>
+      <button class="modal-close" onclick="closeModal('detailModal')"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="photo-box" id="detailPhotoBox"><span class="no-img">No Image</span></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <label class="btn-foto" style="cursor:pointer">
+          <span class="material-icons-round" style="font-size:15px">photo_camera</span> Ganti Foto
+          <input type="file" accept="image/*" style="display:none" onchange="onFotoChange(event)" id="fotoInput">
+        </label>
+      </div>
+      <div class="detail-grid" id="detailGrid"></div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">LIST AWB (<span id="awbCount">0</span>)</div>
+        <div class="awb-list-modal" id="detailAwbList" style="max-height:200px"></div>
+      </div>
+    </div>
+    <div class="modal-footer" id="detailModalFooter"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="width:360px">
+    <div class="modal-header"><div class="modal-title" id="confirmTitle">Konfirmasi</div></div>
+    <div class="modal-body"><p id="confirmMsg" style="font-size:14px;color:var(--gray7)"></p></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('confirmModal')">Batal</button>
+      <button class="btn btn-danger" id="confirmBtn">Ya, Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+var GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // GANTI DENGAN URL ANDA
+// ============================================================
+
+var masterData = {};
+var obData = [], hvsData = [], ibData = [];
+var obScanned = [], hvsScanned = [], ibScanned = [];
+var currentDetailItem = null, currentDetailType = '';
+
+// Global incharge yang dipilih dari topbar
+var globalIncharge = '';
+
+function gasGet(action, params) {
+  var url = new URL(GAS_URL);
+  url.searchParams.set('action', action);
+  if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
+  return fetch(url.toString(), { redirect: 'follow' }).then(function(r){ return r.json(); });
+}
+function gasPost(action, data) {
+  data.action = action;
+  return fetch(GAS_URL, {
+    method: 'POST', redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(data)
+  }).then(function(r){ return r.json(); });
+}
+
+function showLoading(t){ document.getElementById('loadingText').innerText=t||'Memuat...'; document.getElementById('loading').style.display='flex'; }
+function hideLoading(){ document.getElementById('loading').style.display='none'; }
+
+// ============================================================
+// GLOBAL INCHARGE — satu-satunya tempat pilih incharge
+// ============================================================
+function populateGlobalIncharge() {
+  var sel = document.getElementById('globalIncharge');
+  // Gabungkan incharge OB dan IB (tanpa duplikat)
+  var obList = masterData.obIncharges || [];
+  var ibList = masterData.ibIncharges || [];
+  var combined = obList.slice();
+  ibList.forEach(function(v){ if (!combined.includes(v)) combined.push(v); });
+
+  sel.innerHTML = '<option value="">— Pilih —</option>' +
+    combined.map(function(v){ return '<option value="'+v+'">'+v+'</option>'; }).join('');
+
+  // Restore pilihan kalau ada
+  if (globalIncharge) {
+    sel.value = globalIncharge;
+    updateInchargeDot(true);
+  }
+}
+
+function onGlobalInchargeChange() {
+  globalIncharge = document.getElementById('globalIncharge').value;
+  updateInchargeDot(!!globalIncharge);
+
+  // Update semua form — tampilkan/sembunyikan section berdasarkan incharge
+  refreshObFormIncharge();
+  refreshHvsFormIncharge();
+  refreshIbFormIncharge();
+}
+
+function updateInchargeDot(active) {
+  var dot = document.getElementById('inchargeDot');
+  if (active) dot.classList.add('active'); else dot.classList.remove('active');
+}
+
+// ---- OB form incharge refresh ----
+function refreshObFormIncharge() {
+  var hasIncharge = !!globalIncharge;
+  document.getElementById('obInchargeInfo').style.display   = hasIncharge ? '' : 'none';
+  document.getElementById('obNoInchargeWarn').style.display = hasIncharge ? 'none' : '';
+  document.getElementById('obFormGrid').style.display       = hasIncharge ? '' : 'none';
+  document.getElementById('obScanSection').style.display    = hasIncharge ? '' : 'none';
+  document.getElementById('obFormActions').style.display    = hasIncharge ? '' : 'none';
+
+  if (hasIncharge) {
+    document.getElementById('obInchargeDisplay').innerText = globalIncharge;
+    // Isi dropdown service & tujuan sesuai incharge
+    var d = (masterData.obData||{})[globalIncharge] || {};
+    var obSvc = document.getElementById('obService');
+    var obTuj = document.getElementById('obTujuan');
+    obSvc.innerHTML = '<option value="">— Pilih Service —</option>' + (d.services||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
+    obTuj.innerHTML = '<option value="">— Pilih Tujuan —</option>'  + (d.tujuans||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
+  }
+  checkObForm();
+}
+
+// ---- HVS form incharge refresh ----
+function refreshHvsFormIncharge() {
+  var hasIncharge = !!globalIncharge;
+  document.getElementById('hvsInchargeInfo').style.display   = hasIncharge ? '' : 'none';
+  document.getElementById('hvsNoInchargeWarn').style.display = hasIncharge ? 'none' : '';
+  document.getElementById('hvsFormGrid').style.display       = hasIncharge ? '' : 'none';
+  document.getElementById('hvsScanSection').style.display    = hasIncharge ? '' : 'none';
+  document.getElementById('hvsFormActions').style.display    = hasIncharge ? '' : 'none';
+
+  if (hasIncharge) {
+    document.getElementById('hvsInchargeDisplay').innerText = globalIncharge;
+    var d = (masterData.obData||{})[globalIncharge] || {};
+    var hvsSvc = document.getElementById('hvsService');
+    var hvsTuj = document.getElementById('hvsTujuan');
+    hvsSvc.innerHTML = '<option value="">— Pilih Service —</option>' + (d.services||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
+    hvsTuj.innerHTML = '<option value="">— Pilih Tujuan —</option>'  + (d.tujuans||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
+  }
+  checkHvsForm();
+}
+
+// ---- IB form incharge refresh ----
+function refreshIbFormIncharge() {
+  var hasIncharge = !!globalIncharge;
+  document.getElementById('ibInchargeInfo').style.display   = hasIncharge ? '' : 'none';
+  document.getElementById('ibNoInchargeWarn').style.display = hasIncharge ? 'none' : '';
+  document.getElementById('ibFormGrid').style.display       = hasIncharge ? '' : 'none';
+  document.getElementById('ibScanSection').style.display    = hasIncharge ? '' : 'none';
+  document.getElementById('ibFormActions').style.display    = hasIncharge ? '' : 'none';
+
+  if (hasIncharge) {
+    document.getElementById('ibInchargeDisplay').innerText = globalIncharge;
+    var d = (masterData.ibData||{})[globalIncharge] || {};
+    var ibSvc  = document.getElementById('ibService');
+    var ibFrom = document.getElementById('ibFrom');
+    var ibTuj  = document.getElementById('ibTujuan');
+    ibSvc.innerHTML  = '<option value="">— Pilih Service —</option>' + (d.services||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
+    ibFrom.innerHTML = '<option value="">— Pilih From —</option>'    + (d.froms||[]).map(function(v)   { return '<option>'+v+'</option>'; }).join('');
+    ibTuj.innerHTML  = '<option value="">— Pilih Tujuan —</option>'  + (d.tujuans||[]).map(function(v) { return '<option>'+v+'</option>'; }).join('');
+  }
+  checkIbForm();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.onload = function() { reloadAll(); };
+
+function reloadAll() {
+  showLoading('Memuat data...');
+  gasGet('getMasterData').then(function(d) {
+    masterData = d;
+    obData  = d.obList  || [];
+    hvsData = d.hvsList || [];
+    ibData  = d.ibList  || [];
+    populateGlobalIncharge();
+    renderObTable();
+    renderHvsTable();
+    renderIbTable();
+    loadManifest();
+    loadOBIB();
+    updateObStats();
+    updateHvsStats();
+    updateIbStats();
+    hideLoading();
+  }).catch(function(e){ hideLoading(); alert('Gagal memuat data: '+e.message); });
+}
+
+// ============================================================
+// PAGE SWITCHING
+// ============================================================
+var pages = ['ob','hvs','ib','manifest','obib'];
+var pageTitles = {
+  ob:       'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
+  hvs:      'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',
+  ib:       'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',
+  manifest: 'Manifest <span class="topbar-sub">Rekap AWB OB & HVS</span>',
+  obib:     'OB & IB <span class="topbar-sub">Combined outbound & inbound view</span>'
+};
+
+function switchPage(page) {
+  pages.forEach(function(p){
+    document.getElementById('page-'+p).style.display = (p===page) ? '' : 'none';
+    var nav = document.getElementById('nav-'+p);
+    if(nav) nav.classList.toggle('active', p===page);
+  });
+  document.getElementById('topbarTitle').innerHTML = pageTitles[page] || page;
+}
+
+// ============================================================
+// FORM TOGGLES
+// ============================================================
+function toggleForm(type) {
+  var body = document.getElementById(type+'FormBody');
+  var icon = document.getElementById(type+'FormIcon');
+  var open = body.classList.toggle('open');
+  icon.innerText = open ? 'expand_less' : 'expand_more';
+  // Refresh incharge state saat buka form
+  if (open) {
+    if (type==='ob')  refreshObFormIncharge();
+    if (type==='hvs') refreshHvsFormIncharge();
+    if (type==='ib')  refreshIbFormIncharge();
+  }
+}
+
+// ============================================================
+// FORM CHECKS
+// ============================================================
+function checkObForm() {
+  var ok = globalIncharge &&
+           document.getElementById('obService').value &&
+           document.getElementById('obTujuan').value;
+  document.getElementById('btnSaveOb').disabled = !ok;
+}
+function checkHvsForm() {
+  var ok = globalIncharge &&
+           document.getElementById('hvsService').value &&
+           document.getElementById('hvsTujuan').value;
+  document.getElementById('btnSaveHvs').disabled = !ok;
+}
+function checkIbForm() {
+  var ok = globalIncharge &&
+           document.getElementById('ibService').value &&
+           document.getElementById('ibFrom').value &&
+           document.getElementById('ibTujuan').value;
+  document.getElementById('btnSaveIb').disabled = !ok;
+}
+
+// ============================================================
+// SCAN INPUT
+// ============================================================
+function handleScan(e, type) {
+  if (e.key !== 'Enter') return;
+  var input = document.getElementById(type+'ScanInput');
+  var val = input.value.trim();
+  if (!val) return;
+  var arr = type==='ob' ? obScanned : type==='hvs' ? hvsScanned : ibScanned;
+  if (!arr.includes(val)) arr.unshift(val);
+  input.value = '';
+  renderScanList(type);
+}
+function renderScanList(type) {
+  var arr = type==='ob' ? obScanned : type==='hvs' ? hvsScanned : ibScanned;
+  var listEl = document.getElementById(type+'ScanList');
+  var countEl = document.getElementById(type+'ScanCount');
+  countEl.innerText = arr.length + ' AWB';
+  if (!arr.length) { listEl.innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>'; return; }
+  listEl.innerHTML = arr.map(function(awb, i){
+    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span><span class="material-icons-round scan-item-del" onclick="removeScan(\''+type+'\','+i+')">delete</span></div>';
+  }).join('');
+}
+function removeScan(type, idx) {
+  var arr = type==='ob' ? obScanned : type==='hvs' ? hvsScanned : ibScanned;
+  arr.splice(idx, 1);
+  renderScanList(type);
+}
+
+// ============================================================
+// SAVE OB
+// ============================================================
+function saveOb() {
+  var service = document.getElementById('obService').value;
+  var tujuan  = document.getElementById('obTujuan').value;
+  if (!globalIncharge||!service||!tujuan) return;
+  showLoading('Menyimpan data OB...');
+  gasPost('saveOb', { incharge:globalIncharge, service:service, tujuan:tujuan, awbList:obScanned.slice() })
+    .then(function(res) {
+      hideLoading();
+      if (res.error) { alert('Gagal: '+res.error); return; }
+      alert('✅ Data OB berhasil disimpan!\n\nNO TRACK: '+res.noTrack);
+      resetObForm();
+      reloadAll();
+    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+}
+function resetObForm() {
+  document.getElementById('obService').value = '';
+  document.getElementById('obTujuan').value  = '';
+  obScanned = [];
+  renderScanList('ob');
+  checkObForm();
+  var body = document.getElementById('obFormBody');
+  body.classList.remove('open');
+  document.getElementById('obFormIcon').innerText = 'expand_more';
+}
+
+// ============================================================
+// SAVE HVS
+// ============================================================
+function saveHvs() {
+  var service = document.getElementById('hvsService').value;
+  var tujuan  = document.getElementById('hvsTujuan').value;
+  if (!globalIncharge||!service||!tujuan) return;
+  showLoading('Menyimpan data HVS...');
+  gasPost('saveHvs', { incharge:globalIncharge, service:service, tujuan:tujuan, awbList:hvsScanned.slice() })
+    .then(function(res) {
+      hideLoading();
+      if (res.error) { alert('Gagal: '+res.error); return; }
+      alert('✅ Data HVS berhasil disimpan!\n\nNO TRACK: '+res.noTrack);
+      resetHvsForm();
+      reloadAll();
+    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+}
+function resetHvsForm() {
+  document.getElementById('hvsService').value = '';
+  document.getElementById('hvsTujuan').value  = '';
+  hvsScanned = [];
+  renderScanList('hvs');
+  checkHvsForm();
+  document.getElementById('hvsFormBody').classList.remove('open');
+  document.getElementById('hvsFormIcon').innerText = 'expand_more';
+}
+
+// ============================================================
+// SAVE IB
+// ============================================================
+function saveIb() {
+  var service = document.getElementById('ibService').value;
+  var from    = document.getElementById('ibFrom').value;
+  var tujuan  = document.getElementById('ibTujuan').value;
+  if (!globalIncharge||!service||!from||!tujuan) return;
+  showLoading('Menyimpan data IB...');
+  gasPost('saveIb', { incharge:globalIncharge, service:service, from:from, tujuan:tujuan, awbList:ibScanned.slice() })
+    .then(function(res) {
+      hideLoading();
+      if (res.error) { alert('Gagal: '+res.error); return; }
+      alert('✅ Data IB berhasil disimpan!\n\nNO TRACK: '+res.noTrack);
+      resetIbForm();
+      reloadAll();
+    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+}
+function resetIbForm() {
+  ['ibService','ibFrom','ibTujuan'].forEach(function(id){ document.getElementById(id).value=''; });
+  ibScanned = [];
+  renderScanList('ib');
+  checkIbForm();
+  document.getElementById('ibFormBody').classList.remove('open');
+  document.getElementById('ibFormIcon').innerText = 'expand_more';
+}
+
+// ============================================================
+// STATS
+// ============================================================
+function updateObStats() {
+  var total = obData.reduce(function(s,d){ return s+(+d.total_awb||0); }, 0);
+  var selesai = obData.filter(function(d){ return d.status==='SELESAI'; }).length;
+  document.getElementById('obTotalAwb').innerText = total;
+  document.getElementById('obSelesai').innerText  = selesai;
+  document.getElementById('obProses').innerText   = obData.length - selesai;
+}
+function updateHvsStats() {
+  var total = hvsData.reduce(function(s,d){ return s+(+d.total_awb||0); }, 0);
+  var selesai = hvsData.filter(function(d){ return d.status==='SELESAI'; }).length;
+  document.getElementById('hvsTotalAwb').innerText = total;
+  document.getElementById('hvsSelesai').innerText  = selesai;
+  document.getElementById('hvsProses').innerText   = hvsData.length - selesai;
+}
+function updateIbStats() {
+  var total = ibData.reduce(function(s,d){ return s+(+d.total_awb||0); }, 0);
+  var selesai = ibData.filter(function(d){ return d.status==='SELESAI'; }).length;
+  document.getElementById('ibTotalAwb').innerText = total;
+  document.getElementById('ibSelesai').innerText  = selesai;
+  document.getElementById('ibProses').innerText   = ibData.length - selesai;
+}
+
+// ============================================================
+// TABLE RENDERS
+// ============================================================
+function statusBadge(s) {
+  return s==='SELESAI'
+    ? '<span class="badge badge-selesai">✓ Selesai</span>'
+    : '<span class="badge badge-proses">● Proses</span>';
+}
+function fotoThumb(url) {
+  if (!url) return '<span style="font-size:11px;color:var(--gray5)">—</span>';
+  return '<a href="'+url+'" target="_blank"><img src="'+url+'" style="width:44px;height:36px;object-fit:cover;border-radius:5px;border:1px solid var(--gray3)"></a>';
+}
+
+function renderObTable(filter) {
+  var data = obData;
+  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(d){ return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }); }
+  var tbody = document.getElementById('obTbody');
+  if (!data.length) { tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>'; return; }
+  tbody.innerHTML = data.map(function(d, i){
+    return '<tr>'
+      +'<td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
+      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ob\',\''+d.no_track+'\')">'+d.no_track+'</span></td>'
+      +'<td>'+d.incharge+'</td>'
+      +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
+      +'<td>'+d.tujuan+'</td>'
+      +'<td style="font-size:12px;color:var(--gray6)">'+d.created_date+'</td>'
+      +'<td style="text-align:center;font-weight:700">'+d.total_awb+'</td>'
+      +'<td>'+statusBadge(d.status)+'</td>'
+      +'<td>'+fotoThumb(d.foto_url)+'</td>'
+      +'<td><div style="display:flex;gap:4px">'
+      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ob\',\''+d.no_track+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
+      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ob\',\''+d.no_track+'\')"><span class="material-icons-round">delete</span></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function renderHvsTable(filter) {
+  var data = hvsData;
+  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(d){ return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }); }
+  var tbody = document.getElementById('hvsTbody');
+  if (!data.length) { tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>'; return; }
+  tbody.innerHTML = data.map(function(d, i){
+    return '<tr>'
+      +'<td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
+      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'hvs\',\''+d.no_track+'\')">'+d.no_track+'</span></td>'
+      +'<td>'+d.incharge+'</td>'
+      +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
+      +'<td>'+d.tujuan+'</td>'
+      +'<td style="font-size:12px;color:var(--gray6)">'+d.created_date+'</td>'
+      +'<td style="text-align:center;font-weight:700">'+d.total_awb+'</td>'
+      +'<td>'+statusBadge(d.status)+'</td>'
+      +'<td>'+fotoThumb(d.foto_url)+'</td>'
+      +'<td><div style="display:flex;gap:4px">'
+      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'hvs\',\''+d.no_track+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
+      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'hvs\',\''+d.no_track+'\')"><span class="material-icons-round">delete</span></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function renderIbTable(filter) {
+  var data = ibData;
+  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(d){ return (d.no_track+d.incharge+d.service+d.tujuan+(d.from||'')+d.status).toLowerCase().includes(v); }); }
+  var tbody = document.getElementById('ibTbody');
+  if (!data.length) { tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>'; return; }
+  tbody.innerHTML = data.map(function(d, i){
+    return '<tr>'
+      +'<td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
+      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ib\',\''+d.no_track+'\')">'+d.no_track+'</span></td>'
+      +'<td>'+d.incharge+'</td>'
+      +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
+      +'<td>'+(d.from||'—')+'</td>'
+      +'<td>'+d.tujuan+'</td>'
+      +'<td style="font-size:12px;color:var(--gray6)">'+d.created_date+'</td>'
+      +'<td style="text-align:center;font-weight:700">'+d.total_awb+'</td>'
+      +'<td>'+statusBadge(d.status)+'</td>'
+      +'<td>'+fotoThumb(d.foto_url)+'</td>'
+      +'<td><div style="display:flex;gap:4px">'
+      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ib\',\''+d.no_track+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
+      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ib\',\''+d.no_track+'\')"><span class="material-icons-round">delete</span></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function filterObTable()  { renderObTable(document.getElementById('obSearch').value); }
+function filterHvsTable() { renderHvsTable(document.getElementById('hvsSearch').value); }
+function filterIbTable()  { renderIbTable(document.getElementById('ibSearch').value); }
+
+// ============================================================
+// MARK SELESAI
+// ============================================================
+function markSelesai(type, noTrack) {
+  var action = type==='ob' ? 'updateObStatus' : 'updateHvsStatus';
+  if (!confirm('Tandai '+noTrack+' sebagai SELESAI?')) return;
+  showLoading('Mengubah status...');
+  gasPost(action, { noTrack:noTrack, newStatus:'SELESAI' }).then(function(res){
+    hideLoading();
+    if (res.success) reloadAll();
+    else alert('Gagal: '+(res.error||''));
+  }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+}
+
+// ============================================================
+// DELETE
+// ============================================================
+function confirmDelete(type, noTrack) {
+  document.getElementById('confirmTitle').innerText = 'Hapus Data';
+  document.getElementById('confirmMsg').innerText   = 'Hapus '+noTrack+'? Data AWB terkait juga akan dihapus. Tidak dapat dibatalkan.';
+  var action = type==='ob' ? 'deleteOb' : 'deleteHvs';
+  document.getElementById('confirmBtn').onclick = function(){
+    closeModal('confirmModal');
+    showLoading('Menghapus...');
+    gasPost(action, { noTrack:noTrack }).then(function(res){
+      hideLoading();
+      if (res.success) reloadAll();
+      else alert('Gagal: '+(res.error||''));
+    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+  };
+  openModal('confirmModal');
+}
+
+// ============================================================
+// DETAIL MODAL
+// ============================================================
+function openDetailModal(type, noTrack) {
+  var data = type==='ob' ? obData : type==='hvs' ? hvsData : ibData;
+  var item = data.find(function(d){ return d.no_track===noTrack; });
+  if (!item) return;
+  currentDetailItem = item;
+  currentDetailType = type;
+
+  document.getElementById('detailModalTitle').innerText = noTrack;
+
+  var photoBox = document.getElementById('detailPhotoBox');
+  if (item.foto_url) {
+    photoBox.innerHTML = '<img src="'+item.foto_url+'" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">';
+  } else {
+    photoBox.innerHTML = '<span class="no-img">No Image</span>';
+  }
+
+  var fields = type==='ib'
+    ? [['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['FROM',item.from||'—'],['TUJUAN',item.tujuan],['CREATED DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]]
+    : [['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['TUJUAN',item.tujuan],['CREATED DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]];
+  document.getElementById('detailGrid').innerHTML = fields.map(function(f){
+    return '<div class="detail-field"><div class="d-label">'+f[0]+'</div><div class="d-value">'+f[1]+'</div></div>';
+  }).join('');
+
+  showLoading('Memuat AWB...');
+  gasGet('getAwbList', { noTrack:noTrack, type:type.toUpperCase() }).then(function(res){
+    hideLoading();
+    var list = res.list||[];
+    document.getElementById('awbCount').innerText = list.length;
+    var awbEl = document.getElementById('detailAwbList');
+    if (!list.length) { awbEl.innerHTML='<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>'; }
+    else awbEl.innerHTML = list.map(function(r){ return '<div class="awb-row">'+(r.awb||r)+(r.tujuan?' <span style="color:var(--gray5);font-size:11px">— '+r.tujuan+'</span>':'')+'</div>'; }).join('');
+  }).catch(function(){ hideLoading(); });
+
+  var footer = document.getElementById('detailModalFooter');
+  var selesaiBtn = item.status!=='SELESAI' ? '<button class="btn btn-success" onclick="markSelesai(\''+type+'\',\''+noTrack+'\');closeModal(\'detailModal\')"><span class="material-icons-round">check_circle</span> Selesai</button>' : '';
+  footer.innerHTML = '<button class="btn btn-outline" onclick="closeModal(\'detailModal\')">Tutup</button>'
+    + selesaiBtn
+    + '<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+type+'\',\''+noTrack+'\');closeModal(\'detailModal\')"><span class="material-icons-round">delete</span></button>';
+
+  openModal('detailModal');
+}
+
+// ============================================================
+// FOTO UPDATE
+// ============================================================
+function onFotoChange(e) {
+  var file = e.target.files[0];
+  if (!file || !currentDetailItem) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var base64 = ev.target.result.split(',')[1];
+    showLoading('Mengupload foto...');
+    gasPost('updateFoto', {
+      noTrack: currentDetailItem.no_track,
+      type: currentDetailType.toUpperCase(),
+      base64Data: base64
+    }).then(function(res){
+      hideLoading();
+      if (res.success && res.url) {
+        document.getElementById('detailPhotoBox').innerHTML = '<img src="'+res.url+'">';
+        currentDetailItem.foto_url = res.url;
+        alert('✅ Foto berhasil diperbarui!');
+        reloadAll();
+      } else alert('Gagal upload foto: '+(res.error||''));
+    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+// ============================================================
+// MANIFEST
+// ============================================================
+var manifestData = [];
+function loadManifest() {
+  gasGet('getMasterData').then(function(d){
+    manifestData = d.obList.concat(d.hvsList).concat(d.ibList||[]);
+  }).catch(function(){});
+}
+function filterManifest() {
+  var v = document.getElementById('manifestSearch').value.toLowerCase();
+}
+
+// ============================================================
+// OB&IB
+// ============================================================
+var obibData = [];
+function loadOBIB() {
+  gasGet('getOBIB').then(function(res){
+    var headers = res.headers||[];
+    var rows = res.rows||[];
+    obibData = rows;
+    if (!headers.length && !rows.length) {
+      document.getElementById('obibTableWrap').innerHTML = '<div class="empty-state"><span class="material-icons-round">table_view</span><p>Sheet OB&IB masih kosong</p></div>';
+      return;
+    }
+    renderObibTable(headers, rows);
+  }).catch(function(){});
+}
+function renderObibTable(headers, rows, filter) {
+  var data = rows;
+  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(r){ return r.join(' ').toLowerCase().includes(v); }); }
+  var wrap = document.getElementById('obibTableWrap');
+  if (!headers.length) { wrap.innerHTML='<div class="empty-state"><span class="material-icons-round">table_view</span><p>Tidak ada data</p></div>'; return; }
+  var html = '<table><thead><tr>'+headers.map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr></thead><tbody>';
+  html += data.map(function(r){ return '<tr>'+r.map(function(c){ return '<td style="font-size:12px">'+c+'</td>'; }).join('')+'</tr>'; }).join('');
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+function filterObib() {
+  var v = document.getElementById('obibSearch').value;
+  gasGet('getOBIB').then(function(res){ renderObibTable(res.headers||[], res.rows||[], v); });
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(function(el){
+  el.addEventListener('click', function(e){
+    if (e.target === el) el.classList.remove('open');
+  });
+});
+
+// ============================================================
+// CSV EXPORT
+// ============================================================
+function exportCSV() {
+  var page = document.querySelector('.nav-item.active').innerText.trim();
+  var data, headers, filename;
+  if (page.includes('Outbound BDO'))      { data=obData;  headers=['NO_TRACK','INCHARGE','SERVICE','TUJUAN','CREATED_DATE','STATUS','TOTAL_AWB','FOTO_URL']; filename='OB_export.csv'; }
+  else if (page.includes('Outbound HVS')) { data=hvsData; headers=['NO_TRACK','INCHARGE','SERVICE','TUJUAN','CREATED_DATE','STATUS','TOTAL_AWB','FOTO_URL']; filename='HVS_export.csv'; }
+  else if (page.includes('Inbound HVS'))  { data=ibData;  headers=['NO_TRACK','INCHARGE','SERVICE','FROM','TUJUAN','CREATED_DATE','STATUS','TOTAL_AWB','FOTO_URL']; filename='IB_export.csv'; }
+  else { alert('Pilih halaman OB/HVS/IB dulu'); return; }
+  var csv = headers.join(',') + '\n' + data.map(function(d){ return headers.map(function(h,i){ return '"'+(d[h.toLowerCase()]||d[Object.keys(d)[i]]||'')+'"'; }).join(','); }).join('\n');
+  downloadCSV(csv, filename);
+}
+function exportManifestCSV() {
+  var csv = 'INCHARGE,SERVICE,TUJUAN,AWB,NO_TRACK,TYPE\n' + (manifestData||[]).map(function(d){ return [d.incharge,d.service,d.tujuan,'',d.no_track,'OB'].join(','); }).join('\n');
+  downloadCSV(csv, 'manifest_export.csv');
+}
+function exportObibCSV() {
+  alert('Export OB&IB akan mengambil data langsung dari sheet.');
+}
+function downloadCSV(csv, filename) {
+  var blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+</script>
+</body>
+</html>
