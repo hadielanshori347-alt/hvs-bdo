@@ -223,7 +223,7 @@ tr:hover td{background:var(--gray0)}
   <div class="topbar">
     <div class="topbar-title" id="topbarTitle">Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span></div>
 
-    <!-- INCHARGE GLOBAL SELECTOR — hanya di sini -->
+    <!-- INCHARGE GLOBAL SELECTOR -->
     <div class="topbar-incharge">
       <span class="material-icons-round" style="font-size:16px;color:var(--blue)">person</span>
       <span class="topbar-incharge-label">Incharge</span>
@@ -241,21 +241,18 @@ tr:hover td{background:var(--gray0)}
 
     <!-- ===== OB PAGE ===== -->
     <div id="page-ob">
-      <!-- Stats -->
       <div class="stats-row" id="obStats">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="obTotalAwb">0</div></div>
         <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="obSelesai">0</div></div>
         <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="obProses">0</div></div>
       </div>
 
-      <!-- Add Form -->
       <div class="form-panel">
         <div class="form-panel-header" onclick="toggleForm('ob')" style="cursor:pointer">
           <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Outbound BDO</div>
           <span class="material-icons-round" id="obFormIcon" style="color:#fff;font-size:20px">expand_more</span>
         </div>
         <div class="form-panel-body" id="obFormBody">
-          <!-- Incharge dari topbar (read-only info) -->
           <div id="obInchargeInfo" class="incharge-info-bar" style="display:none">
             <span class="material-icons-round">badge</span>
             <span>Incharge: <strong id="obInchargeDisplay">—</strong></span>
@@ -265,7 +262,6 @@ tr:hover td{background:var(--gray0)}
             <span class="material-icons-round">warning</span>
             Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
           </div>
-
           <div class="form-grid" id="obFormGrid" style="display:none">
             <div class="form-group">
               <label>SERVICE</label>
@@ -280,8 +276,6 @@ tr:hover td{background:var(--gray0)}
               </select>
             </div>
           </div>
-
-          <!-- Scan AWB -->
           <div class="scan-section" id="obScanSection" style="display:none">
             <div class="scan-row">
               <input class="scan-input" id="obScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'ob')">
@@ -296,7 +290,6 @@ tr:hover td{background:var(--gray0)}
         </div>
       </div>
 
-      <!-- Table -->
       <div class="table-panel">
         <div class="table-toolbar">
           <div class="table-toolbar-title">Google Sheets View — Outbound BDO</div>
@@ -526,7 +519,9 @@ tr:hover td{background:var(--gray0)}
 
 <script>
 // ============================================================
-var GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // GANTI DENGAN URL ANDA
+// GAS URL — sudah terhubung ke backend Google Apps Script
+// ============================================================
+var GAS_URL = "https://script.google.com/macros/s/AKfycbzr38rOgkuH9bpkT1-dexfA8LAeJ_ECF-2m63AHCst9zAnHWqtyU40-m3Mieb4wWeM-/exec";
 // ============================================================
 
 var masterData = {};
@@ -556,11 +551,10 @@ function showLoading(t){ document.getElementById('loadingText').innerText=t||'Me
 function hideLoading(){ document.getElementById('loading').style.display='none'; }
 
 // ============================================================
-// GLOBAL INCHARGE — satu-satunya tempat pilih incharge
+// GLOBAL INCHARGE
 // ============================================================
 function populateGlobalIncharge() {
   var sel = document.getElementById('globalIncharge');
-  // Gabungkan incharge OB dan IB (tanpa duplikat)
   var obList = masterData.obIncharges || [];
   var ibList = masterData.ibIncharges || [];
   var combined = obList.slice();
@@ -569,7 +563,6 @@ function populateGlobalIncharge() {
   sel.innerHTML = '<option value="">— Pilih —</option>' +
     combined.map(function(v){ return '<option value="'+v+'">'+v+'</option>'; }).join('');
 
-  // Restore pilihan kalau ada
   if (globalIncharge) {
     sel.value = globalIncharge;
     updateInchargeDot(true);
@@ -579,8 +572,6 @@ function populateGlobalIncharge() {
 function onGlobalInchargeChange() {
   globalIncharge = document.getElementById('globalIncharge').value;
   updateInchargeDot(!!globalIncharge);
-
-  // Update semua form — tampilkan/sembunyikan section berdasarkan incharge
   refreshObFormIncharge();
   refreshHvsFormIncharge();
   refreshIbFormIncharge();
@@ -591,7 +582,6 @@ function updateInchargeDot(active) {
   if (active) dot.classList.add('active'); else dot.classList.remove('active');
 }
 
-// ---- OB form incharge refresh ----
 function refreshObFormIncharge() {
   var hasIncharge = !!globalIncharge;
   document.getElementById('obInchargeInfo').style.display   = hasIncharge ? '' : 'none';
@@ -602,7 +592,6 @@ function refreshObFormIncharge() {
 
   if (hasIncharge) {
     document.getElementById('obInchargeDisplay').innerText = globalIncharge;
-    // Isi dropdown service & tujuan sesuai incharge
     var d = (masterData.obData||{})[globalIncharge] || {};
     var obSvc = document.getElementById('obService');
     var obTuj = document.getElementById('obTujuan');
@@ -612,7 +601,6 @@ function refreshObFormIncharge() {
   checkObForm();
 }
 
-// ---- HVS form incharge refresh ----
 function refreshHvsFormIncharge() {
   var hasIncharge = !!globalIncharge;
   document.getElementById('hvsInchargeInfo').style.display   = hasIncharge ? '' : 'none';
@@ -632,7 +620,6 @@ function refreshHvsFormIncharge() {
   checkHvsForm();
 }
 
-// ---- IB form incharge refresh ----
 function refreshIbFormIncharge() {
   var hasIncharge = !!globalIncharge;
   document.getElementById('ibInchargeInfo').style.display   = hasIncharge ? '' : 'none';
@@ -708,7 +695,6 @@ function toggleForm(type) {
   var icon = document.getElementById(type+'FormIcon');
   var open = body.classList.toggle('open');
   icon.innerText = open ? 'expand_less' : 'expand_more';
-  // Refresh incharge state saat buka form
   if (open) {
     if (type==='ob')  refreshObFormIncharge();
     if (type==='hvs') refreshHvsFormIncharge();
@@ -969,7 +955,7 @@ function filterIbTable()  { renderIbTable(document.getElementById('ibSearch').va
 // MARK SELESAI
 // ============================================================
 function markSelesai(type, noTrack) {
-  var action = type==='ob' ? 'updateObStatus' : 'updateHvsStatus';
+  var action = type==='ob' ? 'updateObStatus' : type==='hvs' ? 'updateHvsStatus' : 'updateIbStatus';
   if (!confirm('Tandai '+noTrack+' sebagai SELESAI?')) return;
   showLoading('Mengubah status...');
   gasPost(action, { noTrack:noTrack, newStatus:'SELESAI' }).then(function(res){
@@ -985,7 +971,7 @@ function markSelesai(type, noTrack) {
 function confirmDelete(type, noTrack) {
   document.getElementById('confirmTitle').innerText = 'Hapus Data';
   document.getElementById('confirmMsg').innerText   = 'Hapus '+noTrack+'? Data AWB terkait juga akan dihapus. Tidak dapat dibatalkan.';
-  var action = type==='ob' ? 'deleteOb' : 'deleteHvs';
+  var action = type==='ob' ? 'deleteOb' : type==='hvs' ? 'deleteHvs' : 'deleteIb';
   document.getElementById('confirmBtn').onclick = function(){
     closeModal('confirmModal');
     showLoading('Menghapus...');
@@ -1076,28 +1062,32 @@ function onFotoChange(e) {
 // ============================================================
 var manifestData = [];
 function loadManifest() {
-  gasGet('getMasterData').then(function(d){
-    manifestData = d.obList.concat(d.hvsList).concat(d.ibList||[]);
-  }).catch(function(){});
+  manifestData = (masterData.obList||[]).concat(masterData.hvsList||[]).concat(masterData.ibList||[]);
 }
 function filterManifest() {
   var v = document.getElementById('manifestSearch').value.toLowerCase();
+  var tbody = document.getElementById('manifestTbody');
+  var data = manifestData.filter(function(d){
+    return !v || (d.incharge+d.service+d.tujuan+d.no_track).toLowerCase().includes(v);
+  });
+  tbody.innerHTML = data.map(function(d){
+    return '<tr><td>'+d.incharge+'</td><td>'+d.service+'</td><td>'+d.tujuan+'</td><td>—</td><td class="mono">'+d.no_track+'</td><td>OB</td></tr>';
+  }).join('') || '<tr><td colspan="6"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>';
 }
 
 // ============================================================
 // OB&IB
 // ============================================================
-var obibData = [];
+var obibHeaders = [], obibRows = [];
 function loadOBIB() {
   gasGet('getOBIB').then(function(res){
-    var headers = res.headers||[];
-    var rows = res.rows||[];
-    obibData = rows;
-    if (!headers.length && !rows.length) {
+    obibHeaders = res.headers||[];
+    obibRows    = res.rows||[];
+    if (!obibHeaders.length && !obibRows.length) {
       document.getElementById('obibTableWrap').innerHTML = '<div class="empty-state"><span class="material-icons-round">table_view</span><p>Sheet OB&IB masih kosong</p></div>';
       return;
     }
-    renderObibTable(headers, rows);
+    renderObibTable(obibHeaders, obibRows);
   }).catch(function(){});
 }
 function renderObibTable(headers, rows, filter) {
@@ -1112,7 +1102,7 @@ function renderObibTable(headers, rows, filter) {
 }
 function filterObib() {
   var v = document.getElementById('obibSearch').value;
-  gasGet('getOBIB').then(function(res){ renderObibTable(res.headers||[], res.rows||[], v); });
+  renderObibTable(obibHeaders, obibRows, v);
 }
 
 // ============================================================
@@ -1133,19 +1123,21 @@ document.querySelectorAll('.modal-overlay').forEach(function(el){
 function exportCSV() {
   var page = document.querySelector('.nav-item.active').innerText.trim();
   var data, headers, filename;
-  if (page.includes('Outbound BDO'))      { data=obData;  headers=['NO_TRACK','INCHARGE','SERVICE','TUJUAN','CREATED_DATE','STATUS','TOTAL_AWB','FOTO_URL']; filename='OB_export.csv'; }
-  else if (page.includes('Outbound HVS')) { data=hvsData; headers=['NO_TRACK','INCHARGE','SERVICE','TUJUAN','CREATED_DATE','STATUS','TOTAL_AWB','FOTO_URL']; filename='HVS_export.csv'; }
-  else if (page.includes('Inbound HVS'))  { data=ibData;  headers=['NO_TRACK','INCHARGE','SERVICE','FROM','TUJUAN','CREATED_DATE','STATUS','TOTAL_AWB','FOTO_URL']; filename='IB_export.csv'; }
+  if (page.includes('Outbound BDO'))      { data=obData;  headers=['no_track','incharge','service','tujuan','created_date','status','total_awb','foto_url']; filename='OB_export.csv'; }
+  else if (page.includes('Outbound HVS')) { data=hvsData; headers=['no_track','incharge','service','tujuan','created_date','status','total_awb','foto_url']; filename='HVS_export.csv'; }
+  else if (page.includes('Inbound HVS'))  { data=ibData;  headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb','foto_url']; filename='IB_export.csv'; }
   else { alert('Pilih halaman OB/HVS/IB dulu'); return; }
-  var csv = headers.join(',') + '\n' + data.map(function(d){ return headers.map(function(h,i){ return '"'+(d[h.toLowerCase()]||d[Object.keys(d)[i]]||'')+'"'; }).join(','); }).join('\n');
+  var csv = headers.join(',') + '\n' + data.map(function(d){ return headers.map(function(h){ return '"'+(d[h]||'')+'"'; }).join(','); }).join('\n');
   downloadCSV(csv, filename);
 }
 function exportManifestCSV() {
-  var csv = 'INCHARGE,SERVICE,TUJUAN,AWB,NO_TRACK,TYPE\n' + (manifestData||[]).map(function(d){ return [d.incharge,d.service,d.tujuan,'',d.no_track,'OB'].join(','); }).join('\n');
+  var csv = 'INCHARGE,SERVICE,TUJUAN,NO_TRACK,TYPE\n' + manifestData.map(function(d){ return [d.incharge,d.service,d.tujuan,d.no_track,'OB'].join(','); }).join('\n');
   downloadCSV(csv, 'manifest_export.csv');
 }
 function exportObibCSV() {
-  alert('Export OB&IB akan mengambil data langsung dari sheet.');
+  if (!obibRows.length) { alert('Tidak ada data OB&IB'); return; }
+  var csv = obibHeaders.join(',') + '\n' + obibRows.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n');
+  downloadCSV(csv, 'OBIB_export.csv');
 }
 function downloadCSV(csv, filename) {
   var blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
