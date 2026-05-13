@@ -3,217 +3,286 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OUTBOUND GTW BDO — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>OUTBOUND GTW BDO — v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
 :root{
-  --blue:#1565C0;--blue2:#1976D2;--blue-light:#E3F2FD;--blue-mid:#BBDEFB;
-  --green:#2E7D32;--green-light:#E8F5E9;
+  --blue:#1565C0;--blue2:#1976D2;--blue3:#2196F3;--blue-light:#E3F2FD;--blue-mid:#BBDEFB;
+  --green:#2E7D32;--green2:#388E3C;--green-light:#E8F5E9;
   --orange:#E65100;--orange-light:#FFF3E0;
   --red:#C62828;--red-light:#FFEBEE;
+  --purple:#6A1B9A;--purple-light:#F3E5F5;
   --gray0:#FAFAFA;--gray1:#F5F5F5;--gray2:#EEEEEE;--gray3:#E0E0E0;
   --gray4:#BDBDBD;--gray5:#9E9E9E;--gray6:#757575;--gray7:#424242;--gray8:#212121;
   --white:#fff;
   --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
-  --sidebar:220px;--topbar:56px;
-  --radius:10px;--shadow:0 2px 8px rgba(0,0,0,.1);
+  --sidebar-w:220px;--topbar-h:54px;
+  --r:10px;--shadow:0 2px 8px rgba(0,0,0,.08);--shadow2:0 4px 16px rgba(0,0,0,.12);
+  --sidebar-collapsed:0px;
+  --trans:.18s ease;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:100vh;overflow:hidden;display:flex}
 
-/* SIDEBAR */
-.sidebar{width:var(--sidebar);background:var(--blue);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow-y:auto}
-.sidebar-brand{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.15)}
-.brand-label{color:rgba(255,255,255,.6);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.brand-title{color:#fff;font-size:15px;font-weight:700;margin-top:3px;line-height:1.3}
-.sidebar-nav{padding:10px 0;flex:1}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;color:rgba(255,255,255,.75);font-size:13px;font-weight:500;cursor:pointer;transition:.15s;border-left:3px solid transparent}
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);background:var(--blue);display:flex;flex-direction:column;
+  flex-shrink:0;height:100vh;overflow:hidden;transition:width var(--trans);position:relative;z-index:100;
+}
+.sidebar.collapsed{width:52px}
+.sidebar-brand{padding:14px 12px 10px;border-bottom:1px solid rgba(255,255,255,.15);display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap}
+.brand-texts{overflow:hidden}
+.brand-label{color:rgba(255,255,255,.55);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.brand-title{color:#fff;font-size:14px;font-weight:700;margin-top:2px;line-height:1.3}
+.sidebar-toggle{position:absolute;right:-13px;top:18px;width:26px;height:26px;background:var(--blue2);border:2px solid var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:var(--shadow);transition:var(--trans)}
+.sidebar-toggle:hover{background:var(--blue)}
+.sidebar-toggle .material-icons-round{font-size:14px;color:#fff;transition:var(--trans)}
+.sidebar.collapsed .sidebar-toggle .material-icons-round{transform:rotate(180deg)}
+.sidebar-nav{padding:8px 0;flex:1;overflow:hidden}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;color:rgba(255,255,255,.72);font-size:13px;font-weight:500;cursor:pointer;transition:var(--trans);border-left:3px solid transparent;white-space:nowrap;overflow:hidden}
 .nav-item:hover{background:rgba(255,255,255,.1);color:#fff}
-.nav-item.active{background:rgba(255,255,255,.18);color:#fff;border-left:3px solid #fff}
-.nav-item .material-icons-round{font-size:18px}
-.sidebar-bottom{padding:12px 16px;border-top:1px solid rgba(255,255,255,.15)}
-.sidebar-bottom .version{color:rgba(255,255,255,.4);font-size:10px;font-family:var(--mono)}
+.nav-item.active{background:rgba(255,255,255,.16);color:#fff;border-left:3px solid #fff}
+.nav-item .material-icons-round{font-size:19px;flex-shrink:0}
+.nav-label{overflow:hidden;transition:var(--trans)}
+.sidebar.collapsed .nav-label{opacity:0;width:0}
+.sidebar-bottom{padding:10px 14px;border-top:1px solid rgba(255,255,255,.12);overflow:hidden;white-space:nowrap}
+.sidebar-bottom .ver{color:rgba(255,255,255,.35);font-size:10px;font-family:var(--mono)}
 
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
-/* TOPBAR */
-.topbar{height:var(--topbar);background:var(--white);border-bottom:1px solid var(--gray3);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.topbar-title{font-size:16px;font-weight:700;color:var(--gray8);flex:1}
-.topbar-sub{font-size:12px;color:var(--gray5);font-weight:400}
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--gray3);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.topbar-title{font-size:15px;font-weight:700;color:var(--gray8);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-sub{font-size:11px;color:var(--gray5);font-weight:400}
 
-/* INCHARGE TOPBAR WIDGET */
-.topbar-incharge{display:flex;align-items:center;gap:8px;background:var(--blue-light);border:1.5px solid var(--blue-mid);border-radius:9px;padding:5px 10px 5px 12px}
-.topbar-incharge-label{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.topbar-incharge select{border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:var(--blue2);font-family:var(--font);cursor:pointer;min-width:130px}
-.topbar-incharge select option{color:var(--gray8);background:#fff}
-.topbar-incharge-dot{width:8px;height:8px;border-radius:50%;background:var(--gray4);flex-shrink:0;transition:.3s}
-.topbar-incharge-dot.active{background:#4CAF50;box-shadow:0 0 0 2px #C8E6C9}
+/* Incharge widget */
+.incharge-widget{display:flex;align-items:center;gap:6px;background:var(--blue-light);border:1.5px solid var(--blue-mid);border-radius:8px;padding:4px 8px 4px 10px;flex-shrink:0}
+.incharge-widget-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.combobox-wrap{position:relative;min-width:140px}
+.combobox-input{width:100%;border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:var(--blue2);font-family:var(--font);cursor:text;padding:2px 0}
+.combobox-input::placeholder{color:var(--gray4);font-weight:400}
+.combobox-dropdown{position:absolute;top:calc(100% + 6px);left:-10px;background:var(--white);border:1px solid var(--gray3);border-radius:8px;box-shadow:var(--shadow2);z-index:500;min-width:180px;max-height:220px;overflow-y:auto;display:none}
+.combobox-dropdown.open{display:block}
+.combobox-option{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--gray7)}
+.combobox-option:hover,.combobox-option.selected{background:var(--blue-light);color:var(--blue2)}
+.combobox-empty{padding:10px 14px;font-size:12px;color:var(--gray5)}
+.incharge-dot{width:7px;height:7px;border-radius:50%;background:var(--gray4);flex-shrink:0;transition:.3s}
+.incharge-dot.on{background:#4CAF50;box-shadow:0 0 0 2px #C8E6C9}
 
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:var(--font)}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--trans);font-family:var(--font);white-space:nowrap}
 .btn-primary{background:var(--blue2);color:#fff}.btn-primary:hover{background:var(--blue)}
-.btn-success{background:var(--green);color:#fff}.btn-success:hover{filter:brightness(.92)}
+.btn-primary:disabled{background:var(--gray4);cursor:not-allowed}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{background:var(--green2)}
 .btn-outline{background:transparent;border:1.5px solid var(--gray3);color:var(--gray7)}.btn-outline:hover{background:var(--gray1)}
 .btn-danger{background:var(--red);color:#fff}.btn-danger:hover{filter:brightness(.9)}
-.btn-sm{padding:5px 11px;font-size:12px;border-radius:6px}
-.btn .material-icons-round{font-size:16px}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px}
+.btn .material-icons-round{font-size:15px}
+.export-btn{background:var(--green-light);color:var(--green);border:1.5px solid #A5D6A7;padding:5px 11px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:var(--font);transition:var(--trans)}
+.export-btn:hover{filter:brightness(.95)}
 
-/* CONTENT */
-.content{flex:1;overflow:auto;padding:20px}
+/* ── CONTENT ── */
+.content{flex:1;overflow:auto;padding:16px 18px}
 
-/* STATS */
-.stats-row{display:flex;gap:12px;margin-bottom:18px}
-.stat-card{background:var(--white);border-radius:var(--radius);padding:14px 18px;flex:1;border:1px solid var(--gray3);box-shadow:var(--shadow)}
-.stat-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.stat-value{font-size:26px;font-weight:700;color:var(--gray8);font-family:var(--mono)}
-.stat-sub{font-size:11px;color:var(--gray5);margin-top:3px}
+/* Stats */
+.stats-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.stat-card{background:var(--white);border-radius:var(--r);padding:12px 16px;flex:1;min-width:100px;border:1px solid var(--gray3);box-shadow:var(--shadow)}
+.stat-label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-value{font-size:24px;font-weight:700;font-family:var(--mono)}
 .stat-card.blue .stat-value{color:var(--blue2)}
 .stat-card.green .stat-value{color:var(--green)}
 .stat-card.orange .stat-value{color:var(--orange)}
 
-/* ADD FORM PANEL */
-.form-panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--gray3);margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow)}
-.form-panel-header{background:var(--blue2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
-.form-panel-title{color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
-.form-panel-title .material-icons-round{font-size:18px}
-.form-panel-body{padding:16px 18px;display:none}
+/* Form Panel */
+.form-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow)}
+.form-panel-hdr{background:var(--blue2);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.form-panel-title{color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:7px}
+.form-panel-title .material-icons-round{font-size:17px}
+.form-panel-body{padding:14px 16px;display:none}
 .form-panel-body.open{display:block}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px}
-.form-group label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
-.form-group select,.form-group input{width:100%;padding:9px 12px;border:1.5px solid var(--gray3);border-radius:8px;font-size:13px;font-family:var(--font);color:var(--gray8);outline:none;background:var(--white);transition:.15s}
-.form-group select:focus,.form-group input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light)}
 
-/* INCHARGE BADGE IN FORM (read-only info) */
-.incharge-info-bar{display:flex;align-items:center;gap:8px;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:8px;padding:9px 14px;margin-bottom:14px;font-size:13px;font-weight:600;color:var(--blue2)}
-.incharge-info-bar .material-icons-round{font-size:16px;color:var(--blue)}
-.incharge-info-bar span.hint{font-size:11px;color:var(--blue);font-weight:400;margin-left:2px;opacity:.7}
+/* Incharge info bar */
+.info-bar{display:flex;align-items:center;gap:7px;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:7px;padding:8px 12px;margin-bottom:12px;font-size:13px;font-weight:600;color:var(--blue2)}
+.info-bar .material-icons-round{font-size:15px;color:var(--blue)}
+.info-bar .hint{font-size:11px;color:var(--blue);font-weight:400;opacity:.7}
+.warn-bar{display:flex;align-items:center;gap:7px;background:#FFF8E1;border:1.5px solid #FFE082;border-radius:7px;padding:9px 12px;font-size:13px;color:#F57F17;margin-bottom:12px}
+.warn-bar .material-icons-round{font-size:17px}
 
-/* SCAN SECTION */
-.scan-section{border-top:1px solid var(--gray2);padding-top:14px;margin-top:2px}
-.scan-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
-.scan-input{flex:1;padding:10px 14px;border:1.5px solid var(--blue2);border-radius:8px;font-size:14px;font-family:var(--mono);color:var(--gray8);outline:none}
-.scan-input:focus{box-shadow:0 0 0 3px var(--blue-light)}
-.scan-list{background:var(--gray0);border-radius:8px;border:1px solid var(--gray3);max-height:160px;overflow-y:auto}
-.scan-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--gray2);font-size:13px;font-family:var(--mono)}
+/* Form grid */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px}
+.fg{} .fg label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+
+/* Searchable combobox inside form */
+.cb-wrap{position:relative}
+.cb-inp{width:100%;padding:8px 11px;border:1.5px solid var(--gray3);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--gray8);outline:none;background:var(--white);transition:var(--trans);cursor:text}
+.cb-inp:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light)}
+.cb-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--gray3);border-radius:7px;box-shadow:var(--shadow2);z-index:300;max-height:180px;overflow-y:auto;display:none}
+.cb-list.open{display:block}
+.cb-opt{padding:8px 12px;font-size:13px;cursor:pointer;color:var(--gray7)}
+.cb-opt:hover,.cb-opt.active{background:var(--blue-light);color:var(--blue2)}
+.cb-opt.empty{color:var(--gray5);cursor:default}
+.cb-opt:hover.empty{background:none}
+
+/* Multi-tujuan scan table */
+.scan-table-wrap{margin-bottom:10px}
+.scan-tujuan-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.scan-tujuan-tab{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--gray2);color:var(--gray7);cursor:pointer;border:1.5px solid transparent;transition:var(--trans)}
+.scan-tujuan-tab.active{background:var(--blue-light);color:var(--blue2);border-color:var(--blue-mid)}
+.scan-tujuan-tab .cnt{background:var(--blue2);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px}
+.scan-tujuan-tab.active .cnt{background:var(--blue)}
+.scan-tujuan-tab .rm-tuj{font-size:14px;color:var(--gray5);margin-left:2px;line-height:1}
+.scan-tujuan-tab .rm-tuj:hover{color:var(--red)}
+
+/* Scan row */
+.scan-section{border-top:1px solid var(--gray2);padding-top:12px;margin-top:4px}
+.scan-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.scan-header-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px}
+.scan-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.scan-inp{flex:1;padding:9px 13px;border:1.5px solid var(--blue2);border-radius:7px;font-size:13px;font-family:var(--mono);color:var(--gray8);outline:none;transition:var(--trans)}
+.scan-inp:focus{box-shadow:0 0 0 3px var(--blue-light)}
+.scan-list{background:var(--gray0);border-radius:7px;border:1px solid var(--gray3);max-height:150px;overflow-y:auto}
+.scan-item{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid var(--gray2);font-size:12px;font-family:var(--mono)}
 .scan-item:last-child{border-bottom:none}
 .scan-item-awb{color:var(--gray8);font-weight:500}
-.scan-item-del{color:var(--red);cursor:pointer;font-size:18px;padding:2px}
-.scan-item-del:hover{background:var(--red-light);border-radius:4px}
-.scan-empty{padding:20px;text-align:center;color:var(--gray5);font-size:12px}
-.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.scan-item-tuj{font-size:11px;color:var(--gray5);margin-left:6px}
+.scan-item-edit{display:flex;align-items:center;gap:4px}
+.scan-item-del{color:var(--red);cursor:pointer;font-size:16px;padding:2px;border-radius:4px}
+.scan-item-del:hover{background:var(--red-light)}
+.scan-empty{padding:16px;text-align:center;color:var(--gray5);font-size:12px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray2)}
 
-/* TABLE */
-.table-panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
-.table-toolbar{padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray2)}
-.table-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1}
-.search-box{display:flex;align-items:center;background:var(--gray1);border:1px solid var(--gray3);border-radius:7px;padding:6px 10px;gap:6px}
-.search-box input{border:none;outline:none;background:transparent;font-size:13px;width:180px;font-family:var(--font)}
-.search-box .material-icons-round{font-size:16px;color:var(--gray5)}
+/* Summary table before save */
+.save-preview{margin-bottom:10px}
+.save-preview-title{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.save-preview table{width:100%;border-collapse:collapse;font-size:12px}
+.save-preview th{background:var(--gray1);padding:6px 10px;font-weight:700;font-size:10px;color:var(--gray5);text-transform:uppercase;text-align:left;border:1px solid var(--gray3)}
+.save-preview td{padding:6px 10px;border:1px solid var(--gray2);font-family:var(--mono)}
+
+/* ── TABLE ── */
+.table-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
+.table-toolbar{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray2);flex-wrap:wrap}
+.table-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1;white-space:nowrap}
+.search-box{display:flex;align-items:center;background:var(--gray1);border:1px solid var(--gray3);border-radius:6px;padding:5px 9px;gap:5px}
+.search-box input{border:none;outline:none;background:transparent;font-size:13px;width:160px;font-family:var(--font)}
+.search-box .material-icons-round{font-size:15px;color:var(--gray5)}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead tr{background:var(--gray1)}
-th{padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;border-bottom:1px solid var(--gray3)}
-td{padding:9px 12px;border-bottom:1px solid var(--gray2);vertical-align:middle}
+th{padding:9px 11px;text-align:left;font-weight:700;font-size:10px;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;border-bottom:1px solid var(--gray3)}
+td{padding:8px 11px;border-bottom:1px solid var(--gray2);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--gray0)}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .badge-proses{background:var(--orange-light);color:var(--orange)}
 .badge-selesai{background:var(--green-light);color:var(--green)}
 .badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
 .mono{font-family:var(--mono);font-size:12px}
-.action-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:6px;color:var(--gray5);transition:.15s;display:inline-flex;align-items:center}
+.action-btn{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;color:var(--gray5);transition:var(--trans);display:inline-flex;align-items:center}
 .action-btn:hover{background:var(--gray2);color:var(--gray8)}
 .action-btn.danger:hover{background:var(--red-light);color:var(--red)}
-.action-btn .material-icons-round{font-size:17px}
+.action-btn .material-icons-round{font-size:16px}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center}
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
-.modal{background:var(--white);border-radius:14px;width:500px;max-width:95vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.18)}
-.modal-header{padding:16px 20px;border-bottom:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-weight:700;font-size:15px}
-.modal-close{background:none;border:none;cursor:pointer;color:var(--gray5);padding:4px;border-radius:6px;display:flex}.modal-close:hover{color:var(--gray8);background:var(--gray2)}
-.modal-body{padding:20px;flex:1;overflow-y:auto}
-.modal-footer{padding:14px 20px;border-top:1px solid var(--gray3);display:flex;justify-content:flex-end;gap:10px}
-.awb-list-modal{background:var(--gray0);border-radius:8px;border:1px solid var(--gray3);max-height:300px;overflow-y:auto}
-.awb-row{padding:8px 12px;border-bottom:1px solid var(--gray2);font-size:13px;font-family:var(--mono);color:var(--gray7)}
+.modal{background:var(--white);border-radius:13px;width:500px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+.modal-hdr{padding:14px 18px;border-bottom:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-weight:700;font-size:14px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--gray5);padding:3px;border-radius:5px;display:flex}.modal-close:hover{color:var(--gray8);background:var(--gray2)}
+.modal-body{padding:18px;flex:1;overflow-y:auto}
+.modal-footer{padding:12px 18px;border-top:1px solid var(--gray3);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
+.awb-list-box{background:var(--gray0);border-radius:7px;border:1px solid var(--gray3);max-height:260px;overflow-y:auto}
+.awb-row{padding:7px 11px;border-bottom:1px solid var(--gray2);font-size:12px;font-family:var(--mono);color:var(--gray7);display:flex;align-items:center;justify-content:space-between}
 .awb-row:last-child{border-bottom:none}
 
-/* DETAIL MODAL GRID */
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.detail-field .d-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.detail-field .d-value{font-size:14px;color:var(--gray8);font-weight:500}
-.photo-box{border-radius:10px;overflow:hidden;background:var(--gray2);min-height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+/* Detail modal */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.d-field .d-label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.d-field .d-value{font-size:13px;color:var(--gray8);font-weight:500}
+.photo-box{border-radius:9px;overflow:hidden;background:var(--gray2);min-height:110px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
 .photo-box img{width:100%;display:block}
-.photo-box .no-img{color:var(--gray5);font-size:13px}
+.no-img{color:var(--gray5);font-size:12px}
+.foto-btn{background:var(--gray1);border:1.5px solid var(--gray3);color:var(--gray7);font-size:12px;padding:4px 9px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;font-family:var(--font);font-weight:600;transition:var(--trans)}
+.foto-btn:hover{background:var(--gray2)}
 
-/* LOADING */
-#loading{position:fixed;inset:0;background:rgba(255,255,255,.8);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.spinner{width:36px;height:36px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .7s linear infinite}
+/* Loading */
+#loading{position:fixed;inset:0;background:rgba(255,255,255,.82);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.spinner{width:34px;height:34px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .65s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-#loadingText{font-size:14px;color:var(--gray6);font-weight:500}
+#loadingText{font-size:13px;color:var(--gray6);font-weight:500}
 
-/* TABS */
-.tab-bar{display:flex;gap:2px;background:var(--gray2);padding:3px;border-radius:9px;margin-bottom:16px;width:fit-content}
-.tab-btn{padding:7px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray6);border:none;background:none;transition:.15s}
-.tab-btn.active{background:var(--white);color:var(--blue2);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+/* Empty */
+.empty-state{padding:36px;text-align:center;color:var(--gray5)}
+.empty-state .material-icons-round{font-size:36px;margin-bottom:6px;color:var(--gray4);display:block}
 
-/* MANIFEST */
-.manifest-info{background:var(--blue-light);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;font-size:13px;color:var(--blue);display:flex;gap:8px;align-items:flex-start}
-.manifest-info .material-icons-round{font-size:16px;flex-shrink:0;margin-top:1px}
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--gray8);color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:500;z-index:9999;display:none;box-shadow:var(--shadow2);max-width:320px;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+#toast.success{background:var(--green)}
+#toast.error{background:var(--red)}
 
-/* FOTO UPDATE BUTTON */
-.btn-foto{background:var(--gray1);border:1.5px solid var(--gray3);color:var(--gray7);font-size:12px;padding:5px 10px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:var(--font);font-weight:600;transition:.15s}
-.btn-foto:hover{background:var(--gray2)}
+/* Manifest special */
+.manifest-info{background:var(--blue-light);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--blue);display:flex;gap:7px;align-items:flex-start}
+.manifest-section{margin-bottom:18px}
+.manifest-section-title{font-size:12px;font-weight:700;color:var(--gray6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding:6px 0;border-bottom:2px solid var(--blue-mid);display:flex;align-items:center;gap:6px}
+.manifest-tujuan-header{background:var(--blue2);color:#fff;padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.manifest-awb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0}
+.manifest-awb-cell{padding:6px 12px;border-bottom:1px solid var(--gray2);border-right:1px solid var(--gray2);font-size:12px;font-family:var(--mono)}
 
-/* CSV EXPORT */
-.export-chip{background:var(--green-light);color:var(--green);border:1.5px solid #A5D6A7;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--font);transition:.15s}
-.export-chip:hover{filter:brightness(.95)}
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gray3);border-radius:3px}
 
-/* EMPTY */
-.empty-state{padding:40px;text-align:center;color:var(--gray5)}
-.empty-state .material-icons-round{font-size:40px;margin-bottom:8px;color:var(--gray4)}
-
-/* NO INCHARGE WARNING */
-.no-incharge-warn{background:#FFF8E1;border:1.5px solid #FFE082;border-radius:8px;padding:12px 16px;font-size:13px;color:#F57F17;display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.no-incharge-warn .material-icons-round{font-size:18px}
-
-/* RESP */
-@media(max-width:900px){
-  .sidebar{display:none}
+@media(max-width:860px){
+  .sidebar{width:52px}
+  .sidebar .nav-label{opacity:0;width:0}
+  .sidebar-toggle{display:none}
   .stats-row{flex-wrap:wrap}
-  .form-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <div class="brand-label">GTW BDO</div>
-    <div class="brand-title">OUTBOUND GTW BDO</div>
+    <span class="material-icons-round" style="color:#fff;font-size:22px;flex-shrink:0">hub</span>
+    <div class="brand-texts">
+      <div class="brand-label">GTW BDO</div>
+      <div class="brand-title">OUTBOUND GTW BDO</div>
+    </div>
+  </div>
+  <div class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+    <span class="material-icons-round">chevron_left</span>
   </div>
   <div class="sidebar-nav">
     <div class="nav-item active" onclick="switchPage('ob')" id="nav-ob">
-      <span class="material-icons-round">local_shipping</span> Outbound BDO
+      <span class="material-icons-round">local_shipping</span>
+      <span class="nav-label">Outbound BDO</span>
     </div>
     <div class="nav-item" onclick="switchPage('hvs')" id="nav-hvs">
-      <span class="material-icons-round">inventory_2</span> Outbound HVS
+      <span class="material-icons-round">inventory_2</span>
+      <span class="nav-label">Outbound HVS</span>
     </div>
     <div class="nav-item" onclick="switchPage('ib')" id="nav-ib">
-      <span class="material-icons-round">move_to_inbox</span> Inbound HVS
+      <span class="material-icons-round">move_to_inbox</span>
+      <span class="nav-label">Inbound HVS</span>
     </div>
     <div class="nav-item" onclick="switchPage('manifest')" id="nav-manifest">
-      <span class="material-icons-round">description</span> Manifest
+      <span class="material-icons-round">description</span>
+      <span class="nav-label">Manifest</span>
     </div>
     <div class="nav-item" onclick="switchPage('obib')" id="nav-obib">
-      <span class="material-icons-round">table_view</span> OB &amp; IB
+      <span class="material-icons-round">table_view</span>
+      <span class="nav-label">OB &amp; IB</span>
     </div>
   </div>
   <div class="sidebar-bottom">
-    <div class="version">v1.0.0 — GTW BDO</div>
+    <div class="ver">v2.0 — GTW BDO</div>
   </div>
 </div>
 
@@ -222,85 +291,84 @@ tr:hover td{background:var(--gray0)}
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-title" id="topbarTitle">Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span></div>
-
-    <!-- INCHARGE GLOBAL SELECTOR -->
-    <div class="topbar-incharge">
-      <span class="material-icons-round" style="font-size:16px;color:var(--blue)">person</span>
-      <span class="topbar-incharge-label">Incharge</span>
-      <select id="globalIncharge" onchange="onGlobalInchargeChange()">
-        <option value="">— Pilih —</option>
-      </select>
-      <span class="topbar-incharge-dot" id="inchargeDot"></span>
+    <div class="incharge-widget">
+      <span class="material-icons-round" style="font-size:15px;color:var(--blue)">person</span>
+      <span class="incharge-widget-label">Incharge</span>
+      <div class="combobox-wrap" id="globalCbWrap">
+        <input class="combobox-input" id="globalInchargeInput" placeholder="— Pilih —" autocomplete="off"
+          oninput="filterGlobalIncharge()" onfocus="openGlobalCb()" onblur="closeGlobalCbDelay()">
+        <div class="combobox-dropdown" id="globalCbDrop"></div>
+      </div>
+      <span class="incharge-dot" id="inchargeDot"></span>
     </div>
-
-    <button class="btn btn-outline" onclick="reloadAll()"><span class="material-icons-round">refresh</span> Refresh</button>
-    <button class="export-chip" onclick="exportCSV()"><span class="material-icons-round">file_download</span> Export CSV</button>
+    <button class="btn btn-outline btn-sm" onclick="reloadAll()"><span class="material-icons-round">refresh</span> Refresh</button>
+    <button class="export-btn" onclick="exportCSV()"><span class="material-icons-round">file_download</span> Export CSV</button>
   </div>
 
   <div class="content" id="mainContent">
 
     <!-- ===== OB PAGE ===== -->
     <div id="page-ob">
-      <div class="stats-row" id="obStats">
+      <div class="stats-row">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="obTotalAwb">0</div></div>
         <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="obSelesai">0</div></div>
-        <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="obProses">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">On Proses</div><div class="stat-value" id="obProses">0</div></div>
       </div>
-
       <div class="form-panel">
-        <div class="form-panel-header" onclick="toggleForm('ob')" style="cursor:pointer">
+        <div class="form-panel-hdr" onclick="toggleForm('ob')">
           <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Outbound BDO</div>
-          <span class="material-icons-round" id="obFormIcon" style="color:#fff;font-size:20px">expand_more</span>
+          <span class="material-icons-round" id="obFormIcon" style="color:#fff;font-size:19px">expand_more</span>
         </div>
         <div class="form-panel-body" id="obFormBody">
-          <div id="obInchargeInfo" class="incharge-info-bar" style="display:none">
+          <div id="obInfoBar" class="info-bar" style="display:none">
             <span class="material-icons-round">badge</span>
             <span>Incharge: <strong id="obInchargeDisplay">—</strong></span>
-            <span class="hint">(ubah di topbar kanan atas)</span>
+            <span class="hint">(ubah di topbar)</span>
           </div>
-          <div id="obNoInchargeWarn" class="no-incharge-warn">
+          <div id="obWarnBar" class="warn-bar">
             <span class="material-icons-round">warning</span>
-            Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
+            Pilih <strong>Incharge</strong> terlebih dahulu di topbar kanan atas.
           </div>
-          <div class="form-grid" id="obFormGrid" style="display:none">
-            <div class="form-group">
-              <label>SERVICE</label>
-              <select id="obService" onchange="checkObForm()">
-                <option value="">— Pilih Service —</option>
-              </select>
+          <div id="obFormGrid" class="form-grid" style="display:none">
+            <div class="fg"><label>SERVICE</label>
+              <div class="cb-wrap"><input class="cb-inp" id="obService" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ob','service')" onfocus="openCb('ob','service')" onblur="closeCbDelay('ob','service')">
+              <div class="cb-list" id="obServiceList"></div></div>
             </div>
-            <div class="form-group">
-              <label>TUJUAN</label>
-              <select id="obTujuan" onchange="checkObForm()">
-                <option value="">— Pilih Tujuan —</option>
-              </select>
+            <div class="fg"><label>TUJUAN</label>
+              <div class="cb-wrap"><input class="cb-inp" id="obTujuan" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ob','tujuan')" onfocus="openCb('ob','tujuan')" onblur="closeCbDelay('ob','tujuan')">
+              <div class="cb-list" id="obTujuanList"></div></div>
             </div>
           </div>
+          <!-- Multi-tujuan tabs & scan -->
           <div class="scan-section" id="obScanSection" style="display:none">
-            <div class="scan-row">
-              <input class="scan-input" id="obScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'ob')">
-              <span style="font-size:12px;color:var(--gray5);white-space:nowrap" id="obScanCount">0 AWB</span>
+            <div class="scan-header">
+              <span class="scan-header-label">Scan AWB</span>
+              <span style="font-size:11px;color:var(--gray5)" id="obTotalScanLabel">0 AWB total</span>
             </div>
+            <div class="scan-row">
+              <input class="scan-inp" id="obScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeydown="handleScan(event,'ob')">
+              <button class="btn btn-sm" style="background:var(--blue-light);color:var(--blue2);border:1px solid var(--blue-mid)" onclick="addMultiTujuan('ob')">
+                <span class="material-icons-round">add_location</span> Tujuan Baru
+              </button>
+            </div>
+            <div id="obTujuanTabs" class="scan-tujuan-tabs"></div>
             <div class="scan-list" id="obScanList"><div class="scan-empty">Belum ada AWB di-scan</div></div>
           </div>
           <div class="form-actions" id="obFormActions" style="display:none">
-            <button class="btn btn-outline" onclick="resetObForm()">Batal</button>
-            <button class="btn btn-primary" id="btnSaveOb" disabled onclick="saveOb()"><span class="material-icons-round">save</span> Simpan</button>
+            <button class="btn btn-outline btn-sm" onclick="resetObForm()">Batal</button>
+            <button class="btn btn-primary btn-sm" id="btnSaveOb" disabled onclick="saveOb()"><span class="material-icons-round">save</span> Simpan</button>
           </div>
         </div>
       </div>
-
       <div class="table-panel">
         <div class="table-toolbar">
-          <div class="table-toolbar-title">Google Sheets View — Outbound BDO</div>
-          <div class="search-box"><span class="material-icons-round">search</span><input id="obSearch" placeholder="Cari AWB, Tujuan..." oninput="filterObTable()"></div>
+          <div class="table-toolbar-title">Outbound BDO — <span style="color:var(--gray5);font-weight:400" id="obTableCount">0 record</span></div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="obSearch" placeholder="Cari no track, tujuan..." oninput="filterObTable()"></div>
         </div>
         <div class="table-wrap">
-          <table id="obTable">
-            <thead><tr>
-              <th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th>
-            </tr></thead>
-            <tbody id="obTbody"><tr><td colspan="10" class="empty-state"><span class="material-icons-round">hourglass_empty</span><br>Loading...</td></tr></tbody>
+          <table>
+            <thead><tr><th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th></tr></thead>
+            <tbody id="obTbody"><tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">hourglass_empty</span>Loading...</div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -311,51 +379,60 @@ tr:hover td{background:var(--gray0)}
       <div class="stats-row">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="hvsTotalAwb">0</div></div>
         <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="hvsSelesai">0</div></div>
-        <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="hvsProses">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">On Proses</div><div class="stat-value" id="hvsProses">0</div></div>
       </div>
       <div class="form-panel">
-        <div class="form-panel-header" onclick="toggleForm('hvs')" style="cursor:pointer">
+        <div class="form-panel-hdr" onclick="toggleForm('hvs')">
           <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Outbound HVS</div>
-          <span class="material-icons-round" id="hvsFormIcon" style="color:#fff;font-size:20px">expand_more</span>
+          <span class="material-icons-round" id="hvsFormIcon" style="color:#fff;font-size:19px">expand_more</span>
         </div>
         <div class="form-panel-body" id="hvsFormBody">
-          <div id="hvsInchargeInfo" class="incharge-info-bar" style="display:none">
+          <div id="hvsInfoBar" class="info-bar" style="display:none">
             <span class="material-icons-round">badge</span>
             <span>Incharge: <strong id="hvsInchargeDisplay">—</strong></span>
-            <span class="hint">(ubah di topbar kanan atas)</span>
+            <span class="hint">(ubah di topbar)</span>
           </div>
-          <div id="hvsNoInchargeWarn" class="no-incharge-warn">
+          <div id="hvsWarnBar" class="warn-bar">
             <span class="material-icons-round">warning</span>
-            Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
+            Pilih <strong>Incharge</strong> terlebih dahulu di topbar kanan atas.
           </div>
-          <div class="form-grid" id="hvsFormGrid" style="display:none">
-            <div class="form-group"><label>SERVICE</label>
-              <select id="hvsService" onchange="checkHvsForm()"><option value="">— Pilih Service —</option></select>
+          <div id="hvsFormGrid" class="form-grid" style="display:none">
+            <div class="fg"><label>SERVICE</label>
+              <div class="cb-wrap"><input class="cb-inp" id="hvsService" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('hvs','service')" onfocus="openCb('hvs','service')" onblur="closeCbDelay('hvs','service')">
+              <div class="cb-list" id="hvsServiceList"></div></div>
             </div>
-            <div class="form-group"><label>TUJUAN</label>
-              <select id="hvsTujuan" onchange="checkHvsForm()"><option value="">— Pilih Tujuan —</option></select>
+            <div class="fg"><label>TUJUAN</label>
+              <div class="cb-wrap"><input class="cb-inp" id="hvsTujuan" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('hvs','tujuan')" onfocus="openCb('hvs','tujuan')" onblur="closeCbDelay('hvs','tujuan')">
+              <div class="cb-list" id="hvsTujuanList"></div></div>
             </div>
           </div>
           <div class="scan-section" id="hvsScanSection" style="display:none">
-            <div class="scan-row">
-              <input class="scan-input" id="hvsScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'hvs')">
-              <span style="font-size:12px;color:var(--gray5);white-space:nowrap" id="hvsScanCount">0 AWB</span>
+            <div class="scan-header">
+              <span class="scan-header-label">Scan AWB</span>
+              <span style="font-size:11px;color:var(--gray5)" id="hvsTotalScanLabel">0 AWB total</span>
             </div>
+            <div class="scan-row">
+              <input class="scan-inp" id="hvsScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeydown="handleScan(event,'hvs')">
+              <button class="btn btn-sm" style="background:var(--blue-light);color:var(--blue2);border:1px solid var(--blue-mid)" onclick="addMultiTujuan('hvs')">
+                <span class="material-icons-round">add_location</span> Tujuan Baru
+              </button>
+            </div>
+            <div id="hvsTujuanTabs" class="scan-tujuan-tabs"></div>
             <div class="scan-list" id="hvsScanList"><div class="scan-empty">Belum ada AWB di-scan</div></div>
           </div>
           <div class="form-actions" id="hvsFormActions" style="display:none">
-            <button class="btn btn-outline" onclick="resetHvsForm()">Batal</button>
-            <button class="btn btn-primary" id="btnSaveHvs" disabled onclick="saveHvs()"><span class="material-icons-round">save</span> Simpan</button>
+            <button class="btn btn-outline btn-sm" onclick="resetHvsForm()">Batal</button>
+            <button class="btn btn-primary btn-sm" id="btnSaveHvs" disabled onclick="saveHvs()"><span class="material-icons-round">save</span> Simpan</button>
           </div>
         </div>
       </div>
       <div class="table-panel">
         <div class="table-toolbar">
-          <div class="table-toolbar-title">Google Sheets View — Outbound HVS</div>
+          <div class="table-toolbar-title">Outbound HVS — <span style="color:var(--gray5);font-weight:400" id="hvsTableCount">0 record</span></div>
           <div class="search-box"><span class="material-icons-round">search</span><input id="hvsSearch" placeholder="Cari..." oninput="filterHvsTable()"></div>
         </div>
         <div class="table-wrap">
-          <table id="hvsTable">
+          <table>
             <thead><tr><th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th></tr></thead>
             <tbody id="hvsTbody"></tbody>
           </table>
@@ -368,54 +445,60 @@ tr:hover td{background:var(--gray0)}
       <div class="stats-row">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="ibTotalAwb">0</div></div>
         <div class="stat-card green"><div class="stat-label">Selesai</div><div class="stat-value" id="ibSelesai">0</div></div>
-        <div class="stat-card orange"><div class="stat-label">Proses</div><div class="stat-value" id="ibProses">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">On Proses</div><div class="stat-value" id="ibProses">0</div></div>
       </div>
       <div class="form-panel">
-        <div class="form-panel-header" onclick="toggleForm('ib')" style="cursor:pointer">
+        <div class="form-panel-hdr" onclick="toggleForm('ib')">
           <div class="form-panel-title"><span class="material-icons-round">add_circle</span> Tambah Data Inbound HVS</div>
-          <span class="material-icons-round" id="ibFormIcon" style="color:#fff;font-size:20px">expand_more</span>
+          <span class="material-icons-round" id="ibFormIcon" style="color:#fff;font-size:19px">expand_more</span>
         </div>
         <div class="form-panel-body" id="ibFormBody">
-          <div id="ibInchargeInfo" class="incharge-info-bar" style="display:none">
+          <div id="ibInfoBar" class="info-bar" style="display:none">
             <span class="material-icons-round">badge</span>
             <span>Incharge: <strong id="ibInchargeDisplay">—</strong></span>
-            <span class="hint">(ubah di topbar kanan atas)</span>
+            <span class="hint">(ubah di topbar)</span>
           </div>
-          <div id="ibNoInchargeWarn" class="no-incharge-warn">
+          <div id="ibWarnBar" class="warn-bar">
             <span class="material-icons-round">warning</span>
-            Pilih <strong>Incharge</strong> terlebih dahulu di bagian kanan atas topbar.
+            Pilih <strong>Incharge</strong> terlebih dahulu di topbar kanan atas.
           </div>
-          <div class="form-grid" id="ibFormGrid" style="display:none">
-            <div class="form-group"><label>SERVICE</label>
-              <select id="ibService" onchange="checkIbForm()"><option value="">— Pilih Service —</option></select>
+          <div id="ibFormGrid" class="form-grid" style="display:none">
+            <div class="fg"><label>SERVICE</label>
+              <div class="cb-wrap"><input class="cb-inp" id="ibService" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ib','service')" onfocus="openCb('ib','service')" onblur="closeCbDelay('ib','service')">
+              <div class="cb-list" id="ibServiceList"></div></div>
             </div>
-            <div class="form-group"><label>FROM</label>
-              <select id="ibFrom" onchange="checkIbForm()"><option value="">— Pilih From —</option></select>
+            <div class="fg"><label>FROM</label>
+              <div class="cb-wrap"><input class="cb-inp" id="ibFrom" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ib','from')" onfocus="openCb('ib','from')" onblur="closeCbDelay('ib','from')">
+              <div class="cb-list" id="ibFromList"></div></div>
             </div>
-            <div class="form-group"><label>TUJUAN</label>
-              <select id="ibTujuan" onchange="checkIbForm()"><option value="">— Pilih Tujuan —</option></select>
+            <div class="fg"><label>TUJUAN</label>
+              <div class="cb-wrap"><input class="cb-inp" id="ibTujuan" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ib','tujuan')" onfocus="openCb('ib','tujuan')" onblur="closeCbDelay('ib','tujuan')">
+              <div class="cb-list" id="ibTujuanList"></div></div>
             </div>
           </div>
           <div class="scan-section" id="ibScanSection" style="display:none">
+            <div class="scan-header">
+              <span class="scan-header-label">Scan AWB</span>
+              <span style="font-size:11px;color:var(--gray5)" id="ibTotalScanLabel">0 AWB total</span>
+            </div>
             <div class="scan-row">
-              <input class="scan-input" id="ibScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeypress="handleScan(event,'ib')">
-              <span style="font-size:12px;color:var(--gray5);white-space:nowrap" id="ibScanCount">0 AWB</span>
+              <input class="scan-inp" id="ibScanInput" placeholder="Scan / ketik AWB lalu Enter" onkeydown="handleScan(event,'ib')">
             </div>
             <div class="scan-list" id="ibScanList"><div class="scan-empty">Belum ada AWB di-scan</div></div>
           </div>
           <div class="form-actions" id="ibFormActions" style="display:none">
-            <button class="btn btn-outline" onclick="resetIbForm()">Batal</button>
-            <button class="btn btn-primary" id="btnSaveIb" disabled onclick="saveIb()"><span class="material-icons-round">save</span> Simpan</button>
+            <button class="btn btn-outline btn-sm" onclick="resetIbForm()">Batal</button>
+            <button class="btn btn-primary btn-sm" id="btnSaveIb" disabled onclick="saveIb()"><span class="material-icons-round">save</span> Simpan</button>
           </div>
         </div>
       </div>
       <div class="table-panel">
         <div class="table-toolbar">
-          <div class="table-toolbar-title">Google Sheets View — Inbound HVS</div>
+          <div class="table-toolbar-title">Inbound HVS — <span style="color:var(--gray5);font-weight:400" id="ibTableCount">0 record</span></div>
           <div class="search-box"><span class="material-icons-round">search</span><input id="ibSearch" placeholder="Cari..." oninput="filterIbTable()"></div>
         </div>
         <div class="table-wrap">
-          <table id="ibTable">
+          <table>
             <thead><tr><th>#</th><th>NO TRACK</th><th>INCHARGE</th><th>SERVICE</th><th>FROM</th><th>TUJUAN</th><th>CREATED DATE</th><th>TOTAL AWB</th><th>STATUS</th><th>FOTO</th><th>AKSI</th></tr></thead>
             <tbody id="ibTbody"></tbody>
           </table>
@@ -427,19 +510,17 @@ tr:hover td{background:var(--gray0)}
     <div id="page-manifest" style="display:none">
       <div class="manifest-info">
         <span class="material-icons-round">info</span>
-        Manifest menampilkan data dari SCAN_OB dan SCAN_HVS — berisi incharge, service, tujuan, dan list AWB per track.
+        Manifest dikelompokkan berdasarkan TUJUAN dari SCAN_OB dan SCAN_HVS. Kolom D (AWB) dimasukkan sesuai kategori tujuan.
       </div>
       <div class="table-panel">
         <div class="table-toolbar">
-          <div class="table-toolbar-title">Manifest — OB &amp; HVS</div>
-          <div class="search-box"><span class="material-icons-round">search</span><input id="manifestSearch" placeholder="Cari..." oninput="filterManifest()"></div>
-          <button class="export-chip" onclick="exportManifestCSV()"><span class="material-icons-round">file_download</span> Export</button>
+          <div class="table-toolbar-title">Manifest OB &amp; HVS</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="manifestSearch" placeholder="Cari AWB, tujuan..." oninput="renderManifest()"></div>
+          <button class="export-btn" onclick="exportManifestCSV()"><span class="material-icons-round">file_download</span> Export</button>
+          <button class="btn btn-outline btn-sm" onclick="reloadManifest()"><span class="material-icons-round">refresh</span></button>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>INCHARGE</th><th>SERVICE</th><th>TUJUAN</th><th>AWB</th><th>NO TRACK</th><th>TYPE</th></tr></thead>
-            <tbody id="manifestTbody"></tbody>
-          </table>
+        <div style="padding:14px" id="manifestContent">
+          <div class="empty-state"><span class="material-icons-round">hourglass_empty</span>Loading manifest...</div>
         </div>
       </div>
     </div>
@@ -450,55 +531,42 @@ tr:hover td{background:var(--gray0)}
         <div class="table-toolbar">
           <div class="table-toolbar-title">OB &amp; IB — Combined View</div>
           <div class="search-box"><span class="material-icons-round">search</span><input id="obibSearch" placeholder="Cari..." oninput="filterObib()"></div>
-          <button class="export-chip" onclick="exportObibCSV()"><span class="material-icons-round">file_download</span> Export</button>
+          <button class="export-btn" onclick="exportObibCSV()"><span class="material-icons-round">file_download</span> Export</button>
         </div>
         <div class="table-wrap" id="obibTableWrap">
-          <div class="empty-state"><span class="material-icons-round">table_view</span><p>Loading OB &amp; IB data...</p></div>
+          <div class="empty-state"><span class="material-icons-round">table_view</span>Loading...</div>
         </div>
       </div>
     </div>
 
-  </div><!-- end content -->
-</div><!-- end main -->
+  </div>
+</div>
 
 <!-- LOADING -->
 <div id="loading"><div class="spinner"></div><div id="loadingText">Memuat data...</div></div>
 
-<!-- AWB MODAL -->
-<div class="modal-overlay" id="awbModal">
-  <div class="modal" style="width:420px">
-    <div class="modal-header">
-      <div class="modal-title" id="awbModalTitle">List AWB</div>
-      <button class="modal-close" onclick="closeModal('awbModal')"><span class="material-icons-round">close</span></button>
-    </div>
-    <div class="modal-body">
-      <div class="awb-list-modal" id="awbModalList"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('awbModal')">Tutup</button>
-    </div>
-  </div>
-</div>
+<!-- TOAST -->
+<div id="toast"></div>
 
 <!-- DETAIL MODAL -->
 <div class="modal-overlay" id="detailModal">
-  <div class="modal" style="width:520px">
-    <div class="modal-header">
+  <div class="modal" style="width:540px">
+    <div class="modal-hdr">
       <div class="modal-title" id="detailModalTitle">Detail</div>
       <button class="modal-close" onclick="closeModal('detailModal')"><span class="material-icons-round">close</span></button>
     </div>
     <div class="modal-body">
       <div class="photo-box" id="detailPhotoBox"><span class="no-img">No Image</span></div>
-      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-        <label class="btn-foto" style="cursor:pointer">
-          <span class="material-icons-round" style="font-size:15px">photo_camera</span> Ganti Foto
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <label class="foto-btn" style="cursor:pointer">
+          <span class="material-icons-round" style="font-size:14px">photo_camera</span> Ganti Foto
           <input type="file" accept="image/*" style="display:none" onchange="onFotoChange(event)" id="fotoInput">
         </label>
       </div>
       <div class="detail-grid" id="detailGrid"></div>
-      <div style="margin-top:8px">
-        <div style="font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">LIST AWB (<span id="awbCount">0</span>)</div>
-        <div class="awb-list-modal" id="detailAwbList" style="max-height:200px"></div>
+      <div style="margin-top:6px">
+        <div style="font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">LIST AWB (<span id="awbCount">0</span>)</div>
+        <div class="awb-list-box" id="detailAwbList" style="max-height:180px"></div>
       </div>
     </div>
     <div class="modal-footer" id="detailModalFooter"></div>
@@ -507,644 +575,931 @@ tr:hover td{background:var(--gray0)}
 
 <!-- CONFIRM MODAL -->
 <div class="modal-overlay" id="confirmModal">
-  <div class="modal" style="width:360px">
-    <div class="modal-header"><div class="modal-title" id="confirmTitle">Konfirmasi</div></div>
-    <div class="modal-body"><p id="confirmMsg" style="font-size:14px;color:var(--gray7)"></p></div>
+  <div class="modal" style="width:340px">
+    <div class="modal-hdr"><div class="modal-title" id="confirmTitle">Konfirmasi</div></div>
+    <div class="modal-body"><p id="confirmMsg" style="font-size:13px;color:var(--gray7)"></p></div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('confirmModal')">Batal</button>
-      <button class="btn btn-danger" id="confirmBtn">Ya, Lanjutkan</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('confirmModal')">Batal</button>
+      <button class="btn btn-danger btn-sm" id="confirmBtn">Ya, Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TUJUAN MODAL -->
+<div class="modal-overlay" id="tujuanModal">
+  <div class="modal" style="width:340px">
+    <div class="modal-hdr"><div class="modal-title">Tambah Tujuan Baru</div>
+      <button class="modal-close" onclick="closeModal('tujuanModal')"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--gray6);margin-bottom:10px">Pilih tujuan untuk sesi scan baru. AWB akan dikelompokkan per tujuan.</p>
+      <div class="fg"><label>TUJUAN</label>
+        <div class="cb-wrap"><input class="cb-inp" id="newTujuanInput" placeholder="Ketik / pilih tujuan..." autocomplete="off"
+          oninput="filterNewTujuan()" onfocus="openNewTujuanDrop()" onblur="closeNewTujuanDelay()">
+        <div class="cb-list" id="newTujuanList"></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('tujuanModal')">Batal</button>
+      <button class="btn btn-primary btn-sm" onclick="confirmAddTujuan()"><span class="material-icons-round">check</span> Tambah</button>
     </div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// GAS URL — sudah terhubung ke backend Google Apps Script
-// ============================================================
+// ─── CONFIG ───────────────────────────────────────────────
 var GAS_URL = "https://script.google.com/macros/s/AKfycbw_hmjPsNrHi_ZJStlYZ8NSY3SlGgNgy9f7AI05owjf4x7j2rREXB0JWrQ2mlwsT57Z/exec";
-// ============================================================
 
+// ─── STATE ────────────────────────────────────────────────
 var masterData = {};
 var obData = [], hvsData = [], ibData = [];
-var obScanned = [], hvsScanned = [], ibScanned = [];
-var currentDetailItem = null, currentDetailType = '';
-
-// Global incharge yang dipilih dari topbar
 var globalIncharge = '';
+var allIncharges = [];
+var currentDetailItem = null, currentDetailType = '';
+var pendingTujuanType = '';
 
+// Multi-tujuan scan state: { tujuan: [awb, awb, ...] }
+var obScanMap  = {}; // { tujuan: [awb,...] }
+var hvsScanMap = {};
+var ibScanned  = []; // IB single tujuan
+var obActiveTuj  = '';
+var hvsActiveTuj = '';
+
+// Manifest raw data
+var obScanRaw  = []; // from SCAN_OB
+var hvsScanRaw = []; // from SCAN_HVS
+
+// OB&IB
+var obibHeaders=[], obibRows=[];
+
+// ─── API HELPERS ──────────────────────────────────────────
 function gasGet(action, params) {
   var url = new URL(GAS_URL);
   url.searchParams.set('action', action);
   if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
-  return fetch(url.toString(), { redirect: 'follow' }).then(function(r){ return r.json(); });
+  return fetch(url.toString(), {redirect:'follow'}).then(function(r){return r.json();});
 }
 function gasPost(action, data) {
   data.action = action;
   return fetch(GAS_URL, {
-    method: 'POST', redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    method:'POST', redirect:'follow',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body: JSON.stringify(data)
-  }).then(function(r){ return r.json(); });
+  }).then(function(r){return r.json();});
 }
 
+// ─── UI HELPERS ───────────────────────────────────────────
 function showLoading(t){ document.getElementById('loadingText').innerText=t||'Memuat...'; document.getElementById('loading').style.display='flex'; }
 function hideLoading(){ document.getElementById('loading').style.display='none'; }
+function toast(msg, type){
+  var el=document.getElementById('toast');
+  el.innerText=msg; el.className=type||''; el.style.display='block';
+  clearTimeout(el._t); el._t=setTimeout(function(){el.style.display='none';},3200);
+}
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(function(el){
+  el.addEventListener('click',function(e){ if(e.target===el) el.classList.remove('open'); });
+});
 
-// ============================================================
-// GLOBAL INCHARGE
-// ============================================================
-function populateGlobalIncharge() {
-  var sel = document.getElementById('globalIncharge');
-  var obList = masterData.obIncharges || [];
-  var ibList = masterData.ibIncharges || [];
+// ─── SIDEBAR ──────────────────────────────────────────────
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// ─── GLOBAL INCHARGE COMBOBOX ─────────────────────────────
+function populateGlobalIncharge(){
+  var obList = masterData.obIncharges||[];
+  var ibList = masterData.ibIncharges||[];
   var combined = obList.slice();
-  ibList.forEach(function(v){ if (!combined.includes(v)) combined.push(v); });
-
-  sel.innerHTML = '<option value="">— Pilih —</option>' +
-    combined.map(function(v){ return '<option value="'+v+'">'+v+'</option>'; }).join('');
-
-  if (globalIncharge) {
-    sel.value = globalIncharge;
-    updateInchargeDot(true);
+  ibList.forEach(function(v){ if(!combined.includes(v)) combined.push(v); });
+  allIncharges = combined.sort();
+  renderGlobalCbOptions('');
+  if(globalIncharge){
+    document.getElementById('globalInchargeInput').value = globalIncharge;
+    document.getElementById('inchargeDot').classList.add('on');
   }
 }
-
-function onGlobalInchargeChange() {
-  globalIncharge = document.getElementById('globalIncharge').value;
-  updateInchargeDot(!!globalIncharge);
-  refreshObFormIncharge();
-  refreshHvsFormIncharge();
-  refreshIbFormIncharge();
-}
-
-function updateInchargeDot(active) {
-  var dot = document.getElementById('inchargeDot');
-  if (active) dot.classList.add('active'); else dot.classList.remove('active');
-}
-
-function refreshObFormIncharge() {
-  var hasIncharge = !!globalIncharge;
-  document.getElementById('obInchargeInfo').style.display   = hasIncharge ? '' : 'none';
-  document.getElementById('obNoInchargeWarn').style.display = hasIncharge ? 'none' : '';
-  document.getElementById('obFormGrid').style.display       = hasIncharge ? '' : 'none';
-  document.getElementById('obScanSection').style.display    = hasIncharge ? '' : 'none';
-  document.getElementById('obFormActions').style.display    = hasIncharge ? '' : 'none';
-
-  if (hasIncharge) {
-    document.getElementById('obInchargeDisplay').innerText = globalIncharge;
-    var d = (masterData.obData||{})[globalIncharge] || {};
-    var obSvc = document.getElementById('obService');
-    var obTuj = document.getElementById('obTujuan');
-    obSvc.innerHTML = '<option value="">— Pilih Service —</option>' + (d.services||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
-    obTuj.innerHTML = '<option value="">— Pilih Tujuan —</option>'  + (d.tujuans||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
-  }
-  checkObForm();
-}
-
-function refreshHvsFormIncharge() {
-  var hasIncharge = !!globalIncharge;
-  document.getElementById('hvsInchargeInfo').style.display   = hasIncharge ? '' : 'none';
-  document.getElementById('hvsNoInchargeWarn').style.display = hasIncharge ? 'none' : '';
-  document.getElementById('hvsFormGrid').style.display       = hasIncharge ? '' : 'none';
-  document.getElementById('hvsScanSection').style.display    = hasIncharge ? '' : 'none';
-  document.getElementById('hvsFormActions').style.display    = hasIncharge ? '' : 'none';
-
-  if (hasIncharge) {
-    document.getElementById('hvsInchargeDisplay').innerText = globalIncharge;
-    var d = (masterData.obData||{})[globalIncharge] || {};
-    var hvsSvc = document.getElementById('hvsService');
-    var hvsTuj = document.getElementById('hvsTujuan');
-    hvsSvc.innerHTML = '<option value="">— Pilih Service —</option>' + (d.services||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
-    hvsTuj.innerHTML = '<option value="">— Pilih Tujuan —</option>'  + (d.tujuans||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
-  }
-  checkHvsForm();
-}
-
-function refreshIbFormIncharge() {
-  var hasIncharge = !!globalIncharge;
-  document.getElementById('ibInchargeInfo').style.display   = hasIncharge ? '' : 'none';
-  document.getElementById('ibNoInchargeWarn').style.display = hasIncharge ? 'none' : '';
-  document.getElementById('ibFormGrid').style.display       = hasIncharge ? '' : 'none';
-  document.getElementById('ibScanSection').style.display    = hasIncharge ? '' : 'none';
-  document.getElementById('ibFormActions').style.display    = hasIncharge ? '' : 'none';
-
-  if (hasIncharge) {
-    document.getElementById('ibInchargeDisplay').innerText = globalIncharge;
-    var d = (masterData.ibData||{})[globalIncharge] || {};
-    var ibSvc  = document.getElementById('ibService');
-    var ibFrom = document.getElementById('ibFrom');
-    var ibTuj  = document.getElementById('ibTujuan');
-    ibSvc.innerHTML  = '<option value="">— Pilih Service —</option>' + (d.services||[]).map(function(v){ return '<option>'+v+'</option>'; }).join('');
-    ibFrom.innerHTML = '<option value="">— Pilih From —</option>'    + (d.froms||[]).map(function(v)   { return '<option>'+v+'</option>'; }).join('');
-    ibTuj.innerHTML  = '<option value="">— Pilih Tujuan —</option>'  + (d.tujuans||[]).map(function(v) { return '<option>'+v+'</option>'; }).join('');
-  }
-  checkIbForm();
-}
-
-// ============================================================
-// INIT
-// ============================================================
-window.onload = function() { reloadAll(); };
-
-function reloadAll() {
-  showLoading('Memuat data...');
-  gasGet('getMasterData').then(function(d) {
-    masterData = d;
-    obData  = d.obList  || [];
-    hvsData = d.hvsList || [];
-    ibData  = d.ibList  || [];
-    populateGlobalIncharge();
-    renderObTable();
-    renderHvsTable();
-    renderIbTable();
-    loadManifest();
-    loadOBIB();
-    updateObStats();
-    updateHvsStats();
-    updateIbStats();
-    hideLoading();
-  }).catch(function(e){ hideLoading(); alert('Gagal memuat data: '+e.message); });
-}
-
-// ============================================================
-// PAGE SWITCHING
-// ============================================================
-var pages = ['ob','hvs','ib','manifest','obib'];
-var pageTitles = {
-  ob:       'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
-  hvs:      'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',
-  ib:       'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',
-  manifest: 'Manifest <span class="topbar-sub">Rekap AWB OB & HVS</span>',
-  obib:     'OB & IB <span class="topbar-sub">Combined outbound & inbound view</span>'
-};
-
-function switchPage(page) {
-  pages.forEach(function(p){
-    document.getElementById('page-'+p).style.display = (p===page) ? '' : 'none';
-    var nav = document.getElementById('nav-'+p);
-    if(nav) nav.classList.toggle('active', p===page);
-  });
-  document.getElementById('topbarTitle').innerHTML = pageTitles[page] || page;
-}
-
-// ============================================================
-// FORM TOGGLES
-// ============================================================
-function toggleForm(type) {
-  var body = document.getElementById(type+'FormBody');
-  var icon = document.getElementById(type+'FormIcon');
-  var open = body.classList.toggle('open');
-  icon.innerText = open ? 'expand_less' : 'expand_more';
-  if (open) {
-    if (type==='ob')  refreshObFormIncharge();
-    if (type==='hvs') refreshHvsFormIncharge();
-    if (type==='ib')  refreshIbFormIncharge();
-  }
-}
-
-// ============================================================
-// FORM CHECKS
-// ============================================================
-function checkObForm() {
-  var ok = globalIncharge &&
-           document.getElementById('obService').value &&
-           document.getElementById('obTujuan').value;
-  document.getElementById('btnSaveOb').disabled = !ok;
-}
-function checkHvsForm() {
-  var ok = globalIncharge &&
-           document.getElementById('hvsService').value &&
-           document.getElementById('hvsTujuan').value;
-  document.getElementById('btnSaveHvs').disabled = !ok;
-}
-function checkIbForm() {
-  var ok = globalIncharge &&
-           document.getElementById('ibService').value &&
-           document.getElementById('ibFrom').value &&
-           document.getElementById('ibTujuan').value;
-  document.getElementById('btnSaveIb').disabled = !ok;
-}
-
-// ============================================================
-// SCAN INPUT
-// ============================================================
-function handleScan(e, type) {
-  if (e.key !== 'Enter') return;
-  var input = document.getElementById(type+'ScanInput');
-  var val = input.value.trim();
-  if (!val) return;
-  var arr = type==='ob' ? obScanned : type==='hvs' ? hvsScanned : ibScanned;
-  if (!arr.includes(val)) arr.unshift(val);
-  input.value = '';
-  renderScanList(type);
-}
-function renderScanList(type) {
-  var arr = type==='ob' ? obScanned : type==='hvs' ? hvsScanned : ibScanned;
-  var listEl = document.getElementById(type+'ScanList');
-  var countEl = document.getElementById(type+'ScanCount');
-  countEl.innerText = arr.length + ' AWB';
-  if (!arr.length) { listEl.innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>'; return; }
-  listEl.innerHTML = arr.map(function(awb, i){
-    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span><span class="material-icons-round scan-item-del" onclick="removeScan(\''+type+'\','+i+')">delete</span></div>';
+function renderGlobalCbOptions(q){
+  var drop = document.getElementById('globalCbDrop');
+  var filtered = allIncharges.filter(function(v){ return v.toLowerCase().includes(q.toLowerCase()); });
+  if(!filtered.length){ drop.innerHTML='<div class="combobox-option" style="color:var(--gray5)">Tidak ada</div>'; return; }
+  drop.innerHTML = filtered.map(function(v){
+    return '<div class="combobox-option'+(v===globalIncharge?' selected':'')+'" onmousedown="selectGlobalIncharge(\''+v+'\')">'+v+'</div>';
   }).join('');
 }
-function removeScan(type, idx) {
-  var arr = type==='ob' ? obScanned : type==='hvs' ? hvsScanned : ibScanned;
-  arr.splice(idx, 1);
-  renderScanList(type);
+function filterGlobalIncharge(){
+  var q=document.getElementById('globalInchargeInput').value;
+  renderGlobalCbOptions(q);
+  if(document.getElementById('globalCbDrop').className.indexOf('open')===-1) openGlobalCb();
+}
+function openGlobalCb(){ document.getElementById('globalCbDrop').classList.add('open'); renderGlobalCbOptions(document.getElementById('globalInchargeInput').value); }
+function closeGlobalCbDelay(){ setTimeout(function(){ document.getElementById('globalCbDrop').classList.remove('open'); },200); }
+function selectGlobalIncharge(v){
+  globalIncharge=v;
+  document.getElementById('globalInchargeInput').value=v;
+  document.getElementById('globalCbDrop').classList.remove('open');
+  document.getElementById('inchargeDot').classList.toggle('on',!!v);
+  refreshAllFormIncharges();
 }
 
-// ============================================================
-// SAVE OB
-// ============================================================
-function saveOb() {
-  var service = document.getElementById('obService').value;
-  var tujuan  = document.getElementById('obTujuan').value;
-  if (!globalIncharge||!service||!tujuan) return;
-  showLoading('Menyimpan data OB...');
-  gasPost('saveOb', { incharge:globalIncharge, service:service, tujuan:tujuan, awbList:obScanned.slice() })
-    .then(function(res) {
+// ─── PAGE SWITCHING ───────────────────────────────────────
+var pages=['ob','hvs','ib','manifest','obib'];
+var pageTitles={
+  ob:'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
+  hvs:'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',
+  ib:'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',
+  manifest:'Manifest <span class="topbar-sub">Rekap AWB OB &amp; HVS per tujuan</span>',
+  obib:'OB &amp; IB <span class="topbar-sub">Combined view</span>'
+};
+function switchPage(page){
+  pages.forEach(function(p){
+    document.getElementById('page-'+p).style.display=(p===page)?'':'none';
+    var n=document.getElementById('nav-'+p); if(n) n.classList.toggle('active',p===page);
+  });
+  document.getElementById('topbarTitle').innerHTML=pageTitles[page]||page;
+  if(page==='manifest') renderManifest();
+  if(page==='obib') renderObibTable(obibHeaders,obibRows);
+}
+
+// ─── FORM COMBOBOXES ──────────────────────────────────────
+var cbOptions = {
+  ob:  { service:[], tujuan:[] },
+  hvs: { service:[], tujuan:[] },
+  ib:  { service:[], from:[], tujuan:[] }
+};
+function openCb(type,field){
+  document.getElementById(type+cap(field)+'List').classList.add('open');
+  filterCb(type,field);
+}
+function closeCbDelay(type,field){ setTimeout(function(){ document.getElementById(type+cap(field)+'List').classList.remove('open'); },200); }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function filterCb(type,field){
+  var q=(document.getElementById(type+cap(field)).value||'').toLowerCase();
+  var opts=cbOptions[type][field]||[];
+  var list=document.getElementById(type+cap(field)+'List');
+  var filtered=opts.filter(function(v){ return v.toLowerCase().includes(q); });
+  if(!filtered.length){ list.innerHTML='<div class="cb-opt empty">Tidak ada pilihan</div>'; return; }
+  list.innerHTML=filtered.map(function(v){
+    return '<div class="cb-opt" onmousedown="selectCb(\''+type+'\',\''+field+'\',\''+v+'\')">'+v+'</div>';
+  }).join('');
+}
+function selectCb(type,field,val){
+  document.getElementById(type+cap(field)).value=val;
+  document.getElementById(type+cap(field)+'List').classList.remove('open');
+  if(type==='ob'){ checkObForm(); if(field==='tujuan') setObActiveTujuan(val); }
+  if(type==='hvs'){ checkHvsForm(); if(field==='tujuan') setHvsActiveTujuan(val); }
+  if(type==='ib') checkIbForm();
+}
+
+function buildCbOptions(){
+  var obIncharge = globalIncharge;
+  var d = (masterData.obData||{})[obIncharge]||{};
+  cbOptions.ob.service = d.services||[];
+  cbOptions.ob.tujuan  = d.tujuans||[];
+  cbOptions.hvs.service= d.services||[];
+  cbOptions.hvs.tujuan = d.tujuans||[];
+  var ib = (masterData.ibData||{})[obIncharge]||{};
+  cbOptions.ib.service = ib.services||[];
+  cbOptions.ib.from    = ib.froms||[];
+  cbOptions.ib.tujuan  = ib.tujuans||[];
+}
+
+// ─── REFRESH FORM INCHARGE ────────────────────────────────
+function refreshAllFormIncharges(){
+  buildCbOptions();
+  refreshFormIncharge('ob');
+  refreshFormIncharge('hvs');
+  refreshFormIncharge('ib');
+}
+function refreshFormIncharge(t){
+  var has=!!globalIncharge;
+  document.getElementById(t+'InfoBar').style.display=has?'':'none';
+  document.getElementById(t+'WarnBar').style.display=has?'none':'';
+  document.getElementById(t+'FormGrid').style.display=has?'':'none';
+  document.getElementById(t+'ScanSection').style.display=has?'':'none';
+  document.getElementById(t+'FormActions').style.display=has?'':'none';
+  if(has){
+    document.getElementById(t+'InchargeDisplay').innerText=globalIncharge;
+  }
+  if(t==='ob') checkObForm();
+  else if(t==='hvs') checkHvsForm();
+  else checkIbForm();
+}
+
+// ─── FORM TOGGLES ─────────────────────────────────────────
+function toggleForm(type){
+  var body=document.getElementById(type+'FormBody');
+  var icon=document.getElementById(type+'FormIcon');
+  var open=body.classList.toggle('open');
+  icon.innerText=open?'expand_less':'expand_more';
+  if(open) refreshFormIncharge(type);
+}
+
+// ─── FORM CHECKS ──────────────────────────────────────────
+function checkObForm(){
+  var ok=globalIncharge&&document.getElementById('obService').value&&document.getElementById('obTujuan').value;
+  document.getElementById('btnSaveOb').disabled=!ok;
+  if(ok){ var tuj=document.getElementById('obTujuan').value; if(tuj&&!obScanMap[tuj]) initObTujuan(tuj); }
+}
+function checkHvsForm(){
+  var ok=globalIncharge&&document.getElementById('hvsService').value&&document.getElementById('hvsTujuan').value;
+  document.getElementById('btnSaveHvs').disabled=!ok;
+  if(ok){ var tuj=document.getElementById('hvsTujuan').value; if(tuj&&!hvsScanMap[tuj]) initHvsTujuan(tuj); }
+}
+function checkIbForm(){
+  var ok=globalIncharge&&document.getElementById('ibService').value&&document.getElementById('ibFrom').value&&document.getElementById('ibTujuan').value;
+  document.getElementById('btnSaveIb').disabled=!ok;
+}
+
+// ─── MULTI-TUJUAN OB/HVS ──────────────────────────────────
+function initObTujuan(tuj){
+  if(!obScanMap[tuj]) obScanMap[tuj]=[];
+  obActiveTuj=tuj;
+  renderObTabs(); renderObScanList();
+}
+function initHvsTujuan(tuj){
+  if(!hvsScanMap[tuj]) hvsScanMap[tuj]=[];
+  hvsActiveTuj=tuj;
+  renderHvsTabs(); renderHvsScanList();
+}
+function setObActiveTujuan(tuj){ initObTujuan(tuj); }
+function setHvsActiveTujuan(tuj){ initHvsTujuan(tuj); }
+
+function addMultiTujuan(type){
+  pendingTujuanType=type;
+  document.getElementById('newTujuanInput').value='';
+  var tujuans = cbOptions[type].tujuan||[];
+  renderNewTujuanOptions(tujuans,'');
+  openModal('tujuanModal');
+  setTimeout(function(){ document.getElementById('newTujuanInput').focus(); },100);
+}
+function filterNewTujuan(){
+  var q=document.getElementById('newTujuanInput').value;
+  var opts=cbOptions[pendingTujuanType].tujuan||[];
+  renderNewTujuanOptions(opts,q);
+}
+function renderNewTujuanOptions(opts,q){
+  var list=document.getElementById('newTujuanList');
+  var filtered=opts.filter(function(v){ return v.toLowerCase().includes(q.toLowerCase()); });
+  list.innerHTML=filtered.map(function(v){
+    return '<div class="cb-opt" onmousedown="selectNewTujuan(\''+v+'\')">'+v+'</div>';
+  }).join('')||'<div class="cb-opt empty">Tidak ada</div>';
+}
+function openNewTujuanDrop(){ document.getElementById('newTujuanList').classList.add('open'); }
+function closeNewTujuanDelay(){ setTimeout(function(){ document.getElementById('newTujuanList').classList.remove('open'); },200); }
+function selectNewTujuan(v){ document.getElementById('newTujuanInput').value=v; }
+function confirmAddTujuan(){
+  var tuj=document.getElementById('newTujuanInput').value.trim();
+  if(!tuj){ toast('Masukkan tujuan terlebih dahulu','error'); return; }
+  closeModal('tujuanModal');
+  if(pendingTujuanType==='ob'){ initObTujuan(tuj); document.getElementById('obTujuan').value=tuj; checkObForm(); }
+  else if(pendingTujuanType==='hvs'){ initHvsTujuan(tuj); document.getElementById('hvsTujuan').value=tuj; checkHvsForm(); }
+}
+
+// OB tabs
+function renderObTabs(){
+  var tabs=document.getElementById('obTujuanTabs');
+  var keys=Object.keys(obScanMap);
+  if(!keys.length){ tabs.innerHTML=''; return; }
+  tabs.innerHTML=keys.map(function(t){
+    var cnt=obScanMap[t].length;
+    return '<span class="scan-tujuan-tab'+(t===obActiveTuj?' active':'')+'" onclick="switchObTuj(\''+t+'\')">'
+      +t+' <span class="cnt">'+cnt+'</span>'
+      +'<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeObTuj(\''+t+'\')">cancel</span>'
+      +'</span>';
+  }).join('');
+  updateObTotalLabel();
+}
+function switchObTuj(t){ obActiveTuj=t; renderObTabs(); renderObScanList(); }
+function removeObTuj(t){
+  delete obScanMap[t];
+  var keys=Object.keys(obScanMap);
+  obActiveTuj=keys.length?keys[0]:'';
+  renderObTabs(); renderObScanList(); checkObForm();
+}
+function renderObScanList(){
+  var list=document.getElementById('obScanList');
+  if(!obActiveTuj||!obScanMap[obActiveTuj]){ list.innerHTML='<div class="scan-empty">Belum ada AWB</div>'; return; }
+  var arr=obScanMap[obActiveTuj];
+  if(!arr.length){ list.innerHTML='<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
+  list.innerHTML=arr.map(function(awb,i){
+    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span><span class="scan-item-tuj">'+obActiveTuj+'</span>'
+      +'<span class="material-icons-round scan-item-del" onclick="removeObAwb('+i+')">delete</span></div>';
+  }).join('');
+}
+function removeObAwb(i){ obScanMap[obActiveTuj].splice(i,1); renderObTabs(); renderObScanList(); }
+function updateObTotalLabel(){
+  var total=Object.values(obScanMap).reduce(function(s,a){ return s+a.length; },0);
+  document.getElementById('obTotalScanLabel').innerText=total+' AWB total';
+}
+
+// HVS tabs
+function renderHvsTabs(){
+  var tabs=document.getElementById('hvsTujuanTabs');
+  var keys=Object.keys(hvsScanMap);
+  if(!keys.length){ tabs.innerHTML=''; return; }
+  tabs.innerHTML=keys.map(function(t){
+    var cnt=hvsScanMap[t].length;
+    return '<span class="scan-tujuan-tab'+(t===hvsActiveTuj?' active':'')+'" onclick="switchHvsTuj(\''+t+'\')">'
+      +t+' <span class="cnt">'+cnt+'</span>'
+      +'<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeHvsTuj(\''+t+'\')">cancel</span>'
+      +'</span>';
+  }).join('');
+  updateHvsTotalLabel();
+}
+function switchHvsTuj(t){ hvsActiveTuj=t; renderHvsTabs(); renderHvsScanList(); }
+function removeHvsTuj(t){
+  delete hvsScanMap[t];
+  var keys=Object.keys(hvsScanMap);
+  hvsActiveTuj=keys.length?keys[0]:'';
+  renderHvsTabs(); renderHvsScanList(); checkHvsForm();
+}
+function renderHvsScanList(){
+  var list=document.getElementById('hvsScanList');
+  if(!hvsActiveTuj||!hvsScanMap[hvsActiveTuj]){ list.innerHTML='<div class="scan-empty">Belum ada AWB</div>'; return; }
+  var arr=hvsScanMap[hvsActiveTuj];
+  if(!arr.length){ list.innerHTML='<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
+  list.innerHTML=arr.map(function(awb,i){
+    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span><span class="scan-item-tuj">'+hvsActiveTuj+'</span>'
+      +'<span class="material-icons-round scan-item-del" onclick="removeHvsAwb('+i+')">delete</span></div>';
+  }).join('');
+}
+function removeHvsAwb(i){ hvsScanMap[hvsActiveTuj].splice(i,1); renderHvsTabs(); renderHvsScanList(); }
+function updateHvsTotalLabel(){
+  var total=Object.values(hvsScanMap).reduce(function(s,a){ return s+a.length; },0);
+  document.getElementById('hvsTotalScanLabel').innerText=total+' AWB total';
+}
+
+// IB scan list
+function renderIbScanList(){
+  var list=document.getElementById('ibScanList');
+  var total=ibScanned.length;
+  document.getElementById('ibTotalScanLabel').innerText=total+' AWB total';
+  if(!total){ list.innerHTML='<div class="scan-empty">Belum ada AWB di-scan</div>'; return; }
+  list.innerHTML=ibScanned.map(function(awb,i){
+    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span>'
+      +'<span class="material-icons-round scan-item-del" onclick="ibScanned.splice('+i+',1);renderIbScanList()">delete</span></div>';
+  }).join('');
+}
+
+// ─── SCAN INPUT HANDLER ───────────────────────────────────
+function handleScan(e, type){
+  if(e.key!=='Enter') return;
+  var input=document.getElementById(type+'ScanInput');
+  var val=input.value.trim(); if(!val) return;
+  if(type==='ob'){
+    if(!obActiveTuj){ toast('Pilih tujuan dahulu','error'); return; }
+    if(!obScanMap[obActiveTuj]) obScanMap[obActiveTuj]=[];
+    if(!obScanMap[obActiveTuj].includes(val)) obScanMap[obActiveTuj].unshift(val);
+    renderObTabs(); renderObScanList();
+  } else if(type==='hvs'){
+    if(!hvsActiveTuj){ toast('Pilih tujuan dahulu','error'); return; }
+    if(!hvsScanMap[hvsActiveTuj]) hvsScanMap[hvsActiveTuj]=[];
+    if(!hvsScanMap[hvsActiveTuj].includes(val)) hvsScanMap[hvsActiveTuj].unshift(val);
+    renderHvsTabs(); renderHvsScanList();
+  } else {
+    if(!ibScanned.includes(val)) ibScanned.unshift(val);
+    renderIbScanList();
+  }
+  input.value='';
+}
+
+// ─── SAVE OB ──────────────────────────────────────────────
+function saveOb(){
+  var service=document.getElementById('obService').value;
+  var tujuan=document.getElementById('obTujuan').value;
+  if(!globalIncharge||!service||!tujuan) return;
+
+  // Flatten all scanned AWBs with their tujuan
+  var entries=[];
+  Object.keys(obScanMap).forEach(function(t){
+    obScanMap[t].forEach(function(awb){ entries.push({awb:awb,tujuan:t}); });
+  });
+  var awbList=entries.map(function(e){ return e.awb; });
+
+  // Use primary tujuan from form; send all as flat list
+  showLoading('Menyimpan OB...');
+  gasPost('saveOb',{incharge:globalIncharge,service:service,tujuan:tujuan,awbList:awbList})
+    .then(function(res){
       hideLoading();
-      if (res.error) { alert('Gagal: '+res.error); return; }
-      alert('✅ Data OB berhasil disimpan!\n\nNO TRACK: '+res.noTrack);
+      if(res.error){ toast('Gagal: '+res.error,'error'); return; }
+      toast('✅ OB disimpan! NO TRACK: '+res.noTrack,'success');
       resetObForm();
-      reloadAll();
-    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+      // Partial reload: only OB data
+      refreshObOnly();
+    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
 }
-function resetObForm() {
-  document.getElementById('obService').value = '';
-  document.getElementById('obTujuan').value  = '';
-  obScanned = [];
-  renderScanList('ob');
-  checkObForm();
-  var body = document.getElementById('obFormBody');
-  body.classList.remove('open');
-  document.getElementById('obFormIcon').innerText = 'expand_more';
+function refreshObOnly(){
+  gasGet('getObList').then(function(res){
+    obData=res.list||[]; renderObTable(); updateObStats();
+    // Also refresh manifest raw
+    loadScanRaw();
+  }).catch(function(){});
 }
 
-// ============================================================
-// SAVE HVS
-// ============================================================
-function saveHvs() {
-  var service = document.getElementById('hvsService').value;
-  var tujuan  = document.getElementById('hvsTujuan').value;
-  if (!globalIncharge||!service||!tujuan) return;
-  showLoading('Menyimpan data HVS...');
-  gasPost('saveHvs', { incharge:globalIncharge, service:service, tujuan:tujuan, awbList:hvsScanned.slice() })
-    .then(function(res) {
-      hideLoading();
-      if (res.error) { alert('Gagal: '+res.error); return; }
-      alert('✅ Data HVS berhasil disimpan!\n\nNO TRACK: '+res.noTrack);
-      resetHvsForm();
-      reloadAll();
-    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+function resetObForm(){
+  document.getElementById('obService').value='';
+  document.getElementById('obTujuan').value='';
+  obScanMap={}; obActiveTuj='';
+  document.getElementById('obTujuanTabs').innerHTML='';
+  document.getElementById('obScanList').innerHTML='<div class="scan-empty">Belum ada AWB di-scan</div>';
+  document.getElementById('obTotalScanLabel').innerText='0 AWB total';
+  checkObForm();
+  document.getElementById('obFormBody').classList.remove('open');
+  document.getElementById('obFormIcon').innerText='expand_more';
 }
-function resetHvsForm() {
-  document.getElementById('hvsService').value = '';
-  document.getElementById('hvsTujuan').value  = '';
-  hvsScanned = [];
-  renderScanList('hvs');
+
+// ─── SAVE HVS ─────────────────────────────────────────────
+function saveHvs(){
+  var service=document.getElementById('hvsService').value;
+  var tujuan=document.getElementById('hvsTujuan').value;
+  if(!globalIncharge||!service||!tujuan) return;
+  var awbList=[];
+  Object.keys(hvsScanMap).forEach(function(t){ hvsScanMap[t].forEach(function(awb){ awbList.push(awb); }); });
+  showLoading('Menyimpan HVS...');
+  gasPost('saveHvs',{incharge:globalIncharge,service:service,tujuan:tujuan,awbList:awbList})
+    .then(function(res){
+      hideLoading();
+      if(res.error){ toast('Gagal: '+res.error,'error'); return; }
+      toast('✅ HVS disimpan! NO TRACK: '+res.noTrack,'success');
+      resetHvsForm();
+      refreshHvsOnly();
+    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+}
+function refreshHvsOnly(){
+  gasGet('getHvsList').then(function(res){
+    hvsData=res.list||[]; renderHvsTable(); updateHvsStats(); loadScanRaw();
+  }).catch(function(){});
+}
+function resetHvsForm(){
+  document.getElementById('hvsService').value='';
+  document.getElementById('hvsTujuan').value='';
+  hvsScanMap={}; hvsActiveTuj='';
+  document.getElementById('hvsTujuanTabs').innerHTML='';
+  document.getElementById('hvsScanList').innerHTML='<div class="scan-empty">Belum ada AWB di-scan</div>';
+  document.getElementById('hvsTotalScanLabel').innerText='0 AWB total';
   checkHvsForm();
   document.getElementById('hvsFormBody').classList.remove('open');
-  document.getElementById('hvsFormIcon').innerText = 'expand_more';
+  document.getElementById('hvsFormIcon').innerText='expand_more';
 }
 
-// ============================================================
-// SAVE IB
-// ============================================================
-function saveIb() {
-  var service = document.getElementById('ibService').value;
-  var from    = document.getElementById('ibFrom').value;
-  var tujuan  = document.getElementById('ibTujuan').value;
-  if (!globalIncharge||!service||!from||!tujuan) return;
-  showLoading('Menyimpan data IB...');
-  gasPost('saveIb', { incharge:globalIncharge, service:service, from:from, tujuan:tujuan, awbList:ibScanned.slice() })
-    .then(function(res) {
+// ─── SAVE IB ──────────────────────────────────────────────
+function saveIb(){
+  var service=document.getElementById('ibService').value;
+  var from=document.getElementById('ibFrom').value;
+  var tujuan=document.getElementById('ibTujuan').value;
+  if(!globalIncharge||!service||!from||!tujuan) return;
+  showLoading('Menyimpan IB...');
+  gasPost('saveIb',{incharge:globalIncharge,service:service,from:from,tujuan:tujuan,awbList:ibScanned.slice()})
+    .then(function(res){
       hideLoading();
-      if (res.error) { alert('Gagal: '+res.error); return; }
-      alert('✅ Data IB berhasil disimpan!\n\nNO TRACK: '+res.noTrack);
+      if(res.error){ toast('Gagal: '+res.error,'error'); return; }
+      toast('✅ IB disimpan! NO TRACK: '+res.noTrack,'success');
       resetIbForm();
-      reloadAll();
-    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+      refreshIbOnly();
+    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
 }
-function resetIbForm() {
+function refreshIbOnly(){
+  gasGet('getIbList').then(function(res){
+    ibData=res.list||[]; renderIbTable(); updateIbStats();
+  }).catch(function(){});
+}
+function resetIbForm(){
   ['ibService','ibFrom','ibTujuan'].forEach(function(id){ document.getElementById(id).value=''; });
-  ibScanned = [];
-  renderScanList('ib');
-  checkIbForm();
+  ibScanned=[]; renderIbScanList(); checkIbForm();
   document.getElementById('ibFormBody').classList.remove('open');
-  document.getElementById('ibFormIcon').innerText = 'expand_more';
+  document.getElementById('ibFormIcon').innerText='expand_more';
 }
 
-// ============================================================
-// STATS
-// ============================================================
-function updateObStats() {
-  var total = obData.reduce(function(s,d){ return s+(+d.total_awb||0); }, 0);
-  var selesai = obData.filter(function(d){ return d.status==='SELESAI'; }).length;
-  document.getElementById('obTotalAwb').innerText = total;
-  document.getElementById('obSelesai').innerText  = selesai;
-  document.getElementById('obProses').innerText   = obData.length - selesai;
-}
-function updateHvsStats() {
-  var total = hvsData.reduce(function(s,d){ return s+(+d.total_awb||0); }, 0);
-  var selesai = hvsData.filter(function(d){ return d.status==='SELESAI'; }).length;
-  document.getElementById('hvsTotalAwb').innerText = total;
-  document.getElementById('hvsSelesai').innerText  = selesai;
-  document.getElementById('hvsProses').innerText   = hvsData.length - selesai;
-}
-function updateIbStats() {
-  var total = ibData.reduce(function(s,d){ return s+(+d.total_awb||0); }, 0);
-  var selesai = ibData.filter(function(d){ return d.status==='SELESAI'; }).length;
-  document.getElementById('ibTotalAwb').innerText = total;
-  document.getElementById('ibSelesai').innerText  = selesai;
-  document.getElementById('ibProses').innerText   = ibData.length - selesai;
-}
-
-// ============================================================
-// TABLE RENDERS
-// ============================================================
-function statusBadge(s) {
-  return s==='SELESAI'
-    ? '<span class="badge badge-selesai">✓ Selesai</span>'
-    : '<span class="badge badge-proses">● Proses</span>';
-}
-function fotoThumb(url) {
-  if (!url) return '<span style="font-size:11px;color:var(--gray5)">—</span>';
-  return '<a href="'+url+'" target="_blank"><img src="'+url+'" style="width:44px;height:36px;object-fit:cover;border-radius:5px;border:1px solid var(--gray3)"></a>';
+// ─── INIT ─────────────────────────────────────────────────
+window.onload=function(){ reloadAll(); };
+function reloadAll(){
+  showLoading('Memuat data...');
+  Promise.all([
+    gasGet('getMasterData'),
+    gasGet('getObList'),
+    gasGet('getHvsList'),
+    gasGet('getIbList'),
+    gasGet('getOBIB')
+  ]).then(function(results){
+    masterData=results[0];
+    obData=results[1].list||[];
+    hvsData=results[2].list||[];
+    ibData=results[3].list||[];
+    obibHeaders=results[4].headers||[];
+    obibRows=results[4].rows||[];
+    populateGlobalIncharge();
+    buildCbOptions();
+    renderObTable(); renderHvsTable(); renderIbTable();
+    updateObStats(); updateHvsStats(); updateIbStats();
+    loadScanRaw();
+    renderObibTable(obibHeaders,obibRows);
+    hideLoading();
+  }).catch(function(e){ hideLoading(); toast('Gagal memuat: '+e.message,'error'); });
 }
 
-function renderObTable(filter) {
-  var data = obData;
-  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(d){ return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }); }
-  var tbody = document.getElementById('obTbody');
-  if (!data.length) { tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>'; return; }
-  tbody.innerHTML = data.map(function(d, i){
-    return '<tr>'
-      +'<td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ob\',\''+d.no_track+'\')">'+d.no_track+'</span></td>'
+// ─── LOAD SCAN RAW for Manifest ───────────────────────────
+function loadScanRaw(){
+  Promise.all([
+    gasGet('getAwbRaw',{type:'OB'}),
+    gasGet('getAwbRaw',{type:'HVS'})
+  ]).then(function(res){
+    // fallback: use getManifest
+    gasGet('getManifest').then(function(r){
+      // We'll render manifest from obData+hvsData scan if getManifest empty
+      // Try using SCAN_OB/HVS via searchAwb workaround — render from OB/HVS list
+      renderManifestFromData();
+    });
+  }).catch(function(){
+    renderManifestFromData();
+  });
+}
+
+// ─── MANIFEST RENDER ──────────────────────────────────────
+// Manifest structure from sheet:
+// Row1: A:P = SUKAJADI, Q:U = METRO
+// Row2: A:H=SAMEDAY, I:P=NEXTDAY, Q:R=SAMEDAY, T:U=NEXTDAY
+// Row3: A=DATE, B=GTW JAKARTA, C=GTW BAWEN, D=CIANJUR, E=GTW MAJALENGKA, F=TASIK, G=GARUT, H=PH METRO(BDO-02)
+//       I=DATE, J=GTW JAKARTA, K=GTW BAWEN, L=CIANJUR, M=GTW MAJALENGKA, N=TASIK, O=GARUT, P=PH METRO(BDO-02)
+//       Q=GTW JAKARTA, R=LINEHAUL, S=PH SUKAJADI(BDO-01), T=GTW JAKARTA, U=PH SUKAJADI(BDO-01)
+// Row4+: Data from SCAN_OB col D (AWB) grouped by tujuan
+
+// Tujuan mapping to manifest columns:
+var MANIFEST_MAP = {
+  // OB (SUKAJADI SAMEDAY) columns B-H → tujuan keywords
+  'GTW JAKARTA':       {section:'SUKAJADI',sub:'SAMEDAY', col:'B'},
+  'GTW BAWEN':         {section:'SUKAJADI',sub:'SAMEDAY', col:'C'},
+  'CIANJUR':           {section:'SUKAJADI',sub:'SAMEDAY', col:'D'},
+  'GTW MAJALENGKA':    {section:'SUKAJADI',sub:'SAMEDAY', col:'E'},
+  'TASIK':             {section:'SUKAJADI',sub:'SAMEDAY', col:'F'},
+  'GARUT':             {section:'SUKAJADI',sub:'SAMEDAY', col:'G'},
+  'PH METRO (BDO-02)': {section:'SUKAJADI',sub:'SAMEDAY', col:'H'},
+};
+
+function renderManifestFromData(){
+  // Build a tujuan → AWB list map from obData and scan detail
+  // Since we don't have SCAN_OB detail here, we build from obData showing tujuan → total
+  // We call getManifest to get actual sheet data
+  gasGet('getManifest').then(function(r){
+    var headers=r.headers||[];
+    var rows=r.rows||[];
+
+    if(!headers.length && !rows.length){
+      // No MANIFEST sheet — build from OB/HVS scan detail
+      buildManifestFromScan();
+      return;
+    }
+    // Render raw manifest sheet
+    renderManifestRaw(headers, rows);
+  }).catch(function(){
+    buildManifestFromScan();
+  });
+}
+
+function buildManifestFromScan(){
+  // Group obData and hvsData by tujuan
+  var search=document.getElementById('manifestSearch')?document.getElementById('manifestSearch').value.toLowerCase():'';
+  var tujuanMap={};
+
+  function processData(data, type){
+    data.forEach(function(d){
+      var t=d.tujuan||'—';
+      if(!tujuanMap[t]) tujuanMap[t]={ob:[],hvs:[],total:0};
+      if(type==='ob') tujuanMap[t].ob.push(d);
+      else tujuanMap[t].hvs.push(d);
+      tujuanMap[t].total+=parseInt(d.total_awb)||0;
+    });
+  }
+  processData(obData,'ob');
+  processData(hvsData,'hvs');
+
+  var el=document.getElementById('manifestContent');
+  var tujuans=Object.keys(tujuanMap).sort();
+  if(!tujuans.length){ el.innerHTML='<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data manifest</div>'; return; }
+
+  var html='';
+  tujuans.forEach(function(t){
+    if(search && !t.toLowerCase().includes(search)) return;
+    var d=tujuanMap[t];
+    html+='<div class="manifest-section">';
+    html+='<div class="manifest-section-title"><span class="material-icons-round" style="font-size:15px">place</span>'+t+' <span style="font-weight:400;color:var(--gray5)">('+d.total+' AWB)</span></div>';
+
+    // OB table
+    if(d.ob.length){
+      html+='<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND BDO</div>';
+      html+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+      html+='<thead><tr><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left;letter-spacing:.5px">NO TRACK</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th></tr></thead><tbody>';
+      d.ob.forEach(function(r){
+        html+='<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--blue2);cursor:pointer" onclick="switchPage(\'ob\');openDetailModal(\'ob\',\''+r.no_track+'\')">'+r.no_track+'</span></td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.incharge+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.service+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">'+r.total_awb+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+statusBadge(r.status)+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">'+r.created_date+'</td></tr>';
+      });
+      html+='</tbody></table></div>';
+    }
+    // HVS table
+    if(d.hvs.length){
+      html+='<div><div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND HVS</div>';
+      html+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+      html+='<thead><tr><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left;letter-spacing:.5px">NO TRACK</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th></tr></thead><tbody>';
+      d.hvs.forEach(function(r){
+        html+='<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--purple);cursor:pointer" onclick="switchPage(\'hvs\');openDetailModal(\'hvs\',\''+r.no_track+'\')">'+r.no_track+'</span></td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.incharge+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.service+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">'+r.total_awb+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+statusBadge(r.status)+'</td>'
+          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">'+r.created_date+'</td></tr>';
+      });
+      html+='</tbody></table></div>';
+    }
+    html+='</div>';
+  });
+
+  el.innerHTML=html||'<div class="empty-state"><span class="material-icons-round">search_off</span>Tidak ada hasil pencarian</div>';
+}
+
+function renderManifestRaw(headers, rows){
+  var el=document.getElementById('manifestContent');
+  if(!headers.length){ buildManifestFromScan(); return; }
+  var search=(document.getElementById('manifestSearch').value||'').toLowerCase();
+  var filtered=rows.filter(function(r){ return !search||r.join(' ').toLowerCase().includes(search); });
+  var html='<div class="table-wrap"><table><thead><tr>'+headers.map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr></thead><tbody>';
+  html+=filtered.map(function(r){ return '<tr>'+r.map(function(c){ return '<td style="font-size:12px">'+c+'</td>'; }).join('')+'</tr>'; }).join('');
+  html+='</tbody></table></div>';
+  el.innerHTML=html||'<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
+}
+
+function renderManifest(){
+  // Re-render based on current data
+  buildManifestFromScan();
+}
+function reloadManifest(){
+  showLoading('Memuat manifest...');
+  Promise.all([gasGet('getObList'),gasGet('getHvsList')]).then(function(res){
+    obData=res[0].list||[];
+    hvsData=res[1].list||[];
+    updateObStats(); updateHvsStats();
+    renderObTable(); renderHvsTable();
+    hideLoading();
+    buildManifestFromScan();
+  }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+}
+
+// ─── OB&IB TABLE ──────────────────────────────────────────
+function renderObibTable(headers, rows, filter){
+  var data=rows;
+  if(filter){ var v=filter.toLowerCase(); data=data.filter(function(r){ return r.join(' ').toLowerCase().includes(v); }); }
+  var wrap=document.getElementById('obibTableWrap');
+  if(!headers.length){ wrap.innerHTML='<div class="empty-state"><span class="material-icons-round">table_view</span>Sheet OB&IB masih kosong atau belum ada data</div>'; return; }
+  var html='<table><thead><tr>'+headers.map(function(h){ return '<th>'+(h||'')+'</th>'; }).join('')+'</tr></thead><tbody>';
+  html+=data.map(function(r){ return '<tr>'+r.map(function(c){ return '<td style="font-size:12px">'+(c||'')+'</td>'; }).join('')+'</tr>'; }).join('');
+  html+='</tbody></table>';
+  wrap.innerHTML=html||'<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
+}
+function filterObib(){ renderObibTable(obibHeaders,obibRows,document.getElementById('obibSearch').value); }
+
+// ─── STATS ────────────────────────────────────────────────
+function updateObStats(){
+  var total=obData.reduce(function(s,d){ return s+(+d.total_awb||0); },0);
+  var selesai=obData.filter(function(d){ return d.status==='SELESAI'; }).length;
+  document.getElementById('obTotalAwb').innerText=total;
+  document.getElementById('obSelesai').innerText=selesai;
+  document.getElementById('obProses').innerText=obData.length-selesai;
+}
+function updateHvsStats(){
+  var total=hvsData.reduce(function(s,d){ return s+(+d.total_awb||0); },0);
+  var selesai=hvsData.filter(function(d){ return d.status==='SELESAI'; }).length;
+  document.getElementById('hvsTotalAwb').innerText=total;
+  document.getElementById('hvsSelesai').innerText=selesai;
+  document.getElementById('hvsProses').innerText=hvsData.length-selesai;
+}
+function updateIbStats(){
+  var total=ibData.reduce(function(s,d){ return s+(+d.total_awb||0); },0);
+  var selesai=ibData.filter(function(d){ return d.status==='SELESAI'; }).length;
+  document.getElementById('ibTotalAwb').innerText=total;
+  document.getElementById('ibSelesai').innerText=selesai;
+  document.getElementById('ibProses').innerText=ibData.length-selesai;
+}
+
+// ─── TABLE RENDERS ────────────────────────────────────────
+function statusBadge(s){
+  return (s==='SELESAI'||s==='selesai')
+    ?'<span class="badge badge-selesai">✓ Selesai</span>'
+    :'<span class="badge badge-proses">● On Proses</span>';
+}
+function fotoThumb(url){
+  if(!url) return '<span style="font-size:11px;color:var(--gray4)">—</span>';
+  return '<a href="'+url+'" target="_blank"><img src="'+url+'" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';
+}
+function escQ(s){ return (s||'').replace(/'/g,"\\'"); }
+
+function renderObTable(filter){
+  var data=filter?obData.filter(function(d){ var v=filter.toLowerCase(); return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }):obData;
+  document.getElementById('obTableCount').innerText=data.length+' record';
+  var tbody=document.getElementById('obTbody');
+  if(!data.length){ tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
+  tbody.innerHTML=data.map(function(d,i){
+    return '<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
+      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ob\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td>'
       +'<td>'+d.incharge+'</td>'
       +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
       +'<td>'+d.tujuan+'</td>'
-      +'<td style="font-size:12px;color:var(--gray6)">'+d.created_date+'</td>'
-      +'<td style="text-align:center;font-weight:700">'+d.total_awb+'</td>'
+      +'<td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td>'
+      +'<td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td>'
       +'<td>'+statusBadge(d.status)+'</td>'
       +'<td>'+fotoThumb(d.foto_url)+'</td>'
-      +'<td><div style="display:flex;gap:4px">'
-      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ob\',\''+d.no_track+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
-      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ob\',\''+d.no_track+'\')"><span class="material-icons-round">delete</span></button>'
-      +'</div></td>'
-      +'</tr>';
+      +'<td><div style="display:flex;gap:3px">'
+      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ob\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
+      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ob\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button>'
+      +'</div></td></tr>';
   }).join('');
 }
-
-function renderHvsTable(filter) {
-  var data = hvsData;
-  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(d){ return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }); }
-  var tbody = document.getElementById('hvsTbody');
-  if (!data.length) { tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>'; return; }
-  tbody.innerHTML = data.map(function(d, i){
-    return '<tr>'
-      +'<td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'hvs\',\''+d.no_track+'\')">'+d.no_track+'</span></td>'
+function renderHvsTable(filter){
+  var data=filter?hvsData.filter(function(d){ var v=filter.toLowerCase(); return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }):hvsData;
+  document.getElementById('hvsTableCount').innerText=data.length+' record';
+  var tbody=document.getElementById('hvsTbody');
+  if(!data.length){ tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
+  tbody.innerHTML=data.map(function(d,i){
+    return '<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
+      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'hvs\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td>'
       +'<td>'+d.incharge+'</td>'
-      +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
+      +'<td><span class="badge badge-purple">'+d.service+'</span></td>'
       +'<td>'+d.tujuan+'</td>'
-      +'<td style="font-size:12px;color:var(--gray6)">'+d.created_date+'</td>'
-      +'<td style="text-align:center;font-weight:700">'+d.total_awb+'</td>'
+      +'<td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td>'
+      +'<td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td>'
       +'<td>'+statusBadge(d.status)+'</td>'
       +'<td>'+fotoThumb(d.foto_url)+'</td>'
-      +'<td><div style="display:flex;gap:4px">'
-      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'hvs\',\''+d.no_track+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
-      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'hvs\',\''+d.no_track+'\')"><span class="material-icons-round">delete</span></button>'
-      +'</div></td>'
-      +'</tr>';
+      +'<td><div style="display:flex;gap:3px">'
+      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'hvs\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
+      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'hvs\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button>'
+      +'</div></td></tr>';
   }).join('');
 }
-
-function renderIbTable(filter) {
-  var data = ibData;
-  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(d){ return (d.no_track+d.incharge+d.service+d.tujuan+(d.from||'')+d.status).toLowerCase().includes(v); }); }
-  var tbody = document.getElementById('ibTbody');
-  if (!data.length) { tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>'; return; }
-  tbody.innerHTML = data.map(function(d, i){
-    return '<tr>'
-      +'<td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ib\',\''+d.no_track+'\')">'+d.no_track+'</span></td>'
+function renderIbTable(filter){
+  var data=filter?ibData.filter(function(d){ var v=filter.toLowerCase(); return (d.no_track+d.incharge+d.service+d.tujuan+(d.from||'')+d.status).toLowerCase().includes(v); }):ibData;
+  document.getElementById('ibTableCount').innerText=data.length+' record';
+  var tbody=document.getElementById('ibTbody');
+  if(!data.length){ tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
+  tbody.innerHTML=data.map(function(d,i){
+    return '<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
+      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ib\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td>'
       +'<td>'+d.incharge+'</td>'
       +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
       +'<td>'+(d.from||'—')+'</td>'
       +'<td>'+d.tujuan+'</td>'
-      +'<td style="font-size:12px;color:var(--gray6)">'+d.created_date+'</td>'
-      +'<td style="text-align:center;font-weight:700">'+d.total_awb+'</td>'
+      +'<td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td>'
+      +'<td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td>'
       +'<td>'+statusBadge(d.status)+'</td>'
       +'<td>'+fotoThumb(d.foto_url)+'</td>'
-      +'<td><div style="display:flex;gap:4px">'
-      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ib\',\''+d.no_track+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
-      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ib\',\''+d.no_track+'\')"><span class="material-icons-round">delete</span></button>'
-      +'</div></td>'
-      +'</tr>';
+      +'<td><div style="display:flex;gap:3px">'
+      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ib\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
+      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ib\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button>'
+      +'</div></td></tr>';
   }).join('');
 }
 
-function filterObTable()  { renderObTable(document.getElementById('obSearch').value); }
-function filterHvsTable() { renderHvsTable(document.getElementById('hvsSearch').value); }
-function filterIbTable()  { renderIbTable(document.getElementById('ibSearch').value); }
+function filterObTable(){ renderObTable(document.getElementById('obSearch').value||''); }
+function filterHvsTable(){ renderHvsTable(document.getElementById('hvsSearch').value||''); }
+function filterIbTable(){ renderIbTable(document.getElementById('ibSearch').value||''); }
 
-// ============================================================
-// MARK SELESAI
-// ============================================================
-function markSelesai(type, noTrack) {
-  var action = type==='ob' ? 'updateObStatus' : type==='hvs' ? 'updateHvsStatus' : 'updateIbStatus';
-  if (!confirm('Tandai '+noTrack+' sebagai SELESAI?')) return;
+// ─── MARK SELESAI (no full reload) ────────────────────────
+function markSelesai(type, noTrack){
+  var action=type==='ob'?'updateObStatus':type==='hvs'?'updateHvsStatus':'updateIbStatus';
+  if(!confirm('Tandai '+noTrack+' sebagai SELESAI?')) return;
   showLoading('Mengubah status...');
-  gasPost(action, { noTrack:noTrack, newStatus:'SELESAI' }).then(function(res){
+  gasPost(action,{noTrack:noTrack,newStatus:'SELESAI'}).then(function(res){
     hideLoading();
-    if (res.success) reloadAll();
-    else alert('Gagal: '+(res.error||''));
-  }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+    if(res.success){
+      // Update local data only — no full reload
+      var arr=type==='ob'?obData:type==='hvs'?hvsData:ibData;
+      var item=arr.find(function(d){ return d.no_track===noTrack; });
+      if(item) item.status='SELESAI';
+      if(type==='ob'){ renderObTable(); updateObStats(); }
+      else if(type==='hvs'){ renderHvsTable(); updateHvsStats(); }
+      else { renderIbTable(); updateIbStats(); }
+      toast('Status diubah ke SELESAI','success');
+      closeModal('detailModal');
+    } else toast('Gagal: '+(res.error||''),'error');
+  }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
 }
 
-// ============================================================
-// DELETE
-// ============================================================
-function confirmDelete(type, noTrack) {
-  document.getElementById('confirmTitle').innerText = 'Hapus Data';
-  document.getElementById('confirmMsg').innerText   = 'Hapus '+noTrack+'? Data AWB terkait juga akan dihapus. Tidak dapat dibatalkan.';
-  var action = type==='ob' ? 'deleteOb' : type==='hvs' ? 'deleteHvs' : 'deleteIb';
-  document.getElementById('confirmBtn').onclick = function(){
-    closeModal('confirmModal');
+// ─── DELETE ───────────────────────────────────────────────
+function confirmDelete(type, noTrack){
+  document.getElementById('confirmTitle').innerText='Hapus Data';
+  document.getElementById('confirmMsg').innerText='Hapus '+noTrack+'? Semua AWB terkait juga akan dihapus. Tidak bisa dibatalkan.';
+  var action=type==='ob'?'deleteOb':type==='hvs'?'deleteHvs':'deleteIb';
+  document.getElementById('confirmBtn').onclick=function(){
+    closeModal('confirmModal'); closeModal('detailModal');
     showLoading('Menghapus...');
-    gasPost(action, { noTrack:noTrack }).then(function(res){
+    gasPost(action,{noTrack:noTrack}).then(function(res){
       hideLoading();
-      if (res.success) reloadAll();
-      else alert('Gagal: '+(res.error||''));
-    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+      if(res.success){
+        // Remove from local
+        if(type==='ob'){ obData=obData.filter(function(d){ return d.no_track!==noTrack; }); renderObTable(); updateObStats(); }
+        else if(type==='hvs'){ hvsData=hvsData.filter(function(d){ return d.no_track!==noTrack; }); renderHvsTable(); updateHvsStats(); }
+        else { ibData=ibData.filter(function(d){ return d.no_track!==noTrack; }); renderIbTable(); updateIbStats(); }
+        toast('Data dihapus','success');
+      } else toast('Gagal: '+(res.error||''),'error');
+    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
   };
   openModal('confirmModal');
 }
 
-// ============================================================
-// DETAIL MODAL
-// ============================================================
-function openDetailModal(type, noTrack) {
-  var data = type==='ob' ? obData : type==='hvs' ? hvsData : ibData;
-  var item = data.find(function(d){ return d.no_track===noTrack; });
-  if (!item) return;
-  currentDetailItem = item;
-  currentDetailType = type;
+// ─── DETAIL MODAL ─────────────────────────────────────────
+function openDetailModal(type, noTrack){
+  var data=type==='ob'?obData:type==='hvs'?hvsData:ibData;
+  var item=data.find(function(d){ return d.no_track===noTrack; });
+  if(!item) return;
+  currentDetailItem=item; currentDetailType=type;
+  document.getElementById('detailModalTitle').innerText=noTrack;
+  var pb=document.getElementById('detailPhotoBox');
+  pb.innerHTML=item.foto_url?'<img src="'+item.foto_url+'" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">':'<span class="no-img">No Image</span>';
 
-  document.getElementById('detailModalTitle').innerText = noTrack;
-
-  var photoBox = document.getElementById('detailPhotoBox');
-  if (item.foto_url) {
-    photoBox.innerHTML = '<img src="'+item.foto_url+'" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">';
-  } else {
-    photoBox.innerHTML = '<span class="no-img">No Image</span>';
-  }
-
-  var fields = type==='ib'
-    ? [['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['FROM',item.from||'—'],['TUJUAN',item.tujuan],['CREATED DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]]
-    : [['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['TUJUAN',item.tujuan],['CREATED DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]];
-  document.getElementById('detailGrid').innerHTML = fields.map(function(f){
-    return '<div class="detail-field"><div class="d-label">'+f[0]+'</div><div class="d-value">'+f[1]+'</div></div>';
+  var fields=type==='ib'
+    ?[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['FROM',item.from||'—'],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]]
+    :[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]];
+  document.getElementById('detailGrid').innerHTML=fields.map(function(f){
+    return '<div class="d-field"><div class="d-label">'+f[0]+'</div><div class="d-value">'+f[1]+'</div></div>';
   }).join('');
 
-  showLoading('Memuat AWB...');
-  gasGet('getAwbList', { noTrack:noTrack, type:type.toUpperCase() }).then(function(res){
-    hideLoading();
-    var list = res.list||[];
-    document.getElementById('awbCount').innerText = list.length;
-    var awbEl = document.getElementById('detailAwbList');
-    if (!list.length) { awbEl.innerHTML='<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>'; }
-    else awbEl.innerHTML = list.map(function(r){ return '<div class="awb-row">'+(r.awb||r)+(r.tujuan?' <span style="color:var(--gray5);font-size:11px">— '+r.tujuan+'</span>':'')+'</div>'; }).join('');
-  }).catch(function(){ hideLoading(); });
+  document.getElementById('detailAwbList').innerHTML='<div class="awb-row" style="color:var(--gray5)">Memuat AWB...</div>';
+  document.getElementById('awbCount').innerText='...';
 
-  var footer = document.getElementById('detailModalFooter');
-  var selesaiBtn = item.status!=='SELESAI' ? '<button class="btn btn-success" onclick="markSelesai(\''+type+'\',\''+noTrack+'\');closeModal(\'detailModal\')"><span class="material-icons-round">check_circle</span> Selesai</button>' : '';
-  footer.innerHTML = '<button class="btn btn-outline" onclick="closeModal(\'detailModal\')">Tutup</button>'
-    + selesaiBtn
-    + '<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+type+'\',\''+noTrack+'\');closeModal(\'detailModal\')"><span class="material-icons-round">delete</span></button>';
+  gasGet('getAwbList',{noTrack:noTrack,type:type.toUpperCase()}).then(function(res){
+    var list=res.list||[];
+    document.getElementById('awbCount').innerText=list.length;
+    var awbEl=document.getElementById('detailAwbList');
+    awbEl.innerHTML=!list.length
+      ?'<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>'
+      :list.map(function(r){ return '<div class="awb-row"><span>'+(r.awb||r)+'</span>'+(r.tujuan?'<span style="color:var(--gray5);font-size:11px">'+r.tujuan+'</span>':'')+'</div>'; }).join('');
+  }).catch(function(){});
+
+  var selesaiBtn=item.status!=='SELESAI'?'<button class="btn btn-success btn-sm" onclick="markSelesai(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">check_circle</span> Selesai</button>':'';
+  document.getElementById('detailModalFooter').innerHTML=
+    '<button class="btn btn-outline btn-sm" onclick="closeModal(\'detailModal\')">Tutup</button>'
+    +selesaiBtn
+    +'<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">delete</span></button>';
 
   openModal('detailModal');
 }
 
-// ============================================================
-// FOTO UPDATE
-// ============================================================
-function onFotoChange(e) {
-  var file = e.target.files[0];
-  if (!file || !currentDetailItem) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    var base64 = ev.target.result.split(',')[1];
+// ─── FOTO UPDATE ──────────────────────────────────────────
+function onFotoChange(e){
+  var file=e.target.files[0]; if(!file||!currentDetailItem) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var b64=ev.target.result.split(',')[1];
     showLoading('Mengupload foto...');
-    gasPost('updateFoto', {
-      noTrack: currentDetailItem.no_track,
-      type: currentDetailType.toUpperCase(),
-      base64Data: base64
-    }).then(function(res){
-      hideLoading();
-      if (res.success && res.url) {
-        document.getElementById('detailPhotoBox').innerHTML = '<img src="'+res.url+'">';
-        currentDetailItem.foto_url = res.url;
-        alert('✅ Foto berhasil diperbarui!');
-        reloadAll();
-      } else alert('Gagal upload foto: '+(res.error||''));
-    }).catch(function(e){ hideLoading(); alert('Error: '+e.message); });
+    gasPost('updateFoto',{noTrack:currentDetailItem.no_track,type:currentDetailType.toUpperCase(),base64Data:b64})
+      .then(function(res){
+        hideLoading();
+        if(res.success&&res.url){
+          document.getElementById('detailPhotoBox').innerHTML='<img src="'+res.url+'">';
+          currentDetailItem.foto_url=res.url;
+          toast('Foto berhasil diperbarui','success');
+          // Update local table cell without full reload
+          var arr=currentDetailType==='ob'?obData:currentDetailType==='hvs'?hvsData:ibData;
+          var item=arr.find(function(d){ return d.no_track===currentDetailItem.no_track; });
+          if(item) item.foto_url=res.url;
+          if(currentDetailType==='ob') renderObTable();
+          else if(currentDetailType==='hvs') renderHvsTable();
+          else renderIbTable();
+        } else toast('Gagal upload: '+(res.error||''),'error');
+      }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
   };
   reader.readAsDataURL(file);
-  e.target.value = '';
+  e.target.value='';
 }
 
-// ============================================================
-// MANIFEST
-// ============================================================
-var manifestData = [];
-function loadManifest() {
-  manifestData = (masterData.obList||[]).concat(masterData.hvsList||[]).concat(masterData.ibList||[]);
+// ─── CSV EXPORT ───────────────────────────────────────────
+function exportCSV(){
+  var activePage=document.querySelector('.nav-item.active .nav-label');
+  var page=activePage?activePage.innerText:'';
+  var data,headers,filename;
+  if(page.includes('Outbound BDO')){ data=obData; headers=['no_track','incharge','service','tujuan','created_date','status','total_awb']; filename='OB_export.csv'; }
+  else if(page.includes('Outbound HVS')){ data=hvsData; headers=['no_track','incharge','service','tujuan','created_date','status','total_awb']; filename='HVS_export.csv'; }
+  else if(page.includes('Inbound HVS')){ data=ibData; headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb']; filename='IB_export.csv'; }
+  else{ toast('Pilih halaman OB/HVS/IB dulu','error'); return; }
+  var csv=headers.join(',')+'\n'+data.map(function(d){ return headers.map(function(h){ return '"'+(d[h]||'')+'"'; }).join(','); }).join('\n');
+  dlCSV(csv,filename);
 }
-function filterManifest() {
-  var v = document.getElementById('manifestSearch').value.toLowerCase();
-  var tbody = document.getElementById('manifestTbody');
-  var data = manifestData.filter(function(d){
-    return !v || (d.incharge+d.service+d.tujuan+d.no_track).toLowerCase().includes(v);
-  });
-  tbody.innerHTML = data.map(function(d){
-    return '<tr><td>'+d.incharge+'</td><td>'+d.service+'</td><td>'+d.tujuan+'</td><td>—</td><td class="mono">'+d.no_track+'</td><td>OB</td></tr>';
-  }).join('') || '<tr><td colspan="6"><div class="empty-state"><span class="material-icons-round">inbox</span><p>Tidak ada data</p></div></td></tr>';
+function exportManifestCSV(){
+  var rows=[['TUJUAN','TYPE','NO_TRACK','INCHARGE','SERVICE','TOTAL_AWB','STATUS','DATE']];
+  obData.forEach(function(d){ rows.push([d.tujuan,'OB',d.no_track,d.incharge,d.service,d.total_awb,d.status,d.created_date]); });
+  hvsData.forEach(function(d){ rows.push([d.tujuan,'HVS',d.no_track,d.incharge,d.service,d.total_awb,d.status,d.created_date]); });
+  dlCSV(rows.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n'),'manifest_export.csv');
 }
-
-// ============================================================
-// OB&IB
-// ============================================================
-var obibHeaders = [], obibRows = [];
-function loadOBIB() {
-  gasGet('getOBIB').then(function(res){
-    obibHeaders = res.headers||[];
-    obibRows    = res.rows||[];
-    if (!obibHeaders.length && !obibRows.length) {
-      document.getElementById('obibTableWrap').innerHTML = '<div class="empty-state"><span class="material-icons-round">table_view</span><p>Sheet OB&IB masih kosong</p></div>';
-      return;
-    }
-    renderObibTable(obibHeaders, obibRows);
-  }).catch(function(){});
+function exportObibCSV(){
+  if(!obibRows.length){ toast('Tidak ada data OB&IB','error'); return; }
+  var csv=obibHeaders.join(',')+'\n'+obibRows.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n');
+  dlCSV(csv,'OBIB_export.csv');
 }
-function renderObibTable(headers, rows, filter) {
-  var data = rows;
-  if (filter) { var v=filter.toLowerCase(); data=data.filter(function(r){ return r.join(' ').toLowerCase().includes(v); }); }
-  var wrap = document.getElementById('obibTableWrap');
-  if (!headers.length) { wrap.innerHTML='<div class="empty-state"><span class="material-icons-round">table_view</span><p>Tidak ada data</p></div>'; return; }
-  var html = '<table><thead><tr>'+headers.map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr></thead><tbody>';
-  html += data.map(function(r){ return '<tr>'+r.map(function(c){ return '<td style="font-size:12px">'+c+'</td>'; }).join('')+'</tr>'; }).join('');
-  html += '</tbody></table>';
-  wrap.innerHTML = html;
-}
-function filterObib() {
-  var v = document.getElementById('obibSearch').value;
-  renderObibTable(obibHeaders, obibRows, v);
-}
-
-// ============================================================
-// MODAL HELPERS
-// ============================================================
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-document.querySelectorAll('.modal-overlay').forEach(function(el){
-  el.addEventListener('click', function(e){
-    if (e.target === el) el.classList.remove('open');
-  });
-});
-
-// ============================================================
-// CSV EXPORT
-// ============================================================
-function exportCSV() {
-  var page = document.querySelector('.nav-item.active').innerText.trim();
-  var data, headers, filename;
-  if (page.includes('Outbound BDO'))      { data=obData;  headers=['no_track','incharge','service','tujuan','created_date','status','total_awb','foto_url']; filename='OB_export.csv'; }
-  else if (page.includes('Outbound HVS')) { data=hvsData; headers=['no_track','incharge','service','tujuan','created_date','status','total_awb','foto_url']; filename='HVS_export.csv'; }
-  else if (page.includes('Inbound HVS'))  { data=ibData;  headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb','foto_url']; filename='IB_export.csv'; }
-  else { alert('Pilih halaman OB/HVS/IB dulu'); return; }
-  var csv = headers.join(',') + '\n' + data.map(function(d){ return headers.map(function(h){ return '"'+(d[h]||'')+'"'; }).join(','); }).join('\n');
-  downloadCSV(csv, filename);
-}
-function exportManifestCSV() {
-  var csv = 'INCHARGE,SERVICE,TUJUAN,NO_TRACK,TYPE\n' + manifestData.map(function(d){ return [d.incharge,d.service,d.tujuan,d.no_track,'OB'].join(','); }).join('\n');
-  downloadCSV(csv, 'manifest_export.csv');
-}
-function exportObibCSV() {
-  if (!obibRows.length) { alert('Tidak ada data OB&IB'); return; }
-  var csv = obibHeaders.join(',') + '\n' + obibRows.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n');
-  downloadCSV(csv, 'OBIB_export.csv');
-}
-function downloadCSV(csv, filename) {
-  var blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
+function dlCSV(csv,fn){
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=fn; a.click();
 }
 </script>
 </body>
