@@ -633,19 +633,58 @@ var hvsScanRaw = []; // from SCAN_HVS
 var obibHeaders=[], obibRows=[];
 
 // ─── API HELPERS ──────────────────────────────────────────
+// GAS melakukan redirect 302 dari script.google.com → script.googleusercontent.com
+// fetch() dengan redirect:'follow' kadang gagal di beberapa browser/env karena CORS pada redirect.
+// Solusi: gunakan XMLHttpRequest yang lebih toleran terhadap redirect GAS.
+
 function gasGet(action, params) {
-  var url = new URL(GAS_URL);
-  url.searchParams.set('action', action);
-  if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
-  return fetch(url.toString(), {redirect:'follow'}).then(function(r){return r.json();});
+  return new Promise(function(resolve, reject) {
+    var url = new URL(GAS_URL);
+    url.searchParams.set('action', action);
+    if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url.toString(), true);
+    xhr.onload = function() {
+      try { resolve(JSON.parse(xhr.responseText)); }
+      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,100))); }
+    };
+    xhr.onerror = function() {
+      // Fallback: coba via fetch dengan mode cors
+      fetch(url.toString(), {redirect:'follow', mode:'cors'})
+        .then(function(r){ return r.json(); })
+        .then(resolve)
+        .catch(function(){
+          // Last resort: no-cors tidak bisa dibaca, tapi coba quoting trick
+          reject(new Error('Network error — pastikan GAS sudah di-deploy sebagai "Anyone" dan Web App sudah dipublish ulang.'));
+        });
+    };
+    xhr.send();
+  });
 }
+
 function gasPost(action, data) {
   data.action = action;
-  return fetch(GAS_URL, {
-    method:'POST', redirect:'follow',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify(data)
-  }).then(function(r){return r.json();});
+  var body = JSON.stringify(data);
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', GAS_URL, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
+    xhr.onload = function() {
+      try { resolve(JSON.parse(xhr.responseText)); }
+      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,100))); }
+    };
+    xhr.onerror = function() {
+      // Fallback fetch
+      fetch(GAS_URL, {
+        method:'POST', redirect:'follow',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: body
+      }).then(function(r){ return r.json(); }).then(resolve)
+        .catch(function(){ reject(new Error('Network error pada POST ke GAS.')); });
+    };
+    xhr.send(body);
+  });
 }
 
 // ─── UI HELPERS ───────────────────────────────────────────
@@ -1073,47 +1112,66 @@ function resetIbForm(){
 }
 
 // ─── INIT ─────────────────────────────────────────────────
-window.onload=function(){ reloadAll(); };
-function reloadAll(){
+window.onload = function() { reloadAll(); };
+
+function reloadAll() {
   showLoading('Memuat data...');
-  Promise.all([
-    gasGet('getMasterData'),
-    gasGet('getObList'),
-    gasGet('getHvsList'),
-    gasGet('getIbList'),
-    gasGet('getOBIB')
-  ]).then(function(results){
-    masterData=results[0];
-    obData=results[1].list||[];
-    hvsData=results[2].list||[];
-    ibData=results[3].list||[];
-    obibHeaders=results[4].headers||[];
-    obibRows=results[4].rows||[];
-    populateGlobalIncharge();
-    buildCbOptions();
-    renderObTable(); renderHvsTable(); renderIbTable();
-    updateObStats(); updateHvsStats(); updateIbStats();
-    loadScanRaw();
-    renderObibTable(obibHeaders,obibRows);
-    hideLoading();
-  }).catch(function(e){ hideLoading(); toast('Gagal memuat: '+e.message,'error'); });
+  // Sequential calls — GAS lebih stabil sequential vs parallel
+  gasGet('getMasterData')
+    .then(function(d) {
+      if (d.error) throw new Error(d.error);
+      masterData = d;
+      obData  = d.obList  || [];
+      hvsData = d.hvsList || [];
+      ibData  = d.ibList  || [];
+      populateGlobalIncharge();
+      buildCbOptions();
+      renderObTable(); renderHvsTable(); renderIbTable();
+      updateObStats(); updateHvsStats(); updateIbStats();
+      buildManifestFromScan();
+      showLoading('Memuat OB & IB view...');
+      return gasGet('getOBIB');
+    })
+    .then(function(r) {
+      obibHeaders = r.headers || [];
+      obibRows    = r.rows    || [];
+      renderObibTable(obibHeaders, obibRows);
+      hideLoading();
+    })
+    .catch(function(e) {
+      hideLoading();
+      toast('❌ ' + e.message, 'error');
+      console.error('reloadAll error:', e);
+      showNetworkError(e.message);
+    });
+}
+
+function showNetworkError(msg) {
+  var pages = ['ob','hvs','ib'];
+  var html = '<div style="background:#FFEBEE;border:1.5px solid #EF9A9A;border-radius:9px;padding:16px 18px;margin-bottom:14px;font-size:13px;color:#C62828">'
+    + '<strong>❌ Gagal terhubung ke Google Apps Script</strong><br><br>'
+    + '<b>Kemungkinan penyebab:</b><ul style="margin:8px 0 0 16px;line-height:1.8">'
+    + '<li>GAS belum di-deploy atau deployment belum dipublish ulang setelah edit</li>'
+    + '<li>Setting akses GAS bukan <b>"Anyone"</b></li>'
+    + '<li>URL GAS salah atau expired</li>'
+    + '<li>Browser memblokir cross-origin request</li>'
+    + '</ul><br>'
+    + '<b>Solusi:</b><ul style="margin:0 0 0 16px;line-height:1.8">'
+    + '<li>Buka GAS → Deploy → Manage Deployments → pastikan <b>Execute as: Me</b> dan <b>Who has access: Anyone</b></li>'
+    + '<li>Klik <b>New Deployment</b> atau <b>Edit</b> lalu Save jika ada perubahan code</li>'
+    + '<li>Coba buka URL GAS langsung di browser: <a href="' + GAS_URL + '?action=getMasterData" target="_blank" style="color:var(--blue2)">Test URL</a></li>'
+    + '</ul>'
+    + '<br><small style="color:#888">Error: ' + msg + '</small>'
+    + '</div>';
+  document.getElementById('page-ob').insertAdjacentHTML('afterbegin', html);
 }
 
 // ─── LOAD SCAN RAW for Manifest ───────────────────────────
 function loadScanRaw(){
-  Promise.all([
-    gasGet('getAwbRaw',{type:'OB'}),
-    gasGet('getAwbRaw',{type:'HVS'})
-  ]).then(function(res){
-    // fallback: use getManifest
-    gasGet('getManifest').then(function(r){
-      // We'll render manifest from obData+hvsData scan if getManifest empty
-      // Try using SCAN_OB/HVS via searchAwb workaround — render from OB/HVS list
-      renderManifestFromData();
-    });
-  }).catch(function(){
-    renderManifestFromData();
-  });
+  // Tidak ada endpoint getAwbRaw di GAS — skip, langsung render dari data lokal
+  buildManifestFromScan();
+  return; // dummy — block di bawah tidak dipakai
+  if(false) {
 }
 
 // ─── MANIFEST RENDER ──────────────────────────────────────
