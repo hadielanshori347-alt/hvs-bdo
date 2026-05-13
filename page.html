@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OUTBOUND GTW BDO — v2</title>
+<title>OUTBOUND GTW BDO — v2.2</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -54,15 +54,34 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .topbar-sub{font-size:11px;color:var(--gray5);font-weight:400}
 .incharge-widget{display:flex;align-items:center;gap:6px;background:var(--blue-light);border:1.5px solid var(--blue-mid);border-radius:8px;padding:4px 8px 4px 10px;flex-shrink:0}
 .incharge-widget-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.combobox-wrap{position:relative;min-width:140px}
-.combobox-input{width:100%;border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:var(--blue2);font-family:var(--font);cursor:text;padding:2px 0}
-.combobox-input::placeholder{color:var(--gray4);font-weight:400}
-.combobox-dropdown{position:absolute;top:calc(100% + 6px);left:-10px;background:var(--white);border:1px solid var(--gray3);border-radius:8px;box-shadow:var(--shadow2);z-index:500;min-width:180px;max-height:220px;overflow-y:auto;display:none}
-.combobox-dropdown.open{display:block}
-.combobox-option{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--gray7)}
-.combobox-option:hover,.combobox-option.selected{background:var(--blue-light);color:var(--blue2)}
 .incharge-dot{width:7px;height:7px;border-radius:50%;background:var(--gray4);flex-shrink:0;transition:.3s}
 .incharge-dot.on{background:#4CAF50;box-shadow:0 0 0 2px #C8E6C9}
+
+/* ── SMART COMBOBOX ── */
+.smart-cb{position:relative;min-width:140px}
+.smart-cb-input{width:100%;border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:var(--blue2);font-family:var(--font);cursor:text;padding:2px 20px 2px 0}
+.smart-cb-input::placeholder{color:var(--gray4);font-weight:400}
+.smart-cb-arrow{position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--blue2);font-size:16px;pointer-events:none;transition:var(--trans)}
+.smart-cb.open .smart-cb-arrow{transform:translateY(-50%) rotate(180deg)}
+.smart-cb-dropdown{position:absolute;top:calc(100% + 6px);left:-10px;background:var(--white);border:1px solid var(--gray3);border-radius:8px;box-shadow:var(--shadow2);z-index:500;min-width:200px;max-height:240px;overflow-y:auto;display:none}
+.smart-cb.open .smart-cb-dropdown{display:block}
+.smart-cb-option{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--gray7);transition:.1s}
+.smart-cb-option:hover,.smart-cb-option.focused{background:var(--blue-light);color:var(--blue2)}
+.smart-cb-option.selected{background:var(--blue-light);color:var(--blue);font-weight:600}
+.smart-cb-empty{padding:10px 14px;font-size:12px;color:var(--gray5);font-style:italic}
+
+/* ── FORM SMART CB ── */
+.form-smart-cb{position:relative}
+.form-smart-cb-input{width:100%;padding:8px 32px 8px 11px;border:1.5px solid var(--gray3);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--gray8);outline:none;background:var(--white);transition:var(--trans);cursor:text}
+.form-smart-cb-input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light)}
+.form-smart-cb-arrow{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--gray5);font-size:18px;cursor:pointer;transition:var(--trans)}
+.form-smart-cb.open .form-smart-cb-arrow{transform:translateY(-50%) rotate(180deg);color:var(--blue2)}
+.form-smart-cb-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1.5px solid var(--blue-mid);border-radius:8px;box-shadow:var(--shadow2);z-index:400;max-height:200px;overflow-y:auto;display:none}
+.form-smart-cb.open .form-smart-cb-dropdown{display:block}
+.form-smart-cb-option{padding:9px 13px;font-size:13px;cursor:pointer;color:var(--gray7);transition:.1s;display:flex;align-items:center;gap:6px}
+.form-smart-cb-option:hover,.form-smart-cb-option.focused{background:var(--blue-light);color:var(--blue2)}
+.form-smart-cb-option.selected{color:var(--blue);font-weight:600}
+.form-smart-cb-empty{padding:10px 13px;font-size:12px;color:var(--gray5);font-style:italic}
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--trans);font-family:var(--font);white-space:nowrap}
@@ -89,8 +108,8 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .stat-card.orange .stat-value{color:var(--orange)}
 
 /* Form Panel */
-.form-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow)}
-.form-panel-hdr{background:var(--blue2);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.form-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);margin-bottom:14px;overflow:visible;box-shadow:var(--shadow)}
+.form-panel-hdr{background:var(--blue2);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;border-radius:var(--r) var(--r) 0 0}
 .form-panel-title{color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:7px}
 .form-panel-title .material-icons-round{font-size:17px}
 .form-panel-body{padding:14px 16px;display:none}
@@ -102,14 +121,6 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .warn-bar .material-icons-round{font-size:17px}
 .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px}
 .fg label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
-.cb-wrap{position:relative}
-.cb-inp{width:100%;padding:8px 11px;border:1.5px solid var(--gray3);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--gray8);outline:none;background:var(--white);transition:var(--trans);cursor:text}
-.cb-inp:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light)}
-.cb-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--gray3);border-radius:7px;box-shadow:var(--shadow2);z-index:300;max-height:180px;overflow-y:auto;display:none}
-.cb-list.open{display:block}
-.cb-opt{padding:8px 12px;font-size:13px;cursor:pointer;color:var(--gray7)}
-.cb-opt:hover,.cb-opt.active{background:var(--blue-light);color:var(--blue2)}
-.cb-opt.empty{color:var(--gray5);cursor:default}
 
 /* Scan */
 .scan-section{border-top:1px solid var(--gray2);padding-top:12px;margin-top:4px}
@@ -117,10 +128,11 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .scan-header-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px}
 .scan-tujuan-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .scan-tujuan-tab{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--gray2);color:var(--gray7);cursor:pointer;border:1.5px solid transparent;transition:var(--trans)}
+.scan-tujuan-tab:hover{background:var(--gray3)}
 .scan-tujuan-tab.active{background:var(--blue-light);color:var(--blue2);border-color:var(--blue-mid)}
 .scan-tujuan-tab .cnt{background:var(--blue2);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px}
 .scan-tujuan-tab.active .cnt{background:var(--blue)}
-.scan-tujuan-tab .rm-tuj{font-size:14px;color:var(--gray5);margin-left:2px;line-height:1}
+.scan-tujuan-tab .rm-tuj{font-size:14px;color:var(--gray5);margin-left:2px;line-height:1;cursor:pointer}
 .scan-tujuan-tab .rm-tuj:hover{color:var(--red)}
 .scan-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .scan-inp{flex:1;padding:9px 13px;border:1.5px solid var(--blue2);border-radius:7px;font-size:13px;font-family:var(--mono);color:var(--gray8);outline:none;transition:var(--trans)}
@@ -134,6 +146,10 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .scan-item-del:hover{background:var(--red-light)}
 .scan-empty{padding:16px;text-align:center;color:var(--gray5);font-size:12px}
 .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray2)}
+
+/* multi-tujuan info banner */
+.multi-tuj-info{background:#E8F5E9;border:1px solid #A5D6A7;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:12px;color:var(--green);display:flex;align-items:center;gap:6px}
+.multi-tuj-info .material-icons-round{font-size:15px}
 
 /* Table */
 .table-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
@@ -207,7 +223,6 @@ tr:hover td{background:var(--gray0)}
   .sidebar{width:52px}
   .sidebar .nav-label{opacity:0;width:0}
   .sidebar-toggle{display:none}
-  .stats-row{flex-wrap:wrap}
 }
 </style>
 </head>
@@ -248,7 +263,7 @@ tr:hover td{background:var(--gray0)}
     </div>
   </div>
   <div class="sidebar-bottom">
-    <div class="ver">v2.1 — GTW BDO</div>
+    <div class="ver">v2.2 — GTW BDO</div>
   </div>
 </div>
 
@@ -259,10 +274,11 @@ tr:hover td{background:var(--gray0)}
     <div class="incharge-widget">
       <span class="material-icons-round" style="font-size:15px;color:var(--blue)">person</span>
       <span class="incharge-widget-label">Incharge</span>
-      <div class="combobox-wrap" id="globalCbWrap">
-        <input class="combobox-input" id="globalInchargeInput" placeholder="— Pilih —" autocomplete="off"
-          oninput="filterGlobalIncharge()" onfocus="openGlobalCb()" onblur="closeGlobalCbDelay()">
-        <div class="combobox-dropdown" id="globalCbDrop"></div>
+      <!-- Smart Combobox Global Incharge -->
+      <div class="smart-cb" id="globalSmartCb">
+        <input class="smart-cb-input" id="globalInchargeInput" placeholder="— Pilih —" autocomplete="off" readonly>
+        <span class="material-icons-round smart-cb-arrow">expand_more</span>
+        <div class="smart-cb-dropdown" id="globalCbDrop"></div>
       </div>
       <span class="incharge-dot" id="inchargeDot"></span>
     </div>
@@ -296,15 +312,25 @@ tr:hover td{background:var(--gray0)}
           </div>
           <div id="obFormGrid" class="form-grid" style="display:none">
             <div class="fg"><label>SERVICE</label>
-              <div class="cb-wrap"><input class="cb-inp" id="obService" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ob','service')" onfocus="openCb('ob','service')" onblur="closeCbDelay('ob','service')">
-              <div class="cb-list" id="obServiceList"></div></div>
+              <div class="form-smart-cb" id="obServiceCb">
+                <input class="form-smart-cb-input" id="obService" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('obServiceCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="obServiceDrop"></div>
+              </div>
             </div>
-            <div class="fg"><label>TUJUAN</label>
-              <div class="cb-wrap"><input class="cb-inp" id="obTujuan" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ob','tujuan')" onfocus="openCb('ob','tujuan')" onblur="closeCbDelay('ob','tujuan')">
-              <div class="cb-list" id="obTujuanList"></div></div>
+            <div class="fg"><label>TUJUAN (utama)</label>
+              <div class="form-smart-cb" id="obTujuanCb">
+                <input class="form-smart-cb-input" id="obTujuan" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('obTujuanCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="obTujuanDrop"></div>
+              </div>
             </div>
           </div>
           <div class="scan-section" id="obScanSection" style="display:none">
+            <div class="multi-tuj-info">
+              <span class="material-icons-round">info</span>
+              Setiap tujuan akan dibuat NO TRACK terpisah. Tambah tujuan baru dengan tombol "+ Tujuan Baru".
+            </div>
             <div class="scan-header">
               <span class="scan-header-label">Scan AWB</span>
               <span style="font-size:11px;color:var(--gray5)" id="obTotalScanLabel">0 AWB total</span>
@@ -320,7 +346,7 @@ tr:hover td{background:var(--gray0)}
           </div>
           <div class="form-actions" id="obFormActions" style="display:none">
             <button class="btn btn-outline btn-sm" onclick="resetObForm()">Batal</button>
-            <button class="btn btn-primary btn-sm" id="btnSaveOb" disabled onclick="saveOb()"><span class="material-icons-round">save</span> Simpan</button>
+            <button class="btn btn-primary btn-sm" id="btnSaveOb" disabled onclick="saveOb()"><span class="material-icons-round">save</span> Simpan Semua Tujuan</button>
           </div>
         </div>
       </div>
@@ -362,15 +388,25 @@ tr:hover td{background:var(--gray0)}
           </div>
           <div id="hvsFormGrid" class="form-grid" style="display:none">
             <div class="fg"><label>SERVICE</label>
-              <div class="cb-wrap"><input class="cb-inp" id="hvsService" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('hvs','service')" onfocus="openCb('hvs','service')" onblur="closeCbDelay('hvs','service')">
-              <div class="cb-list" id="hvsServiceList"></div></div>
+              <div class="form-smart-cb" id="hvsServiceCb">
+                <input class="form-smart-cb-input" id="hvsService" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('hvsServiceCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="hvsServiceDrop"></div>
+              </div>
             </div>
-            <div class="fg"><label>TUJUAN</label>
-              <div class="cb-wrap"><input class="cb-inp" id="hvsTujuan" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('hvs','tujuan')" onfocus="openCb('hvs','tujuan')" onblur="closeCbDelay('hvs','tujuan')">
-              <div class="cb-list" id="hvsTujuanList"></div></div>
+            <div class="fg"><label>TUJUAN (utama)</label>
+              <div class="form-smart-cb" id="hvsTujuanCb">
+                <input class="form-smart-cb-input" id="hvsTujuan" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('hvsTujuanCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="hvsTujuanDrop"></div>
+              </div>
             </div>
           </div>
           <div class="scan-section" id="hvsScanSection" style="display:none">
+            <div class="multi-tuj-info">
+              <span class="material-icons-round">info</span>
+              Setiap tujuan akan dibuat NO TRACK terpisah. Tambah tujuan baru dengan tombol "+ Tujuan Baru".
+            </div>
             <div class="scan-header">
               <span class="scan-header-label">Scan AWB</span>
               <span style="font-size:11px;color:var(--gray5)" id="hvsTotalScanLabel">0 AWB total</span>
@@ -386,7 +422,7 @@ tr:hover td{background:var(--gray0)}
           </div>
           <div class="form-actions" id="hvsFormActions" style="display:none">
             <button class="btn btn-outline btn-sm" onclick="resetHvsForm()">Batal</button>
-            <button class="btn btn-primary btn-sm" id="btnSaveHvs" disabled onclick="saveHvs()"><span class="material-icons-round">save</span> Simpan</button>
+            <button class="btn btn-primary btn-sm" id="btnSaveHvs" disabled onclick="saveHvs()"><span class="material-icons-round">save</span> Simpan Semua Tujuan</button>
           </div>
         </div>
       </div>
@@ -428,16 +464,25 @@ tr:hover td{background:var(--gray0)}
           </div>
           <div id="ibFormGrid" class="form-grid" style="display:none">
             <div class="fg"><label>SERVICE</label>
-              <div class="cb-wrap"><input class="cb-inp" id="ibService" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ib','service')" onfocus="openCb('ib','service')" onblur="closeCbDelay('ib','service')">
-              <div class="cb-list" id="ibServiceList"></div></div>
+              <div class="form-smart-cb" id="ibServiceCb">
+                <input class="form-smart-cb-input" id="ibService" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibServiceCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="ibServiceDrop"></div>
+              </div>
             </div>
             <div class="fg"><label>FROM</label>
-              <div class="cb-wrap"><input class="cb-inp" id="ibFrom" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ib','from')" onfocus="openCb('ib','from')" onblur="closeCbDelay('ib','from')">
-              <div class="cb-list" id="ibFromList"></div></div>
+              <div class="form-smart-cb" id="ibFromCb">
+                <input class="form-smart-cb-input" id="ibFrom" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibFromCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="ibFromDrop"></div>
+              </div>
             </div>
             <div class="fg"><label>TUJUAN</label>
-              <div class="cb-wrap"><input class="cb-inp" id="ibTujuan" placeholder="Ketik / pilih..." autocomplete="off" oninput="filterCb('ib','tujuan')" onfocus="openCb('ib','tujuan')" onblur="closeCbDelay('ib','tujuan')">
-              <div class="cb-list" id="ibTujuanList"></div></div>
+              <div class="form-smart-cb" id="ibTujuanCb">
+                <input class="form-smart-cb-input" id="ibTujuan" placeholder="Ketik / pilih..." autocomplete="off">
+                <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibTujuanCb')">expand_more</span>
+                <div class="form-smart-cb-dropdown" id="ibTujuanDrop"></div>
+              </div>
             </div>
           </div>
           <div class="scan-section" id="ibScanSection" style="display:none">
@@ -508,8 +553,6 @@ tr:hover td{background:var(--gray0)}
 
 <!-- LOADING -->
 <div id="loading"><div class="spinner"></div><div id="loadingText">Memuat data...</div></div>
-
-<!-- TOAST -->
 <div id="toast"></div>
 
 <!-- DETAIL MODAL -->
@@ -558,10 +601,10 @@ tr:hover td{background:var(--gray0)}
     <div class="modal-body">
       <p style="font-size:13px;color:var(--gray6);margin-bottom:10px">Pilih tujuan untuk sesi scan baru.</p>
       <div class="fg"><label>TUJUAN</label>
-        <div class="cb-wrap">
-          <input class="cb-inp" id="newTujuanInput" placeholder="Ketik / pilih tujuan..." autocomplete="off"
-            oninput="filterNewTujuan()" onfocus="openNewTujuanDrop()" onblur="closeNewTujuanDelay()">
-          <div class="cb-list" id="newTujuanList"></div>
+        <div class="form-smart-cb" id="newTujuanCb">
+          <input class="form-smart-cb-input" id="newTujuanInput" placeholder="Ketik / pilih tujuan..." autocomplete="off">
+          <span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('newTujuanCb')">expand_more</span>
+          <div class="form-smart-cb-dropdown" id="newTujuanDrop"></div>
         </div>
       </div>
     </div>
@@ -573,41 +616,243 @@ tr:hover td{background:var(--gray0)}
 </div>
 
 <script>
-// ─── CONFIG ─────────────────────────────────────────────────────────────────
-// ✅ FIX: URL diupdate ke deployment terbaru
-var GAS_URL = "https://script.google.com/macros/s/AKfycbwCVDXjTDZYlh1MB2eybvXQEi032fXvU0whW2gyDYms8TMppAx9wXWCi0gYXB0edexa1Q/exec";
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+var GAS_URL = "https://script.google.com/macros/s/AKfycbwNevAnTR6yMzj0f4BUZE1lfBmp-vL6o5HkrqFnd_ul7cOaKUnnVSBfLtI9OJYZfnjeKw/exec";
 
-// ─── STATE ──────────────────────────────────────────────────────────────────
+// ─── STATE ─────────────────────────────────────────────────────────────────
 var masterData = {};
 var obData = [], hvsData = [], ibData = [];
 var globalIncharge = '';
 var allIncharges = [];
 var currentDetailItem = null, currentDetailType = '';
 var pendingTujuanType = '';
+// obScanMap & hvsScanMap: { tujuan: [awb, ...] }
 var obScanMap = {}, hvsScanMap = {};
 var ibScanned = [];
 var obActiveTuj = '', hvsActiveTuj = '';
 var obibHeaders = [], obibRows = [];
 
-// ─── API HELPERS ────────────────────────────────────────────────────────────
+// ─── SMART COMBOBOX ENGINE ─────────────────────────────────────────────────
+// Registry of all smart comboboxes: cbId -> { options, value, onSelect, inputEl, dropEl, cbEl }
+var cbRegistry = {};
+
+/**
+ * Register a smart combobox
+ * @param {string} cbId  - id of .form-smart-cb or .smart-cb container
+ * @param {string} inputId - id of the input element
+ * @param {string} dropId  - id of the dropdown element
+ * @param {string[]} options - list of options
+ * @param {function} onSelect - callback(value)
+ * @param {boolean} readOnly - if true, input is always readonly (only click to open)
+ */
+function registerCb(cbId, inputId, dropId, options, onSelect, readOnly) {
+  var inputEl = document.getElementById(inputId);
+  var dropEl = document.getElementById(dropId);
+  var cbEl = document.getElementById(cbId);
+  var focusIdx = -1;
+
+  cbRegistry[cbId] = { options: options, value: '', onSelect: onSelect, inputEl: inputEl, dropEl: dropEl, cbEl: cbEl, focusIdx: -1 };
+
+  // Make readonly inputs clickable to open
+  if (readOnly) {
+    inputEl.setAttribute('readonly', true);
+    inputEl.style.cursor = 'pointer';
+  }
+
+  inputEl.addEventListener('click', function() { openCb2(cbId); });
+  inputEl.addEventListener('input', function() { if (!readOnly) filterCb2(cbId); });
+  inputEl.addEventListener('keydown', function(e) { handleCbKey(e, cbId); });
+  inputEl.addEventListener('blur', function() { setTimeout(function() { closeCb2(cbId); }, 200); });
+
+  renderCbOptions(cbId, '');
+}
+
+function openCb2(cbId) {
+  // Close all others first
+  Object.keys(cbRegistry).forEach(function(id) { if (id !== cbId) closeCb2(id); });
+  var reg = cbRegistry[cbId];
+  reg.cbEl.classList.add('open');
+  reg.focusIdx = -1;
+  var q = reg.inputEl.getAttribute('readonly') ? '' : reg.inputEl.value;
+  renderCbOptions(cbId, q);
+}
+
+function closeCb2(cbId) {
+  var reg = cbRegistry[cbId];
+  if (reg) reg.cbEl.classList.remove('open');
+}
+
+function filterCb2(cbId) {
+  var reg = cbRegistry[cbId];
+  var q = reg.inputEl.value;
+  reg.cbEl.classList.add('open');
+  reg.focusIdx = -1;
+  renderCbOptions(cbId, q);
+}
+
+function renderCbOptions(cbId, q) {
+  var reg = cbRegistry[cbId];
+  var opts = reg.options;
+  var filtered = q ? opts.filter(function(v) { return v.toLowerCase().indexOf(q.toLowerCase()) !== -1; }) : opts.slice();
+
+  if (!filtered.length) {
+    reg.dropEl.innerHTML = '<div class="form-smart-cb-empty">Tidak ada pilihan</div>';
+    return;
+  }
+  reg.dropEl.innerHTML = filtered.map(function(v, i) {
+    var isSel = v === reg.value;
+    return '<div class="form-smart-cb-option' + (isSel ? ' selected' : '') + '" data-val="' + escQ(v) + '" data-cbid="' + cbId + '" onmousedown="selectCb2(\'' + cbId + '\',\'' + escQ(v) + '\')">'
+      + (isSel ? '<span class="material-icons-round" style="font-size:13px;color:var(--blue)">check</span>' : '<span style="width:13px;display:inline-block"></span>')
+      + v + '</div>';
+  }).join('');
+  reg._filtered = filtered;
+}
+
+function selectCb2(cbId, val) {
+  var reg = cbRegistry[cbId];
+  reg.value = val;
+  reg.inputEl.value = val;
+  closeCb2(cbId);
+  if (reg.onSelect) reg.onSelect(val);
+}
+
+function handleCbKey(e, cbId) {
+  var reg = cbRegistry[cbId];
+  var isOpen = reg.cbEl.classList.contains('open');
+  var filtered = reg._filtered || [];
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (!isOpen) { openCb2(cbId); return; }
+    reg.focusIdx = Math.min(reg.focusIdx + 1, filtered.length - 1);
+    highlightCbOption(cbId);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    reg.focusIdx = Math.max(reg.focusIdx - 1, 0);
+    highlightCbOption(cbId);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (isOpen && reg.focusIdx >= 0 && filtered[reg.focusIdx]) {
+      selectCb2(cbId, filtered[reg.focusIdx]);
+    } else if (isOpen && filtered.length === 1) {
+      selectCb2(cbId, filtered[0]);
+    } else if (!isOpen) {
+      openCb2(cbId);
+    }
+  } else if (e.key === 'Escape') {
+    closeCb2(cbId);
+  } else if (e.key === 'Tab') {
+    // Auto-complete closest match on Tab
+    if (isOpen && filtered.length > 0) {
+      var idx = reg.focusIdx >= 0 ? reg.focusIdx : 0;
+      selectCb2(cbId, filtered[idx]);
+    }
+  }
+}
+
+function highlightCbOption(cbId) {
+  var reg = cbRegistry[cbId];
+  var opts = reg.dropEl.querySelectorAll('.form-smart-cb-option');
+  opts.forEach(function(el, i) {
+    el.classList.toggle('focused', i === reg.focusIdx);
+    if (i === reg.focusIdx) el.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+function toggleFormCb(cbId) {
+  var reg = cbRegistry[cbId];
+  if (!reg) return;
+  if (reg.cbEl.classList.contains('open')) { closeCb2(cbId); }
+  else { openCb2(cbId); reg.inputEl.focus(); }
+}
+
+function updateCbOptions(cbId, options) {
+  if (!cbRegistry[cbId]) return;
+  cbRegistry[cbId].options = options;
+  var q = cbRegistry[cbId].inputEl.getAttribute('readonly') ? '' : cbRegistry[cbId].inputEl.value;
+  renderCbOptions(cbId, q);
+}
+
+// Global topbar incharge combobox uses .smart-cb class (slightly different styling)
+function initGlobalCb(options) {
+  var inputEl = document.getElementById('globalInchargeInput');
+  var dropEl = document.getElementById('globalCbDrop');
+  var cbEl = document.getElementById('globalSmartCb');
+
+  cbRegistry['globalSmartCb'] = {
+    options: options, value: '', onSelect: selectGlobalIncharge,
+    inputEl: inputEl, dropEl: dropEl, cbEl: cbEl, focusIdx: -1,
+    _filtered: options.slice()
+  };
+
+  // Use smart-cb-option class for global
+  function renderGlobal(q) {
+    var filtered = q ? options.filter(function(v) { return v.toLowerCase().indexOf(q.toLowerCase()) !== -1; }) : options.slice();
+    cbRegistry['globalSmartCb']._filtered = filtered;
+    if (!filtered.length) { dropEl.innerHTML = '<div class="smart-cb-empty">Tidak ada</div>'; return; }
+    dropEl.innerHTML = filtered.map(function(v, i) {
+      return '<div class="smart-cb-option' + (v === globalIncharge ? ' selected' : '') + '" onmousedown="selectGlobalIncharge(\'' + escQ(v) + '\')">' + v + '</div>';
+    }).join('');
+  }
+  cbRegistry['globalSmartCb'].render = renderGlobal;
+
+  inputEl.setAttribute('readonly', true);
+  inputEl.style.cursor = 'pointer';
+
+  inputEl.addEventListener('click', function() {
+    cbEl.classList.toggle('open');
+    renderGlobal('');
+  });
+  inputEl.addEventListener('keydown', function(e) {
+    var isOpen = cbEl.classList.contains('open');
+    var filtered = cbRegistry['globalSmartCb']._filtered || [];
+    var reg = cbRegistry['globalSmartCb'];
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!isOpen) { cbEl.classList.add('open'); renderGlobal(''); return; }
+      reg.focusIdx = Math.min((reg.focusIdx||0) + 1, filtered.length - 1);
+      var els = dropEl.querySelectorAll('.smart-cb-option');
+      els.forEach(function(el, i) { el.classList.toggle('focused', i === reg.focusIdx); if (i === reg.focusIdx) el.scrollIntoView({block:'nearest'}); });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      reg.focusIdx = Math.max((reg.focusIdx||0) - 1, 0);
+      var els = dropEl.querySelectorAll('.smart-cb-option');
+      els.forEach(function(el, i) { el.classList.toggle('focused', i === reg.focusIdx); if (i === reg.focusIdx) el.scrollIntoView({block:'nearest'}); });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (isOpen && reg.focusIdx >= 0 && filtered[reg.focusIdx]) selectGlobalIncharge(filtered[reg.focusIdx]);
+    } else if (e.key === 'Escape') { cbEl.classList.remove('open'); }
+  });
+  inputEl.addEventListener('blur', function() { setTimeout(function() { cbEl.classList.remove('open'); }, 200); });
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  Object.keys(cbRegistry).forEach(function(cbId) {
+    var reg = cbRegistry[cbId];
+    if (reg && reg.cbEl && !reg.cbEl.contains(e.target)) closeCb2(cbId);
+  });
+  // global
+  var gcb = document.getElementById('globalSmartCb');
+  if (gcb && !gcb.contains(e.target)) gcb.classList.remove('open');
+});
+
+// ─── API HELPERS ───────────────────────────────────────────────────────────
 function gasGet(action, params) {
   return new Promise(function(resolve, reject) {
     var url = new URL(GAS_URL);
     url.searchParams.set('action', action);
     if (params) Object.keys(params).forEach(function(k) { url.searchParams.set(k, params[k]); });
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url.toString(), true);
-    xhr.onload = function() {
-      try { resolve(JSON.parse(xhr.responseText)); }
-      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,120))); }
-    };
-    xhr.onerror = function() {
-      fetch(url.toString(), { redirect: 'follow', mode: 'cors' })
-        .then(function(r) { return r.json(); })
-        .then(resolve)
-        .catch(function() { reject(new Error('Network error — pastikan GAS di-deploy sebagai Anyone.')); });
-    };
-    xhr.send();
+    fetch(url.toString(), { redirect: 'follow', mode: 'cors' })
+      .then(function(r) { return r.json(); })
+      .then(resolve)
+      .catch(function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url.toString(), true);
+        xhr.onload = function() { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { reject(new Error('Parse error')); } };
+        xhr.onerror = function() { reject(new Error('Network error')); };
+        xhr.send();
+      });
   });
 }
 
@@ -615,76 +860,62 @@ function gasPost(action, data) {
   data.action = action;
   var body = JSON.stringify(data);
   return new Promise(function(resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', GAS_URL, true);
-    xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
-    xhr.onload = function() {
-      try { resolve(JSON.parse(xhr.responseText)); }
-      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,120))); }
-    };
-    xhr.onerror = function() {
-      fetch(GAS_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
-        .then(function(r) { return r.json(); }).then(resolve)
-        .catch(function() { reject(new Error('Network error pada POST ke GAS.')); });
-    };
-    xhr.send(body);
+    fetch(GAS_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
+      .then(function(r) { return r.json(); }).then(resolve)
+      .catch(function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', GAS_URL, true);
+        xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
+        xhr.onload = function() { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { reject(new Error('Parse error')); } };
+        xhr.onerror = function() { reject(new Error('Network error')); };
+        xhr.send(body);
+      });
   });
 }
 
-// ─── UI HELPERS ─────────────────────────────────────────────────────────────
+// ─── UI HELPERS ────────────────────────────────────────────────────────────
 function showLoading(t) { document.getElementById('loadingText').innerText = t || 'Memuat...'; document.getElementById('loading').style.display = 'flex'; }
 function hideLoading() { document.getElementById('loading').style.display = 'none'; }
 function toast(msg, type) {
   var el = document.getElementById('toast');
   el.innerText = msg; el.className = type || ''; el.style.display = 'block';
-  clearTimeout(el._t); el._t = setTimeout(function() { el.style.display = 'none'; }, 3200);
+  clearTimeout(el._t); el._t = setTimeout(function() { el.style.display = 'none'; }, 3500);
 }
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(function(el) {
   el.addEventListener('click', function(e) { if (e.target === el) el.classList.remove('open'); });
 });
+function escQ(s) { return (s || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
-// ─── SIDEBAR ────────────────────────────────────────────────────────────────
+// ─── SIDEBAR ───────────────────────────────────────────────────────────────
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
 
-// ─── GLOBAL INCHARGE COMBOBOX ───────────────────────────────────────────────
+// ─── GLOBAL INCHARGE ───────────────────────────────────────────────────────
 function populateGlobalIncharge() {
   var obList = masterData.obIncharges || [];
   var ibList = masterData.ibIncharges || [];
   var combined = obList.slice();
-  ibList.forEach(function(v) { if (!combined.includes(v)) combined.push(v); });
+  ibList.forEach(function(v) { if (combined.indexOf(v) === -1) combined.push(v); });
   allIncharges = combined.sort();
-  renderGlobalCbOptions('');
+  initGlobalCb(allIncharges);
   if (globalIncharge) {
     document.getElementById('globalInchargeInput').value = globalIncharge;
     document.getElementById('inchargeDot').classList.add('on');
   }
 }
-function renderGlobalCbOptions(q) {
-  var drop = document.getElementById('globalCbDrop');
-  var filtered = allIncharges.filter(function(v) { return v.toLowerCase().includes(q.toLowerCase()); });
-  if (!filtered.length) { drop.innerHTML = '<div class="combobox-option" style="color:var(--gray5)">Tidak ada</div>'; return; }
-  drop.innerHTML = filtered.map(function(v) {
-    return '<div class="combobox-option' + (v === globalIncharge ? ' selected' : '') + '" onmousedown="selectGlobalIncharge(\'' + v + '\')">' + v + '</div>';
-  }).join('');
-}
-function filterGlobalIncharge() {
-  var q = document.getElementById('globalInchargeInput').value;
-  renderGlobalCbOptions(q);
-  if (!document.getElementById('globalCbDrop').classList.contains('open')) openGlobalCb();
-}
-function openGlobalCb() { document.getElementById('globalCbDrop').classList.add('open'); renderGlobalCbOptions(document.getElementById('globalInchargeInput').value); }
-function closeGlobalCbDelay() { setTimeout(function() { document.getElementById('globalCbDrop').classList.remove('open'); }, 200); }
+
 function selectGlobalIncharge(v) {
   globalIncharge = v;
   document.getElementById('globalInchargeInput').value = v;
-  document.getElementById('globalCbDrop').classList.remove('open');
+  document.getElementById('globalSmartCb').classList.remove('open');
   document.getElementById('inchargeDot').classList.toggle('on', !!v);
+  if (cbRegistry['globalSmartCb']) cbRegistry['globalSmartCb'].value = v;
+  buildCbOptions();
   refreshAllFormIncharges();
 }
 
-// ─── PAGE SWITCHING ─────────────────────────────────────────────────────────
+// ─── PAGE SWITCHING ────────────────────────────────────────────────────────
 var pages = ['ob', 'hvs', 'ib', 'manifest', 'obib'];
 var pageTitles = {
   ob: 'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
@@ -703,28 +934,9 @@ function switchPage(page) {
   if (page === 'obib') renderObibTable(obibHeaders, obibRows);
 }
 
-// ─── FORM COMBOBOXES ────────────────────────────────────────────────────────
+// ─── CB OPTIONS BUILD ──────────────────────────────────────────────────────
 var cbOptions = { ob: { service: [], tujuan: [] }, hvs: { service: [], tujuan: [] }, ib: { service: [], from: [], tujuan: [] } };
-function openCb(type, field) { document.getElementById(type + cap(field) + 'List').classList.add('open'); filterCb(type, field); }
-function closeCbDelay(type, field) { setTimeout(function() { document.getElementById(type + cap(field) + 'List').classList.remove('open'); }, 200); }
-function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function filterCb(type, field) {
-  var q = (document.getElementById(type + cap(field)).value || '').toLowerCase();
-  var opts = cbOptions[type][field] || [];
-  var list = document.getElementById(type + cap(field) + 'List');
-  var filtered = opts.filter(function(v) { return v.toLowerCase().includes(q); });
-  if (!filtered.length) { list.innerHTML = '<div class="cb-opt empty">Tidak ada pilihan</div>'; return; }
-  list.innerHTML = filtered.map(function(v) {
-    return '<div class="cb-opt" onmousedown="selectCb(\'' + type + '\',\'' + field + '\',\'' + v + '\')">' + v + '</div>';
-  }).join('');
-}
-function selectCb(type, field, val) {
-  document.getElementById(type + cap(field)).value = val;
-  document.getElementById(type + cap(field) + 'List').classList.remove('open');
-  if (type === 'ob') { checkObForm(); if (field === 'tujuan') setObActiveTujuan(val); }
-  if (type === 'hvs') { checkHvsForm(); if (field === 'tujuan') setHvsActiveTujuan(val); }
-  if (type === 'ib') checkIbForm();
-}
+
 function buildCbOptions() {
   var d = (masterData.obData || {})[globalIncharge] || {};
   cbOptions.ob.service = d.services || [];
@@ -735,11 +947,41 @@ function buildCbOptions() {
   cbOptions.ib.service = ib.services || [];
   cbOptions.ib.from = ib.froms || [];
   cbOptions.ib.tujuan = ib.tujuans || [];
+
+  // Update all registered comboboxes
+  if (cbRegistry['obServiceCb']) updateCbOptions('obServiceCb', cbOptions.ob.service);
+  if (cbRegistry['obTujuanCb']) updateCbOptions('obTujuanCb', cbOptions.ob.tujuan);
+  if (cbRegistry['hvsServiceCb']) updateCbOptions('hvsServiceCb', cbOptions.hvs.service);
+  if (cbRegistry['hvsTujuanCb']) updateCbOptions('hvsTujuanCb', cbOptions.hvs.tujuan);
+  if (cbRegistry['ibServiceCb']) updateCbOptions('ibServiceCb', cbOptions.ib.service);
+  if (cbRegistry['ibFromCb']) updateCbOptions('ibFromCb', cbOptions.ib.from);
+  if (cbRegistry['ibTujuanCb']) updateCbOptions('ibTujuanCb', cbOptions.ib.tujuan);
 }
 
-// ─── REFRESH FORM INCHARGE ──────────────────────────────────────────────────
+// ─── INIT COMBOBOXES ───────────────────────────────────────────────────────
+function initAllCbs() {
+  // OB
+  registerCb('obServiceCb', 'obService', 'obServiceDrop', cbOptions.ob.service, function(v) { checkObForm(); });
+  registerCb('obTujuanCb', 'obTujuan', 'obTujuanDrop', cbOptions.ob.tujuan, function(v) {
+    if (v && !obScanMap[v]) initObTujuan(v);
+    checkObForm();
+  });
+  // HVS
+  registerCb('hvsServiceCb', 'hvsService', 'hvsServiceDrop', cbOptions.hvs.service, function(v) { checkHvsForm(); });
+  registerCb('hvsTujuanCb', 'hvsTujuan', 'hvsTujuanDrop', cbOptions.hvs.tujuan, function(v) {
+    if (v && !hvsScanMap[v]) initHvsTujuan(v);
+    checkHvsForm();
+  });
+  // IB
+  registerCb('ibServiceCb', 'ibService', 'ibServiceDrop', cbOptions.ib.service, function(v) { checkIbForm(); });
+  registerCb('ibFromCb', 'ibFrom', 'ibFromDrop', cbOptions.ib.from, function(v) { checkIbForm(); });
+  registerCb('ibTujuanCb', 'ibTujuan', 'ibTujuanDrop', cbOptions.ib.tujuan, function(v) { checkIbForm(); });
+  // New tujuan modal
+  registerCb('newTujuanCb', 'newTujuanInput', 'newTujuanDrop', [], function(v) {});
+}
+
+// ─── REFRESH FORM INCHARGE ─────────────────────────────────────────────────
 function refreshAllFormIncharges() {
-  buildCbOptions();
   refreshFormIncharge('ob');
   refreshFormIncharge('hvs');
   refreshFormIncharge('ib');
@@ -757,7 +999,7 @@ function refreshFormIncharge(t) {
   else checkIbForm();
 }
 
-// ─── FORM TOGGLES ───────────────────────────────────────────────────────────
+// ─── FORM TOGGLES ──────────────────────────────────────────────────────────
 function toggleForm(type) {
   var body = document.getElementById(type + 'FormBody');
   var icon = document.getElementById(type + 'FormIcon');
@@ -766,78 +1008,89 @@ function toggleForm(type) {
   if (open) refreshFormIncharge(type);
 }
 
-// ─── FORM CHECKS ────────────────────────────────────────────────────────────
+// ─── FORM CHECKS ───────────────────────────────────────────────────────────
 function checkObForm() {
   var ok = globalIncharge && document.getElementById('obService').value && document.getElementById('obTujuan').value;
   document.getElementById('btnSaveOb').disabled = !ok;
-  if (ok) { var tuj = document.getElementById('obTujuan').value; if (tuj && !obScanMap[tuj]) initObTujuan(tuj); }
 }
 function checkHvsForm() {
   var ok = globalIncharge && document.getElementById('hvsService').value && document.getElementById('hvsTujuan').value;
   document.getElementById('btnSaveHvs').disabled = !ok;
-  if (ok) { var tuj = document.getElementById('hvsTujuan').value; if (tuj && !hvsScanMap[tuj]) initHvsTujuan(tuj); }
 }
 function checkIbForm() {
   var ok = globalIncharge && document.getElementById('ibService').value && document.getElementById('ibFrom').value && document.getElementById('ibTujuan').value;
   document.getElementById('btnSaveIb').disabled = !ok;
 }
 
-// ─── MULTI-TUJUAN OB/HVS ───────────────────────────────────────────────────
-function initObTujuan(tuj) { if (!obScanMap[tuj]) obScanMap[tuj] = []; obActiveTuj = tuj; renderObTabs(); renderObScanList(); }
-function initHvsTujuan(tuj) { if (!hvsScanMap[tuj]) hvsScanMap[tuj] = []; hvsActiveTuj = tuj; renderHvsTabs(); renderHvsScanList(); }
-function setObActiveTujuan(tuj) { initObTujuan(tuj); }
-function setHvsActiveTujuan(tuj) { initHvsTujuan(tuj); }
+// ─── MULTI-TUJUAN OB/HVS ──────────────────────────────────────────────────
+function initObTujuan(tuj) {
+  if (!obScanMap[tuj]) obScanMap[tuj] = [];
+  obActiveTuj = tuj;
+  renderObTabs();
+  renderObScanList();
+}
+function initHvsTujuan(tuj) {
+  if (!hvsScanMap[tuj]) hvsScanMap[tuj] = [];
+  hvsActiveTuj = tuj;
+  renderHvsTabs();
+  renderHvsScanList();
+}
 
 function addMultiTujuan(type) {
   pendingTujuanType = type;
   document.getElementById('newTujuanInput').value = '';
-  renderNewTujuanOptions(cbOptions[type].tujuan || [], '');
+  if (cbRegistry['newTujuanCb']) {
+    cbRegistry['newTujuanCb'].options = cbOptions[type].tujuan || [];
+    cbRegistry['newTujuanCb'].value = '';
+    renderCbOptions('newTujuanCb', '');
+  }
   openModal('tujuanModal');
-  setTimeout(function() { document.getElementById('newTujuanInput').focus(); }, 100);
+  setTimeout(function() { document.getElementById('newTujuanInput').focus(); openCb2('newTujuanCb'); }, 120);
 }
-function filterNewTujuan() {
-  var q = document.getElementById('newTujuanInput').value;
-  renderNewTujuanOptions(cbOptions[pendingTujuanType].tujuan || [], q);
-}
-function renderNewTujuanOptions(opts, q) {
-  var list = document.getElementById('newTujuanList');
-  var filtered = opts.filter(function(v) { return v.toLowerCase().includes(q.toLowerCase()); });
-  list.innerHTML = filtered.map(function(v) {
-    return '<div class="cb-opt" onmousedown="selectNewTujuan(\'' + v + '\')">' + v + '</div>';
-  }).join('') || '<div class="cb-opt empty">Tidak ada</div>';
-}
-function openNewTujuanDrop() { document.getElementById('newTujuanList').classList.add('open'); }
-function closeNewTujuanDelay() { setTimeout(function() { document.getElementById('newTujuanList').classList.remove('open'); }, 200); }
-function selectNewTujuan(v) { document.getElementById('newTujuanInput').value = v; }
+
 function confirmAddTujuan() {
   var tuj = document.getElementById('newTujuanInput').value.trim();
   if (!tuj) { toast('Masukkan tujuan terlebih dahulu', 'error'); return; }
   closeModal('tujuanModal');
-  if (pendingTujuanType === 'ob') { initObTujuan(tuj); document.getElementById('obTujuan').value = tuj; checkObForm(); }
-  else if (pendingTujuanType === 'hvs') { initHvsTujuan(tuj); document.getElementById('hvsTujuan').value = tuj; checkHvsForm(); }
+  if (pendingTujuanType === 'ob') {
+    initObTujuan(tuj);
+    document.getElementById('obTujuan').value = tuj;
+    if (cbRegistry['obTujuanCb']) cbRegistry['obTujuanCb'].value = tuj;
+    checkObForm();
+  } else if (pendingTujuanType === 'hvs') {
+    initHvsTujuan(tuj);
+    document.getElementById('hvsTujuan').value = tuj;
+    if (cbRegistry['hvsTujuanCb']) cbRegistry['hvsTujuanCb'].value = tuj;
+    checkHvsForm();
+  }
 }
 
-// OB tabs
+// OB Tabs
 function renderObTabs() {
   var tabs = document.getElementById('obTujuanTabs');
   var keys = Object.keys(obScanMap);
   if (!keys.length) { tabs.innerHTML = ''; return; }
   tabs.innerHTML = keys.map(function(t) {
     var cnt = obScanMap[t].length;
-    return '<span class="scan-tujuan-tab' + (t === obActiveTuj ? ' active' : '') + '" onclick="switchObTuj(\'' + t + '\')">'
+    return '<span class="scan-tujuan-tab' + (t === obActiveTuj ? ' active' : '') + '" onclick="switchObTuj(\'' + escQ(t) + '\')">'
       + t + ' <span class="cnt">' + cnt + '</span>'
-      + '<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeObTuj(\'' + t + '\')">cancel</span>'
+      + '<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeObTuj(\'' + escQ(t) + '\')">cancel</span>'
       + '</span>';
   }).join('');
   updateObTotalLabel();
 }
 function switchObTuj(t) { obActiveTuj = t; renderObTabs(); renderObScanList(); }
-function removeObTuj(t) { delete obScanMap[t]; var keys = Object.keys(obScanMap); obActiveTuj = keys.length ? keys[0] : ''; renderObTabs(); renderObScanList(); checkObForm(); }
+function removeObTuj(t) {
+  delete obScanMap[t];
+  var keys = Object.keys(obScanMap);
+  obActiveTuj = keys.length ? keys[0] : '';
+  renderObTabs(); renderObScanList(); checkObForm();
+}
 function renderObScanList() {
   var list = document.getElementById('obScanList');
-  if (!obActiveTuj || !obScanMap[obActiveTuj]) { list.innerHTML = '<div class="scan-empty">Belum ada AWB</div>'; return; }
+  if (!obActiveTuj || !obScanMap[obActiveTuj]) { list.innerHTML = '<div class="scan-empty">Pilih atau tambah tujuan terlebih dahulu</div>'; return; }
   var arr = obScanMap[obActiveTuj];
-  if (!arr.length) { list.innerHTML = '<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
+  if (!arr.length) { list.innerHTML = '<div class="scan-empty">Belum ada AWB untuk tujuan <strong>' + obActiveTuj + '</strong></div>'; return; }
   list.innerHTML = arr.map(function(awb, i) {
     return '<div class="scan-item"><span class="scan-item-awb">' + awb + '</span><span class="scan-item-tuj">' + obActiveTuj + '</span>'
       + '<span class="material-icons-round scan-item-del" onclick="removeObAwb(' + i + ')">delete</span></div>';
@@ -849,27 +1102,32 @@ function updateObTotalLabel() {
   document.getElementById('obTotalScanLabel').innerText = total + ' AWB total';
 }
 
-// HVS tabs
+// HVS Tabs
 function renderHvsTabs() {
   var tabs = document.getElementById('hvsTujuanTabs');
   var keys = Object.keys(hvsScanMap);
   if (!keys.length) { tabs.innerHTML = ''; return; }
   tabs.innerHTML = keys.map(function(t) {
     var cnt = hvsScanMap[t].length;
-    return '<span class="scan-tujuan-tab' + (t === hvsActiveTuj ? ' active' : '') + '" onclick="switchHvsTuj(\'' + t + '\')">'
+    return '<span class="scan-tujuan-tab' + (t === hvsActiveTuj ? ' active' : '') + '" onclick="switchHvsTuj(\'' + escQ(t) + '\')">'
       + t + ' <span class="cnt">' + cnt + '</span>'
-      + '<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeHvsTuj(\'' + t + '\')">cancel</span>'
+      + '<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeHvsTuj(\'' + escQ(t) + '\')">cancel</span>'
       + '</span>';
   }).join('');
   updateHvsTotalLabel();
 }
 function switchHvsTuj(t) { hvsActiveTuj = t; renderHvsTabs(); renderHvsScanList(); }
-function removeHvsTuj(t) { delete hvsScanMap[t]; var keys = Object.keys(hvsScanMap); hvsActiveTuj = keys.length ? keys[0] : ''; renderHvsTabs(); renderHvsScanList(); checkHvsForm(); }
+function removeHvsTuj(t) {
+  delete hvsScanMap[t];
+  var keys = Object.keys(hvsScanMap);
+  hvsActiveTuj = keys.length ? keys[0] : '';
+  renderHvsTabs(); renderHvsScanList(); checkHvsForm();
+}
 function renderHvsScanList() {
   var list = document.getElementById('hvsScanList');
-  if (!hvsActiveTuj || !hvsScanMap[hvsActiveTuj]) { list.innerHTML = '<div class="scan-empty">Belum ada AWB</div>'; return; }
+  if (!hvsActiveTuj || !hvsScanMap[hvsActiveTuj]) { list.innerHTML = '<div class="scan-empty">Pilih atau tambah tujuan terlebih dahulu</div>'; return; }
   var arr = hvsScanMap[hvsActiveTuj];
-  if (!arr.length) { list.innerHTML = '<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
+  if (!arr.length) { list.innerHTML = '<div class="scan-empty">Belum ada AWB untuk tujuan <strong>' + hvsActiveTuj + '</strong></div>'; return; }
   list.innerHTML = arr.map(function(awb, i) {
     return '<div class="scan-item"><span class="scan-item-awb">' + awb + '</span><span class="scan-item-tuj">' + hvsActiveTuj + '</span>'
       + '<span class="material-icons-round scan-item-del" onclick="removeHvsAwb(' + i + ')">delete</span></div>';
@@ -881,7 +1139,7 @@ function updateHvsTotalLabel() {
   document.getElementById('hvsTotalScanLabel').innerText = total + ' AWB total';
 }
 
-// IB scan list
+// IB scan
 function renderIbScanList() {
   var list = document.getElementById('ibScanList');
   var total = ibScanned.length;
@@ -893,7 +1151,7 @@ function renderIbScanList() {
   }).join('');
 }
 
-// ─── SCAN INPUT ─────────────────────────────────────────────────────────────
+// ─── SCAN INPUT ────────────────────────────────────────────────────────────
 function handleScan(e, type) {
   if (e.key !== 'Enter') return;
   var input = document.getElementById(type + 'ScanInput');
@@ -901,40 +1159,56 @@ function handleScan(e, type) {
   if (type === 'ob') {
     if (!obActiveTuj) { toast('Pilih tujuan dahulu', 'error'); return; }
     if (!obScanMap[obActiveTuj]) obScanMap[obActiveTuj] = [];
-    if (!obScanMap[obActiveTuj].includes(val)) obScanMap[obActiveTuj].unshift(val);
+    if (obScanMap[obActiveTuj].indexOf(val) === -1) obScanMap[obActiveTuj].unshift(val);
+    else { toast('AWB sudah ada di tujuan ini', 'error'); input.value=''; return; }
     renderObTabs(); renderObScanList();
   } else if (type === 'hvs') {
     if (!hvsActiveTuj) { toast('Pilih tujuan dahulu', 'error'); return; }
     if (!hvsScanMap[hvsActiveTuj]) hvsScanMap[hvsActiveTuj] = [];
-    if (!hvsScanMap[hvsActiveTuj].includes(val)) hvsScanMap[hvsActiveTuj].unshift(val);
+    if (hvsScanMap[hvsActiveTuj].indexOf(val) === -1) hvsScanMap[hvsActiveTuj].unshift(val);
+    else { toast('AWB sudah ada', 'error'); input.value=''; return; }
     renderHvsTabs(); renderHvsScanList();
   } else {
-    if (!ibScanned.includes(val)) ibScanned.unshift(val);
+    if (ibScanned.indexOf(val) === -1) ibScanned.unshift(val);
+    else { toast('AWB sudah ada', 'error'); input.value=''; return; }
     renderIbScanList();
   }
   input.value = '';
 }
 
-// ─── SAVE OB ────────────────────────────────────────────────────────────────
+// ─── SAVE OB (✅ FIX: 1 NO TRACK per tujuan) ──────────────────────────────
 function saveOb() {
   var service = document.getElementById('obService').value;
-  var tujuan = document.getElementById('obTujuan').value;
-  if (!globalIncharge || !service || !tujuan) return;
-  var awbList = [];
-  Object.keys(obScanMap).forEach(function(t) { obScanMap[t].forEach(function(awb) { awbList.push(awb); }); });
-  showLoading('Menyimpan OB...');
-  gasPost('saveOb', { incharge: globalIncharge, service: service, tujuan: tujuan, awbList: awbList })
-    .then(function(res) {
+  if (!globalIncharge || !service) return;
+  var tujuanKeys = Object.keys(obScanMap);
+  if (!tujuanKeys.length) { toast('Tambahkan minimal 1 tujuan', 'error'); return; }
+
+  showLoading('Menyimpan OB... (0/' + tujuanKeys.length + ')');
+
+  // ✅ Buat request terpisah untuk SETIAP tujuan
+  var promises = tujuanKeys.map(function(tuj) {
+    var awbList = obScanMap[tuj] || [];
+    return gasPost('saveOb', { incharge: globalIncharge, service: service, tujuan: tuj, awbList: awbList });
+  });
+
+  Promise.all(promises)
+    .then(function(results) {
       hideLoading();
-      if (res.error) { toast('Gagal: ' + res.error, 'error'); return; }
-      toast('✅ OB disimpan! NO TRACK: ' + res.noTrack, 'success');
+      var errors = results.filter(function(r) { return r.error; });
+      if (errors.length) { toast('Ada ' + errors.length + ' error: ' + errors[0].error, 'error'); return; }
+      var tracks = results.map(function(r) { return r.noTrack; }).join(', ');
+      toast('✅ ' + results.length + ' NO TRACK dibuat: ' + tracks, 'success');
       resetObForm();
-      gasGet('getObList').then(function(r) { obData = r.list || []; renderObTable(); updateObStats(); }).catch(function() {});
-    }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
+      gasGet('getObList').then(function(r) { obData = r.list || []; renderObTable(); updateObStats(); }).catch(function(){});
+    })
+    .catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
+
 function resetObForm() {
   document.getElementById('obService').value = '';
   document.getElementById('obTujuan').value = '';
+  if (cbRegistry['obServiceCb']) cbRegistry['obServiceCb'].value = '';
+  if (cbRegistry['obTujuanCb']) cbRegistry['obTujuanCb'].value = '';
   obScanMap = {}; obActiveTuj = '';
   document.getElementById('obTujuanTabs').innerHTML = '';
   document.getElementById('obScanList').innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>';
@@ -944,26 +1218,37 @@ function resetObForm() {
   document.getElementById('obFormIcon').innerText = 'expand_more';
 }
 
-// ─── SAVE HVS ───────────────────────────────────────────────────────────────
+// ─── SAVE HVS (✅ FIX: 1 NO TRACK per tujuan) ─────────────────────────────
 function saveHvs() {
   var service = document.getElementById('hvsService').value;
-  var tujuan = document.getElementById('hvsTujuan').value;
-  if (!globalIncharge || !service || !tujuan) return;
-  var awbList = [];
-  Object.keys(hvsScanMap).forEach(function(t) { hvsScanMap[t].forEach(function(awb) { awbList.push(awb); }); });
+  if (!globalIncharge || !service) return;
+  var tujuanKeys = Object.keys(hvsScanMap);
+  if (!tujuanKeys.length) { toast('Tambahkan minimal 1 tujuan', 'error'); return; }
+
   showLoading('Menyimpan HVS...');
-  gasPost('saveHvs', { incharge: globalIncharge, service: service, tujuan: tujuan, awbList: awbList })
-    .then(function(res) {
+  var promises = tujuanKeys.map(function(tuj) {
+    var awbList = hvsScanMap[tuj] || [];
+    return gasPost('saveHvs', { incharge: globalIncharge, service: service, tujuan: tuj, awbList: awbList });
+  });
+
+  Promise.all(promises)
+    .then(function(results) {
       hideLoading();
-      if (res.error) { toast('Gagal: ' + res.error, 'error'); return; }
-      toast('✅ HVS disimpan! NO TRACK: ' + res.noTrack, 'success');
+      var errors = results.filter(function(r) { return r.error; });
+      if (errors.length) { toast('Ada error: ' + errors[0].error, 'error'); return; }
+      var tracks = results.map(function(r) { return r.noTrack; }).join(', ');
+      toast('✅ ' + results.length + ' NO TRACK dibuat: ' + tracks, 'success');
       resetHvsForm();
-      gasGet('getHvsList').then(function(r) { hvsData = r.list || []; renderHvsTable(); updateHvsStats(); }).catch(function() {});
-    }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
+      gasGet('getHvsList').then(function(r) { hvsData = r.list || []; renderHvsTable(); updateHvsStats(); }).catch(function(){});
+    })
+    .catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
+
 function resetHvsForm() {
   document.getElementById('hvsService').value = '';
   document.getElementById('hvsTujuan').value = '';
+  if (cbRegistry['hvsServiceCb']) cbRegistry['hvsServiceCb'].value = '';
+  if (cbRegistry['hvsTujuanCb']) cbRegistry['hvsTujuanCb'].value = '';
   hvsScanMap = {}; hvsActiveTuj = '';
   document.getElementById('hvsTujuanTabs').innerHTML = '';
   document.getElementById('hvsScanList').innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>';
@@ -973,7 +1258,7 @@ function resetHvsForm() {
   document.getElementById('hvsFormIcon').innerText = 'expand_more';
 }
 
-// ─── SAVE IB ────────────────────────────────────────────────────────────────
+// ─── SAVE IB ───────────────────────────────────────────────────────────────
 function saveIb() {
   var service = document.getElementById('ibService').value;
   var from = document.getElementById('ibFrom').value;
@@ -986,18 +1271,26 @@ function saveIb() {
       if (res.error) { toast('Gagal: ' + res.error, 'error'); return; }
       toast('✅ IB disimpan! NO TRACK: ' + res.noTrack, 'success');
       resetIbForm();
-      gasGet('getIbList').then(function(r) { ibData = r.list || []; renderIbTable(); updateIbStats(); }).catch(function() {});
+      gasGet('getIbList').then(function(r) { ibData = r.list || []; renderIbTable(); updateIbStats(); }).catch(function(){});
     }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
+
 function resetIbForm() {
-  ['ibService', 'ibFrom', 'ibTujuan'].forEach(function(id) { document.getElementById(id).value = ''; });
+  ['ibService', 'ibFrom', 'ibTujuan'].forEach(function(id) {
+    document.getElementById(id).value = '';
+    var cid = id + 'Cb';
+    if (cbRegistry[cid]) cbRegistry[cid].value = '';
+  });
   ibScanned = []; renderIbScanList(); checkIbForm();
   document.getElementById('ibFormBody').classList.remove('open');
   document.getElementById('ibFormIcon').innerText = 'expand_more';
 }
 
-// ─── INIT ───────────────────────────────────────────────────────────────────
-window.onload = function() { reloadAll(); };
+// ─── INIT ──────────────────────────────────────────────────────────────────
+window.onload = function() {
+  initAllCbs();
+  reloadAll();
+};
 
 function reloadAll() {
   showLoading('Memuat data...');
@@ -1024,123 +1317,10 @@ function reloadAll() {
     .catch(function(e) {
       hideLoading();
       toast('❌ ' + e.message, 'error');
-      showNetworkError(e.message);
     });
 }
 
-function showNetworkError(msg) {
-  var html = '<div style="background:#FFEBEE;border:1.5px solid #EF9A9A;border-radius:9px;padding:16px 18px;margin-bottom:14px;font-size:13px;color:#C62828">'
-    + '<strong>❌ Gagal terhubung ke Google Apps Script</strong><br><br>'
-    + '<b>Kemungkinan penyebab:</b><ul style="margin:8px 0 0 16px;line-height:1.8">'
-    + '<li>GAS belum di-deploy atau belum dipublish ulang setelah edit</li>'
-    + '<li>Setting akses GAS bukan <b>"Anyone"</b></li>'
-    + '</ul><br>'
-    + '<b>Solusi:</b> Buka GAS → Deploy → Manage Deployments → pastikan <b>Execute as: Me</b> dan <b>Who has access: Anyone</b>'
-    + '<br><br><small style="color:#888">Error: ' + msg + '</small></div>';
-  document.getElementById('page-ob').insertAdjacentHTML('afterbegin', html);
-}
-
-// ─── ✅ FIX: loadScanRaw sekarang fungsi valid yang benar-benar tertutup ────
-function loadScanRaw() {
-  buildManifestFromScan();
-}
-
-// ─── MANIFEST ───────────────────────────────────────────────────────────────
-function buildManifestFromScan() {
-  var search = (document.getElementById('manifestSearch') ? document.getElementById('manifestSearch').value : '').toLowerCase();
-  var tujuanMap = {};
-  function processData(data, type) {
-    data.forEach(function(d) {
-      var t = d.tujuan || '—';
-      if (!tujuanMap[t]) tujuanMap[t] = { ob: [], hvs: [], total: 0 };
-      if (type === 'ob') tujuanMap[t].ob.push(d);
-      else tujuanMap[t].hvs.push(d);
-      tujuanMap[t].total += parseInt(d.total_awb) || 0;
-    });
-  }
-  processData(obData, 'ob');
-  processData(hvsData, 'hvs');
-  var el = document.getElementById('manifestContent');
-  var tujuans = Object.keys(tujuanMap).sort();
-  if (!tujuans.length) { el.innerHTML = '<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data manifest</div>'; return; }
-  var html = '';
-  tujuans.forEach(function(t) {
-    if (search && !t.toLowerCase().includes(search)) return;
-    var d = tujuanMap[t];
-    html += '<div class="manifest-section">';
-    html += '<div class="manifest-section-title"><span class="material-icons-round" style="font-size:15px">place</span>' + t + ' <span style="font-weight:400;color:var(--gray5)">(' + d.total + ' AWB)</span></div>';
-    if (d.ob.length) {
-      html += '<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND BDO</div>';
-      html += '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>'
-        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">NO TRACK</th>'
-        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th>'
-        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th>'
-        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th>'
-        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th>'
-        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th>'
-        + '</tr></thead><tbody>';
-      d.ob.forEach(function(r) {
-        html += '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--blue2);cursor:pointer" onclick="switchPage(\'ob\');openDetailModal(\'ob\',\'' + escQ(r.no_track) + '\')">' + r.no_track + '</span></td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.incharge + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.service + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">' + r.total_awb + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + statusBadge(r.status) + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">' + r.created_date + '</td></tr>';
-      });
-      html += '</tbody></table></div>';
-    }
-    if (d.hvs.length) {
-      html += '<div><div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND HVS</div>';
-      html += '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>'
-        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">NO TRACK</th>'
-        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th>'
-        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th>'
-        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th>'
-        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th>'
-        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th>'
-        + '</tr></thead><tbody>';
-      d.hvs.forEach(function(r) {
-        html += '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--purple);cursor:pointer" onclick="switchPage(\'hvs\');openDetailModal(\'hvs\',\'' + escQ(r.no_track) + '\')">' + r.no_track + '</span></td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.incharge + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.service + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">' + r.total_awb + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + statusBadge(r.status) + '</td>'
-          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">' + r.created_date + '</td></tr>';
-      });
-      html += '</tbody></table></div>';
-    }
-    html += '</div>';
-  });
-  el.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">search_off</span>Tidak ada hasil</div>';
-}
-
-function renderManifest() { buildManifestFromScan(); }
-function reloadManifest() {
-  showLoading('Memuat manifest...');
-  Promise.all([gasGet('getObList'), gasGet('getHvsList')]).then(function(res) {
-    obData = res[0].list || [];
-    hvsData = res[1].list || [];
-    updateObStats(); updateHvsStats();
-    renderObTable(); renderHvsTable();
-    hideLoading();
-    buildManifestFromScan();
-  }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
-}
-
-// ─── OB&IB TABLE ────────────────────────────────────────────────────────────
-function renderObibTable(headers, rows, filter) {
-  var data = rows;
-  if (filter) { var v = filter.toLowerCase(); data = data.filter(function(r) { return r.join(' ').toLowerCase().includes(v); }); }
-  var wrap = document.getElementById('obibTableWrap');
-  if (!headers.length) { wrap.innerHTML = '<div class="empty-state"><span class="material-icons-round">table_view</span>Sheet OB&IB masih kosong</div>'; return; }
-  var html = '<table><thead><tr>' + headers.map(function(h) { return '<th>' + (h || '') + '</th>'; }).join('') + '</tr></thead><tbody>';
-  html += data.map(function(r) { return '<tr>' + r.map(function(c) { return '<td style="font-size:12px">' + (c || '') + '</td>'; }).join('') + '</tr>'; }).join('');
-  html += '</tbody></table>';
-  wrap.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
-}
-function filterObib() { renderObibTable(obibHeaders, obibRows, document.getElementById('obibSearch').value); }
-
-// ─── STATS ──────────────────────────────────────────────────────────────────
+// ─── STATS ─────────────────────────────────────────────────────────────────
 function updateObStats() {
   var total = obData.reduce(function(s, d) { return s + (+d.total_awb || 0); }, 0);
   var selesai = obData.filter(function(d) { return d.status === 'SELESAI'; }).length;
@@ -1163,7 +1343,7 @@ function updateIbStats() {
   document.getElementById('ibProses').innerText = ibData.length - selesai;
 }
 
-// ─── TABLE RENDERS ──────────────────────────────────────────────────────────
+// ─── TABLE RENDERS ─────────────────────────────────────────────────────────
 function statusBadge(s) {
   return (s === 'SELESAI' || s === 'selesai')
     ? '<span class="badge badge-selesai">✓ Selesai</span>'
@@ -1173,10 +1353,9 @@ function fotoThumb(url) {
   if (!url) return '<span style="font-size:11px;color:var(--gray4)">—</span>';
   return '<a href="' + url + '" target="_blank"><img src="' + url + '" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';
 }
-function escQ(s) { return (s || '').replace(/'/g, "\\'"); }
 
 function renderObTable(filter) {
-  var data = filter ? obData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().includes(v); }) : obData;
+  var data = filter ? obData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().indexOf(v) !== -1; }) : obData;
   document.getElementById('obTableCount').innerText = data.length + ' record';
   var tbody = document.getElementById('obTbody');
   if (!data.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
@@ -1197,7 +1376,7 @@ function renderObTable(filter) {
   }).join('');
 }
 function renderHvsTable(filter) {
-  var data = filter ? hvsData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().includes(v); }) : hvsData;
+  var data = filter ? hvsData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().indexOf(v) !== -1; }) : hvsData;
   document.getElementById('hvsTableCount').innerText = data.length + ' record';
   var tbody = document.getElementById('hvsTbody');
   if (!data.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
@@ -1218,7 +1397,7 @@ function renderHvsTable(filter) {
   }).join('');
 }
 function renderIbTable(filter) {
-  var data = filter ? ibData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + (d.from || '') + d.status).toLowerCase().includes(v); }) : ibData;
+  var data = filter ? ibData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + (d.from||'') + d.status).toLowerCase().indexOf(v) !== -1; }) : ibData;
   document.getElementById('ibTableCount').innerText = data.length + ' record';
   var tbody = document.getElementById('ibTbody');
   if (!data.length) { tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
@@ -1243,7 +1422,19 @@ function filterObTable() { renderObTable(document.getElementById('obSearch').val
 function filterHvsTable() { renderHvsTable(document.getElementById('hvsSearch').value || ''); }
 function filterIbTable() { renderIbTable(document.getElementById('ibSearch').value || ''); }
 
-// ─── MARK SELESAI ───────────────────────────────────────────────────────────
+// ─── OB&IB TABLE ───────────────────────────────────────────────────────────
+function renderObibTable(headers, rows, filter) {
+  var data = rows;
+  if (filter) { var v = filter.toLowerCase(); data = data.filter(function(r) { return r.join(' ').toLowerCase().indexOf(v) !== -1; }); }
+  var wrap = document.getElementById('obibTableWrap');
+  if (!headers.length) { wrap.innerHTML = '<div class="empty-state"><span class="material-icons-round">table_view</span>Sheet OB&IB masih kosong</div>'; return; }
+  var html = '<table><thead><tr>' + headers.map(function(h) { return '<th>' + (h||'') + '</th>'; }).join('') + '</tr></thead><tbody>';
+  html += data.map(function(r) { return '<tr>' + r.map(function(c) { return '<td style="font-size:12px">' + (c||'') + '</td>'; }).join('') + '</tr>'; }).join('');
+  wrap.innerHTML = html + '</tbody></table>';
+}
+function filterObib() { renderObibTable(obibHeaders, obibRows, document.getElementById('obibSearch').value); }
+
+// ─── MARK SELESAI ──────────────────────────────────────────────────────────
 function markSelesai(type, noTrack) {
   var action = type === 'ob' ? 'updateObStatus' : type === 'hvs' ? 'updateHvsStatus' : 'updateIbStatus';
   if (!confirm('Tandai ' + noTrack + ' sebagai SELESAI?')) return;
@@ -1263,7 +1454,7 @@ function markSelesai(type, noTrack) {
   }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
 
-// ─── DELETE ─────────────────────────────────────────────────────────────────
+// ─── DELETE ────────────────────────────────────────────────────────────────
 function confirmDelete(type, noTrack) {
   document.getElementById('confirmTitle').innerText = 'Hapus Data';
   document.getElementById('confirmMsg').innerText = 'Hapus ' + noTrack + '? Semua AWB terkait juga akan dihapus. Tidak bisa dibatalkan.';
@@ -1284,7 +1475,7 @@ function confirmDelete(type, noTrack) {
   openModal('confirmModal');
 }
 
-// ─── DETAIL MODAL ───────────────────────────────────────────────────────────
+// ─── DETAIL MODAL ──────────────────────────────────────────────────────────
 function openDetailModal(type, noTrack) {
   var data = type === 'ob' ? obData : type === 'hvs' ? hvsData : ibData;
   var item = data.find(function(d) { return d.no_track === noTrack; });
@@ -1294,8 +1485,8 @@ function openDetailModal(type, noTrack) {
   var pb = document.getElementById('detailPhotoBox');
   pb.innerHTML = item.foto_url ? '<img src="' + item.foto_url + '" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">' : '<span class="no-img">No Image</span>';
   var fields = type === 'ib'
-    ? [['NO TRACK', item.no_track], ['INCHARGE', item.incharge], ['SERVICE', item.service], ['FROM', item.from || '—'], ['TUJUAN', item.tujuan], ['DATE', item.created_date], ['STATUS', item.status], ['TOTAL AWB', item.total_awb]]
-    : [['NO TRACK', item.no_track], ['INCHARGE', item.incharge], ['SERVICE', item.service], ['TUJUAN', item.tujuan], ['DATE', item.created_date], ['STATUS', item.status], ['TOTAL AWB', item.total_awb]];
+    ? [['NO TRACK', item.no_track],['INCHARGE', item.incharge],['SERVICE', item.service],['FROM', item.from||'—'],['TUJUAN', item.tujuan],['DATE', item.created_date],['STATUS', item.status],['TOTAL AWB', item.total_awb]]
+    : [['NO TRACK', item.no_track],['INCHARGE', item.incharge],['SERVICE', item.service],['TUJUAN', item.tujuan],['DATE', item.created_date],['STATUS', item.status],['TOTAL AWB', item.total_awb]];
   document.getElementById('detailGrid').innerHTML = fields.map(function(f) {
     return '<div class="d-field"><div class="d-label">' + f[0] + '</div><div class="d-value">' + f[1] + '</div></div>';
   }).join('');
@@ -1317,7 +1508,7 @@ function openDetailModal(type, noTrack) {
   openModal('detailModal');
 }
 
-// ─── FOTO UPDATE ────────────────────────────────────────────────────────────
+// ─── FOTO UPDATE ───────────────────────────────────────────────────────────
 function onFotoChange(e) {
   var file = e.target.files[0]; if (!file || !currentDetailItem) return;
   var reader = new FileReader();
@@ -1344,28 +1535,91 @@ function onFotoChange(e) {
   e.target.value = '';
 }
 
-// ─── CSV EXPORT ─────────────────────────────────────────────────────────────
+// ─── MANIFEST ──────────────────────────────────────────────────────────────
+function buildManifestFromScan() {
+  var search = (document.getElementById('manifestSearch').value || '').toLowerCase();
+  var tujuanMap = {};
+  function processData(data, type) {
+    data.forEach(function(d) {
+      var t = d.tujuan || '—';
+      if (!tujuanMap[t]) tujuanMap[t] = { ob: [], hvs: [], total: 0 };
+      if (type === 'ob') tujuanMap[t].ob.push(d);
+      else tujuanMap[t].hvs.push(d);
+      tujuanMap[t].total += parseInt(d.total_awb) || 0;
+    });
+  }
+  processData(obData, 'ob');
+  processData(hvsData, 'hvs');
+  var el = document.getElementById('manifestContent');
+  var tujuans = Object.keys(tujuanMap).sort();
+  if (!tujuans.length) { el.innerHTML = '<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data manifest</div>'; return; }
+  var html = '';
+  tujuans.forEach(function(t) {
+    if (search && t.toLowerCase().indexOf(search) === -1) return;
+    var d = tujuanMap[t];
+    html += '<div class="manifest-section">';
+    html += '<div class="manifest-section-title"><span class="material-icons-round" style="font-size:15px">place</span>' + t + ' <span style="font-weight:400;color:var(--gray5)">(' + d.total + ' AWB)</span></div>';
+    if (d.ob.length) {
+      html += '<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND BDO</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">NO TRACK</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th>'
+        + '</tr></thead><tbody>';
+      d.ob.forEach(function(r) {
+        html += '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--blue2);cursor:pointer" onclick="switchPage(\'ob\');openDetailModal(\'ob\',\'' + escQ(r.no_track) + '\')">' + r.no_track + '</span></td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.incharge + '</td><td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.service + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">' + r.total_awb + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + statusBadge(r.status) + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">' + r.created_date + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    if (d.hvs.length) {
+      html += '<div><div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND HVS</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">NO TRACK</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th>'
+        + '</tr></thead><tbody>';
+      d.hvs.forEach(function(r) {
+        html += '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--purple);cursor:pointer" onclick="switchPage(\'hvs\');openDetailModal(\'hvs\',\'' + escQ(r.no_track) + '\')">' + r.no_track + '</span></td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.incharge + '</td><td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.service + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">' + r.total_awb + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + statusBadge(r.status) + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">' + r.created_date + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+  });
+  el.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">search_off</span>Tidak ada hasil</div>';
+}
+function renderManifest() { buildManifestFromScan(); }
+function reloadManifest() {
+  showLoading('Memuat manifest...');
+  Promise.all([gasGet('getObList'), gasGet('getHvsList')]).then(function(res) {
+    obData = res[0].list || []; hvsData = res[1].list || [];
+    updateObStats(); updateHvsStats(); renderObTable(); renderHvsTable();
+    hideLoading(); buildManifestFromScan();
+  }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
+}
+
+// ─── CSV EXPORT ────────────────────────────────────────────────────────────
 function exportCSV() {
   var activePage = document.querySelector('.nav-item.active .nav-label');
   var page = activePage ? activePage.innerText : '';
   var data, headers, filename;
-  if (page.includes('Outbound BDO')) { data = obData; headers = ['no_track', 'incharge', 'service', 'tujuan', 'created_date', 'status', 'total_awb']; filename = 'OB_export.csv'; }
-  else if (page.includes('Outbound HVS')) { data = hvsData; headers = ['no_track', 'incharge', 'service', 'tujuan', 'created_date', 'status', 'total_awb']; filename = 'HVS_export.csv'; }
-  else if (page.includes('Inbound HVS')) { data = ibData; headers = ['no_track', 'incharge', 'service', 'from', 'tujuan', 'created_date', 'status', 'total_awb']; filename = 'IB_export.csv'; }
+  if (page.indexOf('Outbound BDO') !== -1) { data = obData; headers = ['no_track','incharge','service','tujuan','created_date','status','total_awb']; filename = 'OB_export.csv'; }
+  else if (page.indexOf('Outbound HVS') !== -1) { data = hvsData; headers = ['no_track','incharge','service','tujuan','created_date','status','total_awb']; filename = 'HVS_export.csv'; }
+  else if (page.indexOf('Inbound HVS') !== -1) { data = ibData; headers = ['no_track','incharge','service','from','tujuan','created_date','status','total_awb']; filename = 'IB_export.csv'; }
   else { toast('Pilih halaman OB/HVS/IB dulu', 'error'); return; }
-  var csv = headers.join(',') + '\n' + data.map(function(d) { return headers.map(function(h) { return '"' + (d[h] || '') + '"'; }).join(','); }).join('\n');
+  var csv = headers.join(',') + '\n' + data.map(function(d) { return headers.map(function(h) { return '"' + (d[h]||'') + '"'; }).join(','); }).join('\n');
   dlCSV(csv, filename);
 }
 function exportManifestCSV() {
-  var rows = [['TUJUAN', 'TYPE', 'NO_TRACK', 'INCHARGE', 'SERVICE', 'TOTAL_AWB', 'STATUS', 'DATE']];
-  obData.forEach(function(d) { rows.push([d.tujuan, 'OB', d.no_track, d.incharge, d.service, d.total_awb, d.status, d.created_date]); });
-  hvsData.forEach(function(d) { rows.push([d.tujuan, 'HVS', d.no_track, d.incharge, d.service, d.total_awb, d.status, d.created_date]); });
+  var rows = [['TUJUAN','TYPE','NO_TRACK','INCHARGE','SERVICE','TOTAL_AWB','STATUS','DATE']];
+  obData.forEach(function(d) { rows.push([d.tujuan,'OB',d.no_track,d.incharge,d.service,d.total_awb,d.status,d.created_date]); });
+  hvsData.forEach(function(d) { rows.push([d.tujuan,'HVS',d.no_track,d.incharge,d.service,d.total_awb,d.status,d.created_date]); });
   dlCSV(rows.map(function(r) { return r.map(function(c) { return '"' + c + '"'; }).join(','); }).join('\n'), 'manifest_export.csv');
 }
 function exportObibCSV() {
   if (!obibRows.length) { toast('Tidak ada data OB&IB', 'error'); return; }
-  var csv = obibHeaders.join(',') + '\n' + obibRows.map(function(r) { return r.map(function(c) { return '"' + c + '"'; }).join(','); }).join('\n');
-  dlCSV(csv, 'OBIB_export.csv');
+  dlCSV(obibHeaders.join(',') + '\n' + obibRows.map(function(r) { return r.map(function(c) { return '"' + c + '"'; }).join(','); }).join('\n'), 'OBIB_export.csv');
 }
 function dlCSV(csv, fn) {
   var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
