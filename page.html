@@ -23,7 +23,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:100vh;overflow:hidden;display:flex}
-
+ 
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar-w);background:var(--blue);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow:hidden;transition:width var(--trans);position:relative;z-index:100}
 .sidebar.collapsed{width:52px}
@@ -44,10 +44,10 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .sidebar.collapsed .nav-label{opacity:0;width:0}
 .sidebar-bottom{padding:10px 14px;border-top:1px solid rgba(255,255,255,.12);overflow:hidden;white-space:nowrap}
 .sidebar-bottom .ver{color:rgba(255,255,255,.35);font-size:10px;font-family:var(--mono)}
-
+ 
 /* ── MAIN ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-
+ 
 /* ── TOPBAR ── */
 .topbar{height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--gray3);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .topbar-title{font-size:15px;font-weight:700;color:var(--gray8);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -63,7 +63,7 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .combobox-option:hover,.combobox-option.selected{background:var(--blue-light);color:var(--blue2)}
 .incharge-dot{width:7px;height:7px;border-radius:50%;background:var(--gray4);flex-shrink:0;transition:.3s}
 .incharge-dot.on{background:#4CAF50;box-shadow:0 0 0 2px #C8E6C9}
-
+ 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--trans);font-family:var(--font);white-space:nowrap}
 .btn-primary{background:var(--blue2);color:#fff}.btn-primary:hover{background:var(--blue)}
@@ -75,10 +75,10 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .btn .material-icons-round{font-size:15px}
 .export-btn{background:var(--green-light);color:var(--green);border:1.5px solid #A5D6A7;padding:5px 11px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:var(--font);transition:var(--trans)}
 .export-btn:hover{filter:brightness(.95)}
-
+ 
 /* ── CONTENT ── */
 .content{flex:1;overflow:auto;padding:16px 18px}
-
+ 
 /* Stats */
 .stats-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .stat-card{background:var(--white);border-radius:var(--r);padding:12px 16px;flex:1;min-width:100px;border:1px solid var(--gray3);box-shadow:var(--shadow)}
@@ -87,7 +87,7 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .stat-card.blue .stat-value{color:var(--blue2)}
 .stat-card.green .stat-value{color:var(--green)}
 .stat-card.orange .stat-value{color:var(--orange)}
-
+ 
 /* Form Panel */
 .form-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow)}
 .form-panel-hdr{background:var(--blue2);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
@@ -110,7 +110,7 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .cb-opt{padding:8px 12px;font-size:13px;cursor:pointer;color:var(--gray7)}
 .cb-opt:hover,.cb-opt.active{background:var(--blue-light);color:var(--blue2)}
 .cb-opt.empty{color:var(--gray5);cursor:default}
-
+ 
 /* Scan */
 .scan-section{border-top:1px solid var(--gray2);padding-top:12px;margin-top:4px}
 .scan-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -134,7 +134,7 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .scan-item-del:hover{background:var(--red-light)}
 .scan-empty{padding:16px;text-align:center;color:var(--gray5);font-size:12px}
 .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray2)}
-
+ 
 /* Table */
 .table-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
 .table-toolbar{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray2);flex-wrap:wrap}
@@ -159,7 +159,7 @@ tr:hover td{background:var(--gray0)}
 .action-btn:hover{background:var(--gray2);color:var(--gray8)}
 .action-btn.danger:hover{background:var(--red-light);color:var(--red)}
 .action-btn .material-icons-round{font-size:16px}
-
+ 
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
@@ -180,7 +180,7 @@ tr:hover td{background:var(--gray0)}
 .no-img{color:var(--gray5);font-size:12px}
 .foto-btn{background:var(--gray1);border:1.5px solid var(--gray3);color:var(--gray7);font-size:12px;padding:4px 9px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;font-family:var(--font);font-weight:600;transition:var(--trans)}
 .foto-btn:hover{background:var(--gray2)}
-
+ 
 /* Loading */
 #loading{position:fixed;inset:0;background:rgba(255,255,255,.82);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 .spinner{width:34px;height:34px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .65s linear infinite}
@@ -192,17 +192,17 @@ tr:hover td{background:var(--gray0)}
 @keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
 #toast.success{background:var(--green)}
 #toast.error{background:var(--red)}
-
+ 
 /* Manifest */
 .manifest-info{background:var(--blue-light);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--blue);display:flex;gap:7px;align-items:flex-start}
 .manifest-section{margin-bottom:18px}
 .manifest-section-title{font-size:12px;font-weight:700;color:var(--gray6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding:6px 0;border-bottom:2px solid var(--blue-mid);display:flex;align-items:center;gap:6px}
-
+ 
 /* Scrollbar */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--gray3);border-radius:3px}
-
+ 
 @media(max-width:860px){
   .sidebar{width:52px}
   .sidebar .nav-label{opacity:0;width:0}
@@ -212,7 +212,7 @@ tr:hover td{background:var(--gray0)}
 </style>
 </head>
 <body>
-
+ 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-brand">
@@ -251,7 +251,7 @@ tr:hover td{background:var(--gray0)}
     <div class="ver">v2.1 — GTW BDO</div>
   </div>
 </div>
-
+ 
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
@@ -269,9 +269,9 @@ tr:hover td{background:var(--gray0)}
     <button class="btn btn-outline btn-sm" onclick="reloadAll()"><span class="material-icons-round">refresh</span> Refresh</button>
     <button class="export-btn" onclick="exportCSV()"><span class="material-icons-round">file_download</span> Export CSV</button>
   </div>
-
+ 
   <div class="content" id="mainContent">
-
+ 
     <!-- OB PAGE -->
     <div id="page-ob">
       <div class="stats-row">
@@ -337,7 +337,7 @@ tr:hover td{background:var(--gray0)}
         </div>
       </div>
     </div>
-
+ 
     <!-- HVS PAGE -->
     <div id="page-hvs" style="display:none">
       <div class="stats-row">
@@ -403,7 +403,7 @@ tr:hover td{background:var(--gray0)}
         </div>
       </div>
     </div>
-
+ 
     <!-- IB PAGE -->
     <div id="page-ib" style="display:none">
       <div class="stats-row">
@@ -469,7 +469,7 @@ tr:hover td{background:var(--gray0)}
         </div>
       </div>
     </div>
-
+ 
     <!-- MANIFEST PAGE -->
     <div id="page-manifest" style="display:none">
       <div class="manifest-info">
@@ -488,7 +488,7 @@ tr:hover td{background:var(--gray0)}
         </div>
       </div>
     </div>
-
+ 
     <!-- OB&IB PAGE -->
     <div id="page-obib" style="display:none">
       <div class="table-panel">
@@ -502,16 +502,16 @@ tr:hover td{background:var(--gray0)}
         </div>
       </div>
     </div>
-
+ 
   </div>
 </div>
-
+ 
 <!-- LOADING -->
 <div id="loading"><div class="spinner"></div><div id="loadingText">Memuat data...</div></div>
-
+ 
 <!-- TOAST -->
 <div id="toast"></div>
-
+ 
 <!-- DETAIL MODAL -->
 <div class="modal-overlay" id="detailModal">
   <div class="modal" style="width:540px">
@@ -536,7 +536,7 @@ tr:hover td{background:var(--gray0)}
     <div class="modal-footer" id="detailModalFooter"></div>
   </div>
 </div>
-
+ 
 <!-- CONFIRM MODAL -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal" style="width:340px">
@@ -548,7 +548,7 @@ tr:hover td{background:var(--gray0)}
     </div>
   </div>
 </div>
-
+ 
 <!-- ADD TUJUAN MODAL -->
 <div class="modal-overlay" id="tujuanModal">
   <div class="modal" style="width:340px">
@@ -571,12 +571,12 @@ tr:hover td{background:var(--gray0)}
     </div>
   </div>
 </div>
-
+ 
 <script>
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 // ✅ FIX: URL diupdate ke deployment terbaru
 var GAS_URL = "https://script.google.com/macros/s/AKfycbxDlOR1jD-7O39k6r4Bf09ko4qvH3Bk-IvVpTPBQzDutmIuJfP8ksSkVwDIKyNWa8KI/exec";
-
+ 
 // ─── STATE ──────────────────────────────────────────────────────────────────
 var masterData = {};
 var obData = [], hvsData = [], ibData = [];
@@ -588,7 +588,7 @@ var obScanMap = {}, hvsScanMap = {};
 var ibScanned = [];
 var obActiveTuj = '', hvsActiveTuj = '';
 var obibHeaders = [], obibRows = [];
-
+ 
 // ─── API HELPERS ────────────────────────────────────────────────────────────
 function gasGet(action, params) {
   return new Promise(function(resolve, reject) {
@@ -610,7 +610,7 @@ function gasGet(action, params) {
     xhr.send();
   });
 }
-
+ 
 function gasPost(action, data) {
   data.action = action;
   var body = JSON.stringify(data);
@@ -630,7 +630,7 @@ function gasPost(action, data) {
     xhr.send(body);
   });
 }
-
+ 
 // ─── UI HELPERS ─────────────────────────────────────────────────────────────
 function showLoading(t) { document.getElementById('loadingText').innerText = t || 'Memuat...'; document.getElementById('loading').style.display = 'flex'; }
 function hideLoading() { document.getElementById('loading').style.display = 'none'; }
@@ -644,10 +644,10 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 document.querySelectorAll('.modal-overlay').forEach(function(el) {
   el.addEventListener('click', function(e) { if (e.target === el) el.classList.remove('open'); });
 });
-
+ 
 // ─── SIDEBAR ────────────────────────────────────────────────────────────────
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
-
+ 
 // ─── GLOBAL INCHARGE COMBOBOX ───────────────────────────────────────────────
 function populateGlobalIncharge() {
   var obList = masterData.obIncharges || [];
@@ -683,7 +683,7 @@ function selectGlobalIncharge(v) {
   document.getElementById('inchargeDot').classList.toggle('on', !!v);
   refreshAllFormIncharges();
 }
-
+ 
 // ─── PAGE SWITCHING ─────────────────────────────────────────────────────────
 var pages = ['ob', 'hvs', 'ib', 'manifest', 'obib'];
 var pageTitles = {
@@ -702,7 +702,7 @@ function switchPage(page) {
   if (page === 'manifest') renderManifest();
   if (page === 'obib') renderObibTable(obibHeaders, obibRows);
 }
-
+ 
 // ─── FORM COMBOBOXES ────────────────────────────────────────────────────────
 var cbOptions = { ob: { service: [], tujuan: [] }, hvs: { service: [], tujuan: [] }, ib: { service: [], from: [], tujuan: [] } };
 function openCb(type, field) { document.getElementById(type + cap(field) + 'List').classList.add('open'); filterCb(type, field); }
@@ -736,7 +736,7 @@ function buildCbOptions() {
   cbOptions.ib.from = ib.froms || [];
   cbOptions.ib.tujuan = ib.tujuans || [];
 }
-
+ 
 // ─── REFRESH FORM INCHARGE ──────────────────────────────────────────────────
 function refreshAllFormIncharges() {
   buildCbOptions();
@@ -756,7 +756,7 @@ function refreshFormIncharge(t) {
   else if (t === 'hvs') checkHvsForm();
   else checkIbForm();
 }
-
+ 
 // ─── FORM TOGGLES ───────────────────────────────────────────────────────────
 function toggleForm(type) {
   var body = document.getElementById(type + 'FormBody');
@@ -765,7 +765,7 @@ function toggleForm(type) {
   icon.innerText = open ? 'expand_less' : 'expand_more';
   if (open) refreshFormIncharge(type);
 }
-
+ 
 // ─── FORM CHECKS ────────────────────────────────────────────────────────────
 function checkObForm() {
   var ok = globalIncharge && document.getElementById('obService').value && document.getElementById('obTujuan').value;
@@ -781,13 +781,13 @@ function checkIbForm() {
   var ok = globalIncharge && document.getElementById('ibService').value && document.getElementById('ibFrom').value && document.getElementById('ibTujuan').value;
   document.getElementById('btnSaveIb').disabled = !ok;
 }
-
+ 
 // ─── MULTI-TUJUAN OB/HVS ───────────────────────────────────────────────────
 function initObTujuan(tuj) { if (!obScanMap[tuj]) obScanMap[tuj] = []; obActiveTuj = tuj; renderObTabs(); renderObScanList(); }
 function initHvsTujuan(tuj) { if (!hvsScanMap[tuj]) hvsScanMap[tuj] = []; hvsActiveTuj = tuj; renderHvsTabs(); renderHvsScanList(); }
 function setObActiveTujuan(tuj) { initObTujuan(tuj); }
 function setHvsActiveTujuan(tuj) { initHvsTujuan(tuj); }
-
+ 
 function addMultiTujuan(type) {
   pendingTujuanType = type;
   document.getElementById('newTujuanInput').value = '';
@@ -816,7 +816,7 @@ function confirmAddTujuan() {
   if (pendingTujuanType === 'ob') { initObTujuan(tuj); document.getElementById('obTujuan').value = tuj; checkObForm(); }
   else if (pendingTujuanType === 'hvs') { initHvsTujuan(tuj); document.getElementById('hvsTujuan').value = tuj; checkHvsForm(); }
 }
-
+ 
 // OB tabs
 function renderObTabs() {
   var tabs = document.getElementById('obTujuanTabs');
@@ -848,7 +848,7 @@ function updateObTotalLabel() {
   var total = Object.values(obScanMap).reduce(function(s, a) { return s + a.length; }, 0);
   document.getElementById('obTotalScanLabel').innerText = total + ' AWB total';
 }
-
+ 
 // HVS tabs
 function renderHvsTabs() {
   var tabs = document.getElementById('hvsTujuanTabs');
@@ -880,7 +880,7 @@ function updateHvsTotalLabel() {
   var total = Object.values(hvsScanMap).reduce(function(s, a) { return s + a.length; }, 0);
   document.getElementById('hvsTotalScanLabel').innerText = total + ' AWB total';
 }
-
+ 
 // IB scan list
 function renderIbScanList() {
   var list = document.getElementById('ibScanList');
@@ -892,7 +892,7 @@ function renderIbScanList() {
       + '<span class="material-icons-round scan-item-del" onclick="ibScanned.splice(' + i + ',1);renderIbScanList()">delete</span></div>';
   }).join('');
 }
-
+ 
 // ─── SCAN INPUT ─────────────────────────────────────────────────────────────
 function handleScan(e, type) {
   if (e.key !== 'Enter') return;
@@ -914,7 +914,7 @@ function handleScan(e, type) {
   }
   input.value = '';
 }
-
+ 
 // ─── SAVE OB ────────────────────────────────────────────────────────────────
 function saveOb() {
   var service = document.getElementById('obService').value;
@@ -943,7 +943,7 @@ function resetObForm() {
   document.getElementById('obFormBody').classList.remove('open');
   document.getElementById('obFormIcon').innerText = 'expand_more';
 }
-
+ 
 // ─── SAVE HVS ───────────────────────────────────────────────────────────────
 function saveHvs() {
   var service = document.getElementById('hvsService').value;
@@ -972,7 +972,7 @@ function resetHvsForm() {
   document.getElementById('hvsFormBody').classList.remove('open');
   document.getElementById('hvsFormIcon').innerText = 'expand_more';
 }
-
+ 
 // ─── SAVE IB ────────────────────────────────────────────────────────────────
 function saveIb() {
   var service = document.getElementById('ibService').value;
@@ -995,10 +995,10 @@ function resetIbForm() {
   document.getElementById('ibFormBody').classList.remove('open');
   document.getElementById('ibFormIcon').innerText = 'expand_more';
 }
-
+ 
 // ─── INIT ───────────────────────────────────────────────────────────────────
 window.onload = function() { reloadAll(); };
-
+ 
 function reloadAll() {
   showLoading('Memuat data...');
   gasGet('getMasterData')
@@ -1027,7 +1027,7 @@ function reloadAll() {
       showNetworkError(e.message);
     });
 }
-
+ 
 function showNetworkError(msg) {
   var html = '<div style="background:#FFEBEE;border:1.5px solid #EF9A9A;border-radius:9px;padding:16px 18px;margin-bottom:14px;font-size:13px;color:#C62828">'
     + '<strong>❌ Gagal terhubung ke Google Apps Script</strong><br><br>'
@@ -1039,12 +1039,12 @@ function showNetworkError(msg) {
     + '<br><br><small style="color:#888">Error: ' + msg + '</small></div>';
   document.getElementById('page-ob').insertAdjacentHTML('afterbegin', html);
 }
-
+ 
 // ─── ✅ FIX: loadScanRaw sekarang fungsi valid yang benar-benar tertutup ────
 function loadScanRaw() {
   buildManifestFromScan();
 }
-
+ 
 // ─── MANIFEST ───────────────────────────────────────────────────────────────
 function buildManifestFromScan() {
   var search = (document.getElementById('manifestSearch') ? document.getElementById('manifestSearch').value : '').toLowerCase();
@@ -1113,7 +1113,7 @@ function buildManifestFromScan() {
   });
   el.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">search_off</span>Tidak ada hasil</div>';
 }
-
+ 
 function renderManifest() { buildManifestFromScan(); }
 function reloadManifest() {
   showLoading('Memuat manifest...');
@@ -1126,7 +1126,7 @@ function reloadManifest() {
     buildManifestFromScan();
   }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
-
+ 
 // ─── OB&IB TABLE ────────────────────────────────────────────────────────────
 function renderObibTable(headers, rows, filter) {
   var data = rows;
@@ -1139,7 +1139,7 @@ function renderObibTable(headers, rows, filter) {
   wrap.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
 }
 function filterObib() { renderObibTable(obibHeaders, obibRows, document.getElementById('obibSearch').value); }
-
+ 
 // ─── STATS ──────────────────────────────────────────────────────────────────
 function updateObStats() {
   var total = obData.reduce(function(s, d) { return s + (+d.total_awb || 0); }, 0);
@@ -1162,7 +1162,7 @@ function updateIbStats() {
   document.getElementById('ibSelesai').innerText = selesai;
   document.getElementById('ibProses').innerText = ibData.length - selesai;
 }
-
+ 
 // ─── TABLE RENDERS ──────────────────────────────────────────────────────────
 function statusBadge(s) {
   return (s === 'SELESAI' || s === 'selesai')
@@ -1174,7 +1174,7 @@ function fotoThumb(url) {
   return '<a href="' + url + '" target="_blank"><img src="' + url + '" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';
 }
 function escQ(s) { return (s || '').replace(/'/g, "\\'"); }
-
+ 
 function renderObTable(filter) {
   var data = filter ? obData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().includes(v); }) : obData;
   document.getElementById('obTableCount').innerText = data.length + ' record';
@@ -1242,7 +1242,7 @@ function renderIbTable(filter) {
 function filterObTable() { renderObTable(document.getElementById('obSearch').value || ''); }
 function filterHvsTable() { renderHvsTable(document.getElementById('hvsSearch').value || ''); }
 function filterIbTable() { renderIbTable(document.getElementById('ibSearch').value || ''); }
-
+ 
 // ─── MARK SELESAI ───────────────────────────────────────────────────────────
 function markSelesai(type, noTrack) {
   var action = type === 'ob' ? 'updateObStatus' : type === 'hvs' ? 'updateHvsStatus' : 'updateIbStatus';
@@ -1262,7 +1262,7 @@ function markSelesai(type, noTrack) {
     } else toast('Gagal: ' + (res.error || ''), 'error');
   }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
-
+ 
 // ─── DELETE ─────────────────────────────────────────────────────────────────
 function confirmDelete(type, noTrack) {
   document.getElementById('confirmTitle').innerText = 'Hapus Data';
@@ -1283,7 +1283,7 @@ function confirmDelete(type, noTrack) {
   };
   openModal('confirmModal');
 }
-
+ 
 // ─── DETAIL MODAL ───────────────────────────────────────────────────────────
 function openDetailModal(type, noTrack) {
   var data = type === 'ob' ? obData : type === 'hvs' ? hvsData : ibData;
@@ -1316,7 +1316,7 @@ function openDetailModal(type, noTrack) {
     + '<button class="btn btn-danger btn-sm" onclick="confirmDelete(\'' + type + '\',\'' + escQ(noTrack) + '\')"><span class="material-icons-round">delete</span></button>';
   openModal('detailModal');
 }
-
+ 
 // ─── FOTO UPDATE ────────────────────────────────────────────────────────────
 function onFotoChange(e) {
   var file = e.target.files[0]; if (!file || !currentDetailItem) return;
@@ -1343,7 +1343,7 @@ function onFotoChange(e) {
   reader.readAsDataURL(file);
   e.target.value = '';
 }
-
+ 
 // ─── CSV EXPORT ─────────────────────────────────────────────────────────────
 function exportCSV() {
   var activePage = document.querySelector('.nav-item.active .nav-label');
