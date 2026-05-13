@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OUTBOUND GTW BDO — v3.0</title>
+<title>OUTBOUND GTW BDO — v3.1</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -176,32 +176,23 @@ tr:hover td{background:var(--gray0)}
 
 /* ══════════════════════════════════════════════
    MANIFEST — GOOGLE SHEETS STYLE
-   Layout: A:W = 23 kolom per incharge group
-   A  = Date OB group 1  | B-H = AWB OB1 (7 slot)
-   I  = Date OB group 2  | J-P = AWB OB2 (7 slot)
-   Q  = Date OB group 3  | R-T = AWB OB3 (3 slot)
-   U  = Date HVS         | V-W = AWB HVS (2 slot)
    ══════════════════════════════════════════════ */
 #page-manifest{display:flex;flex-direction:column;height:100%}
 .manifest-toolbar{background:var(--white);border:1px solid var(--gray3);border-radius:var(--r);padding:10px 14px;display:flex;align-items:center;gap:8px;margin-bottom:10px;box-shadow:var(--shadow);flex-shrink:0;flex-wrap:wrap}
 .manifest-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1}
 
-/* Sheet wrapper — fills remaining height */
 .sheet-container{flex:1;display:flex;flex-direction:column;background:var(--white);border:1px solid var(--gray3);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;min-height:0}
 
-/* Formula bar (mimics GSheet) */
 .formula-bar{display:flex;align-items:center;background:#f8f9fa;border-bottom:1px solid var(--gray3);padding:0 8px;height:28px;flex-shrink:0;gap:8px}
 .formula-bar-cell{min-width:60px;font-size:12px;font-family:var(--mono);font-weight:700;color:var(--blue2);border-right:1px solid var(--gray3);padding:0 8px 0 4px}
 .formula-bar-icon{color:var(--gray5);font-size:14px}
 .formula-bar-content{flex:1;font-size:12px;font-family:var(--mono);color:var(--gray7);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* The actual spreadsheet scroll area */
-.sheet-scroll{flex:1;overflow:auto;position:relative;cursor:default}
+/* ─── SHEET SCROLL: outline:none ─── */
+.sheet-scroll{flex:1;overflow:auto;position:relative;cursor:default;outline:none}
 
-/* Sheet table — FIXED layout, GSheet-like */
 .gs-table{border-collapse:collapse;table-layout:fixed;font-size:12px;font-family:var(--mono);min-width:max-content}
 
-/* Row-number column */
 .gs-rn{
   width:40px;min-width:40px;max-width:40px;
   background:#f8f9fa;color:#80868b;
@@ -211,7 +202,6 @@ tr:hover td{background:var(--gray0)}
   position:sticky;left:0;z-index:5;
   padding:0;height:20px;
 }
-/* Column header row */
 .gs-col-hdr{
   background:#f8f9fa;color:#444746;
   font-size:11px;font-family:var(--font);font-weight:500;
@@ -223,15 +213,12 @@ tr:hover td{background:var(--gray0)}
 }
 .gs-col-hdr.gs-rn{z-index:8}
 
-/* Data header rows sticky */
 .gs-hdr-row-1 td,.gs-hdr-row-1 th{position:sticky;top:20px;z-index:4}
 .gs-hdr-row-2 td,.gs-hdr-row-2 th{position:sticky;top:40px;z-index:4}
 .gs-hdr-row-3 td,.gs-hdr-row-3 th{position:sticky;top:60px;z-index:4}
-
-/* Lock rn in header rows too */
 .gs-hdr-row-1 .gs-rn,.gs-hdr-row-2 .gs-rn,.gs-hdr-row-3 .gs-rn{z-index:7}
 
-/* Standard cell */
+/* ─── DATA CELL ─── */
 .gs-cell{
   border:1px solid #e0e0e0;
   height:20px;padding:0 4px;
@@ -240,21 +227,22 @@ tr:hover td{background:var(--gray0)}
   color:#202124;
   font-size:12px;
   min-width:90px;
+  /* CRITICAL: make focusable but hide outline (we draw our own) */
+  outline:none;
 }
 .gs-cell:hover{background:#f0f7ff !important}
 
-/* Selection */
-.gs-cell.selected{
-  outline:2px solid #1a73e8;
-  outline-offset:-2px;
+/* ─── SELECTION: mimics Google Sheets blue border ─── */
+.gs-cell.gs-selected{
   background:#e8f0fe !important;
-  z-index:2;
+  box-shadow:inset 0 0 0 2px #1a73e8;
+  z-index:3;
   position:relative;
 }
-.gs-cell.in-range{background:#e8f0fe80 !important}
 
-/* DATE cell (cols A,I,Q,U) */
-.gs-date{background:#e8f5e9;color:#1b5e20;font-weight:600;font-size:11px}
+/* DATE cell */
+.gs-date{background:#e8f5e9 !important;color:#1b5e20;font-weight:600;font-size:11px}
+.gs-date.gs-selected{background:#c8e6c9 !important;box-shadow:inset 0 0 0 2px #1a73e8;}
 
 /* Header cells */
 .gs-h-incharge{background:#1565C0;color:#fff;font-weight:700;font-size:11px;font-family:var(--font);text-align:center;border:1px solid #1976D2}
@@ -264,9 +252,19 @@ tr:hover td{background:var(--gray0)}
 .gs-h-tujuan{background:#E3F2FD;color:#1565C0;font-weight:700;font-size:10px;font-family:var(--font);text-align:center;border:1px solid #BBDEFB}
 .gs-empty-hdr{background:#f8f9fa;border:1px solid #e0e0e0}
 
-/* Col width */
 .gs-col-date{min-width:88px;width:88px}
 .gs-col-awb{min-width:90px;width:90px}
+
+/* highlight search match */
+.gs-cell.gs-match{background:#fff9c4 !important}
+.gs-cell.gs-match.gs-selected{background:#fff176 !important}
+
+/* Sync badge */
+.sync-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;transition:var(--trans)}
+.sync-badge.syncing{background:#E3F2FD;color:var(--blue2)}
+.sync-badge.synced{background:var(--green-light);color:var(--green)}
+.sync-badge.sync-error{background:var(--red-light);color:var(--red)}
+.sync-badge .material-icons-round{font-size:13px}
 
 /* Status bar */
 .sheet-statusbar{background:#f8f9fa;border-top:1px solid var(--gray3);padding:3px 12px;display:flex;align-items:center;gap:16px;font-size:11px;color:#5f6368;flex-shrink:0}
@@ -274,16 +272,19 @@ tr:hover td{background:var(--gray0)}
 .sheet-statusbar .material-icons-round{font-size:13px}
 
 /* Copy flash */
-@keyframes copyFlash{0%{outline-color:#1a73e8}50%{outline-color:#34a853;background:#d4edda !important}100%{outline-color:#1a73e8}}
-.gs-cell.copy-flash{animation:copyFlash .4s ease}
+@keyframes copyFlash{0%{box-shadow:inset 0 0 0 2px #1a73e8}50%{box-shadow:inset 0 0 0 2px #34a853;background:#d4edda !important}100%{box-shadow:inset 0 0 0 2px #1a73e8}}
+.gs-cell.copy-flash{animation:copyFlash .35s ease}
+
+/* Spin */
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinR{to{transform:rotate(-360deg)}}
+.spin-icon{display:inline-block;animation:spin .8s linear infinite}
 
 /* Loading */
 #loading{position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 .spinner{width:34px;height:34px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .65s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 #loadingText{font-size:13px;color:var(--gray6);font-weight:500}
 
-/* Mini loader */
 .mini-loader{position:absolute;top:8px;right:12px;background:rgba(255,255,255,.95);border:1px solid var(--gray3);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--gray7);font-weight:500;display:none;align-items:center;gap:6px;box-shadow:var(--shadow);z-index:20}
 .mini-loader.show{display:flex}
 .mini-spin{width:14px;height:14px;border:2px solid var(--gray3);border-top:2px solid var(--blue2);border-radius:50%;animation:spin .5s linear infinite}
@@ -321,7 +322,7 @@ tr:hover td{background:var(--gray0)}
 ::-webkit-scrollbar-thumb{background:#c8ccd0;border-radius:4px}
 ::-webkit-scrollbar-corner{background:#f6f8fa}
 
-/* Tooltip for copy */
+/* Copy tooltip */
 .copy-tooltip{position:fixed;background:#333;color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;pointer-events:none;z-index:9999;display:none;white-space:nowrap}
 
 @media(max-width:860px){.sidebar{width:52px}.sidebar .nav-label{opacity:0;width:0}.sidebar-toggle{display:none}}
@@ -346,7 +347,7 @@ tr:hover td{background:var(--gray0)}
     <div class="nav-item" onclick="switchPage('manifest')" id="nav-manifest"><span class="material-icons-round">grid_on</span><span class="nav-label">Manifest</span></div>
     <div class="nav-item" onclick="switchPage('obib')" id="nav-obib"><span class="material-icons-round">table_view</span><span class="nav-label">OB &amp; IB</span></div>
   </div>
-  <div class="sidebar-bottom"><div class="ver">v3.0 — GTW BDO</div></div>
+  <div class="sidebar-bottom"><div class="ver">v3.1 — GTW BDO</div></div>
 </div>
 
 <!-- MAIN -->
@@ -480,6 +481,7 @@ tr:hover td{background:var(--gray0)}
         <div class="manifest-toolbar-title">Manifest AWB — Spreadsheet View (A:W per Incharge)</div>
         <div class="search-box"><span class="material-icons-round">search</span><input id="manifestSearch" placeholder="Cari AWB..." oninput="filterManifest()" style="width:140px"></div>
         <button class="btn btn-outline btn-sm" onclick="reloadManifest()"><span class="material-icons-round">refresh</span> Refresh</button>
+        <span class="sync-badge" id="syncBadge" style="display:none"></span>
         <button class="export-btn" onclick="exportManifestCSV()"><span class="material-icons-round">file_download</span> Export CSV</button>
       </div>
       <div class="sheet-container">
@@ -488,14 +490,15 @@ tr:hover td{background:var(--gray0)}
           <span class="material-icons-round formula-bar-icon">functions</span>
           <div class="formula-bar-content" id="fbContent"></div>
         </div>
-        <div class="sheet-scroll" id="manifestScroll">
+        <!-- tabindex makes div focusable for keyboard events -->
+        <div class="sheet-scroll" id="manifestScroll" tabindex="0">
           <div class="mini-loader" id="manifestLoader"><div class="mini-spin"></div><span id="manifestLoaderText">Memuat...</span></div>
           <div id="manifestTableWrap"></div>
         </div>
         <div class="sheet-statusbar">
           <span><span class="material-icons-round">info</span><span id="sbInfo">—</span></span>
           <span><span class="material-icons-round">grid_3x3</span><span id="sbCell">—</span></span>
-          <span><span class="material-icons-round">content_copy</span><span id="sbCopy">Klik sel → Ctrl+C untuk copy</span></span>
+          <span><span class="material-icons-round">content_copy</span><span id="sbCopy">Klik sel → Ctrl+C / ↑↓←→ untuk navigasi</span></span>
         </div>
       </div>
     </div>
@@ -572,14 +575,22 @@ var obActiveTuj = '', hvsActiveTuj = '';
 var obibHeaders = [], obibRows = [];
 
 // Manifest state
-var _mfCols = [];     // built column definitions
-var _mfData = {};     // colKey -> { date, awbs:[] }
+var _mfBlocks = [];
 var _mfLoaded = false;
 var _mfFilter = '';
 
-// Spreadsheet selection state
-var _selCell = null;   // { row, col, colKey, value, cellRef }
-var _selEl = null;
+// ═══════════════════════════════════════════════════════════
+// SPREADSHEET SELECTION STATE
+// Tracks: { row (data-row int), col (data-col int), el (DOM td) }
+// ═══════════════════════════════════════════════════════════
+var _sel = { row: -1, col: -1, el: null };
+
+// ═══════════════════════════════════════════════════════════
+// MANIFEST LAYOUT CONSTANTS
+// ═══════════════════════════════════════════════════════════
+var MF_OB_SLOTS  = [7, 7, 3];
+var MF_HVS_SLOTS = 2;
+var MF_COLS_PER_INC = 23;
 
 // ═══════════════════════════════════════════════════════════
 // SMART COMBOBOX ENGINE
@@ -722,6 +733,23 @@ document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventList
 function escQ(s){return(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 function escH(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('collapsed');}
+
+// ═══════════════════════════════════════════════════════════
+// SYNC BADGE
+// ═══════════════════════════════════════════════════════════
+function setSyncBadge(state, msg) {
+  var el = document.getElementById('syncBadge');
+  el.style.display = 'inline-flex';
+  el.className = 'sync-badge ' + state;
+  var icons = { syncing: 'sync', synced: 'cloud_done', 'sync-error': 'cloud_off' };
+  var icon = icons[state] || 'sync';
+  var spin = state === 'syncing' ? ' spin-icon' : '';
+  el.innerHTML = '<span class="material-icons-round' + spin + '">' + icon + '</span>' + (msg || '');
+  if (state === 'synced') {
+    clearTimeout(el._t);
+    el._t = setTimeout(function() { el.style.display = 'none'; }, 4000);
+  }
+}
 
 // ═══════════════════════════════════════════════════════════
 // INCHARGE
@@ -901,7 +929,7 @@ function saveOb(){
       var errors=results.filter(function(r){return r.error;});
       if(errors.length){toast('Ada error: '+errors[0].error,'error');return;}
       toast('✅ '+results.length+' NO TRACK dibuat','success');
-      resetObForm(); _mfLoaded=false; // invalidate manifest cache
+      resetObForm(); _mfLoaded=false;
       gasGet('getObList').then(function(r){obData=r.list||[];renderObTable();updateObStats();}).catch(function(){});
     }).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});
 }
@@ -1120,45 +1148,22 @@ function onFotoChange(e){
 // ██████████████████████████████████████████████████████████
 // MANIFEST — GSHEET LAYOUT EXACT A:W
 // ██████████████████████████████████████████████████████████
-// Layout per INCHARGE GROUP (columns A–W = 23 cols):
-//   A        = DATE untuk OB group-1   (col 0)
-//   B..H     = 7 AWB slots OB group-1  (cols 1–7)
-//   I        = DATE untuk OB group-2   (col 8)
-//   J..P     = 7 AWB slots OB group-2  (cols 9–15)
-//   Q        = DATE untuk OB group-3   (col 16)
-//   R..T     = 3 AWB slots OB group-3  (cols 17–19)
-//   U        = DATE untuk HVS          (col 20)
-//   V..W     = 2 AWB slots HVS         (cols 21–22)
-// Total = 23 columns per incharge group
+// Layout per incharge (23 cols):
+//   col 0    = DATE OB-1 | col 1-7   = 7 AWB OB-1
+//   col 8    = DATE OB-2 | col 9-15  = 7 AWB OB-2
+//   col 16   = DATE OB-3 | col 17-19 = 3 AWB OB-3
+//   col 20   = DATE HVS  | col 21-22 = 2 AWB HVS
 // ═══════════════════════════════════════════════════════════
 
-var MF_OB_SLOTS  = [7, 7, 3];   // 3 OB groups: 7 AWB, 7 AWB, 3 AWB
-var MF_HVS_SLOTS = 2;           // 2 HVS slots
-var MF_COLS_PER_INC = 23;       // total per incharge
-// Offsets within a group block:
-// OB group i starts at: 0,8,16
-// HVS starts at: 20
-var MF_OB_DATE_OFFSETS = [0, 8, 16];
-var MF_HVS_DATE_OFFSET = 20;
-
-// Column labels A..Z, AA..AZ, ...
 function colLetter(i) {
   var s=''; i++;
   while(i>0){s=String.fromCharCode(64+(i%26||26))+s;i=Math.floor((i-1)/26);}
   return s;
 }
-// Row labels: header rows = 1,2,3 ; data rows = 4+
-// Cell reference like "B5", "A3"
-function cellRef(colIdx, rowIdx) {
-  return colLetter(colIdx) + (rowIdx+1);
-}
 
-// Build manifest column structure grouped by incharge
-// Returns array of incharge blocks: [{incharge, obGroups:[{date,awbs:[]},...], hvsGroups:[{date,awbs:[]}]}]
+// Build blocks grouped by incharge (sorted)
 function buildMfBlocks() {
-  // Group obData by incharge, then collect up to 3 no_tracks per incharge
   var incMap = {};
-
   obData.forEach(function(d) {
     if(!incMap[d.incharge]) incMap[d.incharge] = { ob:[], hvs:[] };
     incMap[d.incharge].ob.push(d);
@@ -1167,220 +1172,191 @@ function buildMfBlocks() {
     if(!incMap[d.incharge]) incMap[d.incharge] = { ob:[], hvs:[] };
     incMap[d.incharge].hvs.push(d);
   });
-
   var incharges = Object.keys(incMap).sort();
-  var blocks = [];
-
-  incharges.forEach(function(inc) {
+  return incharges.map(function(inc) {
     var grp = incMap[inc];
-    // Sort OB by date desc (most recent first), take up to 3 groups
     var obSorted = grp.ob.slice().sort(function(a,b){ return b.created_date > a.created_date ? 1 : -1; });
     var hvsSorted = grp.hvs.slice().sort(function(a,b){ return b.created_date > a.created_date ? 1 : -1; });
-
-    var obGroups = [];
-    for(var i=0; i<3; i++) {
-      if(obSorted[i]) {
-        obGroups.push({ no_track: obSorted[i].no_track, date: obSorted[i].created_date, service: obSorted[i].service, tujuan: obSorted[i].tujuan, awbs:[], loaded:false });
-      } else {
-        obGroups.push(null);
-      }
-    }
-    var hvsGroup = hvsSorted[0] ? { no_track: hvsSorted[0].no_track, date: hvsSorted[0].created_date, service: hvsSorted[0].service, tujuan: hvsSorted[0].tujuan, awbs:[], loaded:false } : null;
-
-    blocks.push({ incharge: inc, obGroups: obGroups, hvsGroup: hvsGroup });
+    var obGroups = [0,1,2].map(function(i){ return obSorted[i]?{no_track:obSorted[i].no_track,date:obSorted[i].created_date,service:obSorted[i].service,tujuan:obSorted[i].tujuan,awbs:[],loaded:false}:null; });
+    var hvsGroup = hvsSorted[0]?{no_track:hvsSorted[0].no_track,date:hvsSorted[0].created_date,service:hvsSorted[0].service,tujuan:hvsSorted[0].tujuan,awbs:[],loaded:false}:null;
+    return { incharge:inc, obGroups:obGroups, hvsGroup:hvsGroup };
   });
-  return blocks;
 }
-
-var _mfBlocks = [];
 
 function loadManifestPage() {
   if(_mfLoaded) { renderManifestSheet(); return; }
-  showMiniLoader('Memuat data AWB...');
+  showMiniLoader('Memuat AWB...');
   _mfBlocks = buildMfBlocks();
   if(!_mfBlocks.length) { hideMiniLoader(); renderManifestSheet(); return; }
 
-  // Collect all no_tracks to fetch
   var toFetch = [];
   _mfBlocks.forEach(function(blk) {
     blk.obGroups.forEach(function(og) { if(og) toFetch.push({ track:og, type:'OB' }); });
     if(blk.hvsGroup) toFetch.push({ track:blk.hvsGroup, type:'HVS' });
   });
 
-  if(!toFetch.length) { hideMiniLoader(); _mfLoaded=true; renderManifestSheet(); return; }
-
-  // Fetch in batches of 5
-  var idx=0;
+  var idx = 0;
   function nextBatch() {
-    if(idx>=toFetch.length) return Promise.resolve();
-    var batch=toFetch.slice(idx,idx+5); idx+=5;
+    if(idx >= toFetch.length) return Promise.resolve();
+    var batch = toFetch.slice(idx, idx+5); idx += 5;
     return Promise.all(batch.map(function(item){
       return gasGet('getAwbList',{noTrack:item.track.no_track,type:item.type}).then(function(res){
-        item.track.awbs=(res.list||[]).map(function(r){return r.awb||r;});
-        item.track.loaded=true;
-      }).catch(function(){item.track.loaded=true;});
+        item.track.awbs = (res.list||[]).map(function(r){return r.awb||r;});
+        item.track.loaded = true;
+      }).catch(function(){ item.track.loaded = true; });
     })).then(nextBatch);
   }
 
   nextBatch().then(function(){
     hideMiniLoader();
-    _mfLoaded=true;
+    _mfLoaded = true;
     renderManifestSheet();
+    // ── AUTO SYNC to Google Sheets MANIFEST ──
+    syncManifestToSheet();
   });
 }
 
 function showMiniLoader(t){ var el=document.getElementById('manifestLoader'); el.classList.add('show'); document.getElementById('manifestLoaderText').innerText=t||'Memuat...'; }
 function hideMiniLoader(){ document.getElementById('manifestLoader').classList.remove('show'); }
 
+// ═══════════════════════════════════════════════════════════
+// SYNC MANIFEST → GOOGLE SHEETS
+// Kirim data blocks ke GAS writeManifest
+// ═══════════════════════════════════════════════════════════
+function syncManifestToSheet() {
+  if(!_mfBlocks.length) return;
+  setSyncBadge('syncing', 'Menyimpan ke Sheet...');
+  // Build plain blocks (tanpa DOM reference, cukup data)
+  var plainBlocks = _mfBlocks.map(function(blk) {
+    return {
+      incharge: blk.incharge,
+      obGroups: blk.obGroups.map(function(og) {
+        if(!og) return null;
+        return { date:og.date, service:og.service, tujuan:og.tujuan, awbs:og.awbs.slice() };
+      }),
+      hvsGroup: blk.hvsGroup ? { date:blk.hvsGroup.date, service:blk.hvsGroup.service, tujuan:blk.hvsGroup.tujuan, awbs:blk.hvsGroup.awbs.slice() } : null
+    };
+  });
+  gasPost('writeManifest', { blocks: plainBlocks })
+    .then(function(res) {
+      if(res.success) {
+        setSyncBadge('synced', 'Sheet MANIFEST tersimpan ✓');
+      } else {
+        setSyncBadge('sync-error', 'Gagal sync: '+(res.error||''));
+      }
+    })
+    .catch(function(e) {
+      setSyncBadge('sync-error', 'Error: '+e.message);
+    });
+}
+
 // ─── RENDER THE SHEET ───────────────────────────────────────
 function renderManifestSheet() {
   var wrap = document.getElementById('manifestTableWrap');
   if(!_mfBlocks.length){
     wrap.innerHTML='<div class="empty-state" style="padding:60px"><span class="material-icons-round">grid_off</span>Belum ada data OB / HVS</div>';
-    updateMfStatusBar();
-    return;
+    updateMfStatusBar(); return;
   }
 
   var fq = _mfFilter.toLowerCase().trim();
-  var numInc = _mfBlocks.length;
-  var totalCols = numInc * MF_COLS_PER_INC;
+  var totalCols = _mfBlocks.length * MF_COLS_PER_INC;
 
-  // ── Build header cell arrays (4 header rows × totalCols) ──
-  // hdr[0] = col-letter row (frozen)
-  // hdr[1] = row 1: Incharge (spans 23)
-  // hdr[2] = row 2: Service / Group label
-  // hdr[3] = row 3: Tujuan / Label
-  // data rows: date col gets date value, AWB cols get AWB values
-
-  // We'll build HTML directly
   var html = '<table class="gs-table" id="gsTable">';
 
-  // ── Row 0: Column letter headers ──
-  html += '<thead>';
-  html += '<tr>';
-  html += '<th class="gs-col-hdr gs-rn"></th>'; // corner
+  // ── Row 0: Column letter header ──
+  html += '<thead><tr>';
+  html += '<th class="gs-col-hdr gs-rn"></th>';
   for(var ci=0; ci<totalCols; ci++) {
-    var incIdx = Math.floor(ci / MF_COLS_PER_INC);
     var localCol = ci % MF_COLS_PER_INC;
     var isDate = (localCol===0||localCol===8||localCol===16||localCol===20);
-    var w = isDate ? 'gs-col-date' : 'gs-col-awb';
-    html += '<th class="gs-col-hdr '+w+'" data-col="'+ci+'">'+colLetter(ci)+'</th>';
+    html += '<th class="gs-col-hdr '+(isDate?'gs-col-date':'gs-col-awb')+'" data-col="'+ci+'">'+colLetter(ci)+'</th>';
   }
   html += '</tr>';
 
   // ── Row 1: Incharge ──
-  html += '<tr class="gs-hdr-row-1">';
-  html += '<td class="gs-rn">1</td>';
-  for(var ci=0; ci<totalCols; ci++) {
-    var incIdx=Math.floor(ci/MF_COLS_PER_INC);
-    var localCol=ci%MF_COLS_PER_INC;
-    var blk=_mfBlocks[incIdx];
+  html += '<tr class="gs-hdr-row-1"><td class="gs-rn">1</td>';
+  for(var ci=0; ci<totalCols; ci++){
+    var incIdx=Math.floor(ci/MF_COLS_PER_INC), localCol=ci%MF_COLS_PER_INC, blk=_mfBlocks[incIdx];
     var txt=localCol===0?escH(blk.incharge):'';
-    var borderL=localCol===0&&incIdx>0?'border-left:3px solid #0D47A1':'';
-    html+='<td class="gs-h-incharge" style="'+borderL+'" title="'+escH(blk.incharge)+'">'+txt+'</td>';
+    var bL=localCol===0&&incIdx>0?'border-left:3px solid #0D47A1':'';
+    html+='<td class="gs-h-incharge" style="'+bL+'" title="'+escH(blk.incharge)+'">'+txt+'</td>';
   }
   html+='</tr>';
 
-  // ── Row 2: Service / Group label ──
-  html += '<tr class="gs-hdr-row-2">';
-  html += '<td class="gs-rn">2</td>';
-  for(var ci=0; ci<totalCols; ci++) {
-    var incIdx=Math.floor(ci/MF_COLS_PER_INC);
-    var localCol=ci%MF_COLS_PER_INC;
-    var blk=_mfBlocks[incIdx];
-    var txt=''; var cls='gs-empty-hdr';
-    if(localCol===0){ var og=blk.obGroups[0]; if(og){txt=escH(og.service);cls=svcCls(og.service);} }
-    else if(localCol===8){ var og=blk.obGroups[1]; if(og){txt=escH(og.service);cls=svcCls(og.service);} }
-    else if(localCol===16){ var og=blk.obGroups[2]; if(og){txt=escH(og.service);cls=svcCls(og.service);} }
-    else if(localCol===20){ var hg=blk.hvsGroup; if(hg){txt=escH(hg.service);cls='gs-h-service-hvs';} }
-    var borderL=(localCol===0&&incIdx>0)?'border-left:3px solid rgba(255,255,255,.4)':'';
-    html+='<td class="'+cls+'" style="'+borderL+'" title="'+txt+'">'+txt+'</td>';
+  // ── Row 2: Service ──
+  html += '<tr class="gs-hdr-row-2"><td class="gs-rn">2</td>';
+  for(var ci=0; ci<totalCols; ci++){
+    var incIdx=Math.floor(ci/MF_COLS_PER_INC), localCol=ci%MF_COLS_PER_INC, blk=_mfBlocks[incIdx];
+    var txt='', cls='gs-empty-hdr';
+    if(localCol===0){var og=blk.obGroups[0];if(og){txt=escH(og.service);cls=svcCls(og.service);}}
+    else if(localCol===8){var og=blk.obGroups[1];if(og){txt=escH(og.service);cls=svcCls(og.service);}}
+    else if(localCol===16){var og=blk.obGroups[2];if(og){txt=escH(og.service);cls=svcCls(og.service);}}
+    else if(localCol===20){var hg=blk.hvsGroup;if(hg){txt=escH(hg.service);cls='gs-h-service-hvs';}}
+    var bL=(localCol===0&&incIdx>0)?'border-left:3px solid rgba(255,255,255,.4)':'';
+    html+='<td class="'+cls+'" style="'+bL+'">'+txt+'</td>';
   }
   html+='</tr>';
 
   // ── Row 3: Tujuan ──
-  html += '<tr class="gs-hdr-row-3">';
-  html += '<td class="gs-rn">3</td>';
-  for(var ci=0; ci<totalCols; ci++) {
-    var incIdx=Math.floor(ci/MF_COLS_PER_INC);
-    var localCol=ci%MF_COLS_PER_INC;
-    var blk=_mfBlocks[incIdx];
-    var txt=''; var cls='gs-h-tujuan';
-    if(localCol===0){ var og=blk.obGroups[0]; txt=og?escH(og.tujuan):''; }
-    else if(localCol===1){ txt='DATE'; }
-    else if(localCol===8){ var og=blk.obGroups[1]; txt=og?escH(og.tujuan):''; cls=og?'gs-h-tujuan':'gs-empty-hdr'; }
-    else if(localCol===9){ txt=blk.obGroups[1]?'DATE':''; cls=blk.obGroups[1]?'gs-h-tujuan':'gs-empty-hdr'; }
-    else if(localCol===16){ var og=blk.obGroups[2]; txt=og?escH(og.tujuan):''; cls=og?'gs-h-tujuan':'gs-empty-hdr'; }
-    else if(localCol===17){ txt=blk.obGroups[2]?'DATE':''; cls=blk.obGroups[2]?'gs-h-tujuan':'gs-empty-hdr'; }
-    else if(localCol===20){ txt=blk.hvsGroup?escH(blk.hvsGroup.tujuan):''; cls=blk.hvsGroup?'gs-h-tujuan':'gs-empty-hdr'; }
-    else if(localCol===21){ txt=blk.hvsGroup?'DATE':''; cls=blk.hvsGroup?'gs-h-tujuan':'gs-empty-hdr'; }
-    else{ cls='gs-empty-hdr'; }
-    var borderL=(localCol===0&&incIdx>0)?'border-left:3px solid #1565C0':'';
-    html+='<td class="'+cls+'" style="'+borderL+'">'+txt+'</td>';
+  html += '<tr class="gs-hdr-row-3"><td class="gs-rn">3</td>';
+  for(var ci=0; ci<totalCols; ci++){
+    var incIdx=Math.floor(ci/MF_COLS_PER_INC), localCol=ci%MF_COLS_PER_INC, blk=_mfBlocks[incIdx];
+    var txt='', cls='gs-h-tujuan';
+    if(localCol===0){var og=blk.obGroups[0];txt=og?escH(og.tujuan):'';cls=og?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===1){txt=blk.obGroups[0]?'DATE':'';cls=blk.obGroups[0]?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===8){var og=blk.obGroups[1];txt=og?escH(og.tujuan):'';cls=og?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===9){txt=blk.obGroups[1]?'DATE':'';cls=blk.obGroups[1]?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===16){var og=blk.obGroups[2];txt=og?escH(og.tujuan):'';cls=og?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===17){txt=blk.obGroups[2]?'DATE':'';cls=blk.obGroups[2]?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===20){txt=blk.hvsGroup?escH(blk.hvsGroup.tujuan):'';cls=blk.hvsGroup?'gs-h-tujuan':'gs-empty-hdr';}
+    else if(localCol===21){txt=blk.hvsGroup?'DATE':'';cls=blk.hvsGroup?'gs-h-tujuan':'gs-empty-hdr';}
+    else{cls='gs-empty-hdr';}
+    var bL=(localCol===0&&incIdx>0)?'border-left:3px solid #1565C0':'';
+    html+='<td class="'+cls+'" style="'+bL+'">'+txt+'</td>';
   }
-  html+='</tr>';
-  html += '</thead>';
+  html+='</tr></thead>';
 
   // ── Data rows ──
-  // Determine max rows needed
   var maxDataRows = 0;
   _mfBlocks.forEach(function(blk){
-    blk.obGroups.forEach(function(og){ if(og){ var n=fq?og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length:og.awbs.length; if(n>maxDataRows)maxDataRows=n; } });
-    if(blk.hvsGroup){ var n=fq?blk.hvsGroup.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length:blk.hvsGroup.awbs.length; if(n>maxDataRows)maxDataRows=n; }
+    blk.obGroups.forEach(function(og){if(og){var n=fq?og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length:og.awbs.length;if(n>maxDataRows)maxDataRows=n;}});
+    if(blk.hvsGroup){var n=fq?blk.hvsGroup.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length:blk.hvsGroup.awbs.length;if(n>maxDataRows)maxDataRows=n;}
   });
-  var minRows = 50;
-  var dataRows = Math.max(maxDataRows, minRows);
+  var dataRows = Math.max(maxDataRows, 50);
 
   html += '<tbody>';
-  for(var ri=0; ri<dataRows; ri++) {
-    var screenRow = ri + 4; // display row number
+  for(var ri=0; ri<dataRows; ri++){
+    var screenRow = ri + 4;
     html += '<tr>';
     html += '<td class="gs-rn">'+screenRow+'</td>';
 
-    for(var ci=0; ci<totalCols; ci++) {
-      var incIdx=Math.floor(ci/MF_COLS_PER_INC);
-      var localCol=ci%MF_COLS_PER_INC;
-      var blk=_mfBlocks[incIdx];
-      var val=''; var isDate=false; var dateGroup=null;
+    for(var ci=0; ci<totalCols; ci++){
+      var incIdx=Math.floor(ci/MF_COLS_PER_INC), localCol=ci%MF_COLS_PER_INC, blk=_mfBlocks[incIdx];
+      var val='', isDate=false;
 
-      // Determine which data this cell belongs to
-      var obGroupIdx=-1; var awbSlot=-1;
-      if(localCol===0){ isDate=true; dateGroup=blk.obGroups[0]; }
-      else if(localCol>=1&&localCol<=7){ obGroupIdx=0; awbSlot=localCol-1; }
-      else if(localCol===8){ isDate=true; dateGroup=blk.obGroups[1]; }
-      else if(localCol>=9&&localCol<=15){ obGroupIdx=1; awbSlot=localCol-9; }
-      else if(localCol===16){ isDate=true; dateGroup=blk.obGroups[2]; }
-      else if(localCol>=17&&localCol<=19){ obGroupIdx=2; awbSlot=localCol-17; }
-      else if(localCol===20){ isDate=true; dateGroup=blk.hvsGroup; }
-      else if(localCol===21||localCol===22){ 
-        var hg=blk.hvsGroup; 
-        if(hg){ var hvsSlot=localCol-21; var hvsAwbs=fq?hg.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}):hg.awbs; val=hvsAwbs[ri]||''; }
-      }
+      if(localCol===0){ isDate=true; val=(blk.obGroups[0]&&ri===0)?blk.obGroups[0].date:''; }
+      else if(localCol>=1&&localCol<=7){ var og=blk.obGroups[0]; if(og){var fa=fq?og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}):og.awbs;val=fa[ri]||'';} }
+      else if(localCol===8){ isDate=true; val=(blk.obGroups[1]&&ri===0)?blk.obGroups[1].date:''; }
+      else if(localCol>=9&&localCol<=15){ var og=blk.obGroups[1]; if(og){var fa=fq?og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}):og.awbs;val=fa[ri]||'';} }
+      else if(localCol===16){ isDate=true; val=(blk.obGroups[2]&&ri===0)?blk.obGroups[2].date:''; }
+      else if(localCol>=17&&localCol<=19){ var og=blk.obGroups[2]; if(og){var fa=fq?og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}):og.awbs;val=fa[ri]||'';} }
+      else if(localCol===20){ isDate=true; val=(blk.hvsGroup&&ri===0)?blk.hvsGroup.date:''; }
+      else if(localCol===21||localCol===22){ if(blk.hvsGroup){var fa=fq?blk.hvsGroup.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}):blk.hvsGroup.awbs;val=fa[ri]||'';} }
 
-      if(isDate){
-        val=(dateGroup&&ri===0)?dateGroup.date:'';
-      } else if(obGroupIdx>=0){
-        var og=blk.obGroups[obGroupIdx];
-        if(og){ var filtAwbs=fq?og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}):og.awbs; val=filtAwbs[ri]||''; }
-      }
-
-      var hlBg = (fq&&val&&val.toLowerCase().indexOf(fq)!==-1)?'background:#fff9c4 !important':'';
-      var cls = 'gs-cell' + (isDate&&val?' gs-date':'');
-      var borderL = (localCol===0&&incIdx>0)?'border-left:3px solid #BBDEFB':'';
-      var style = [borderL, hlBg].filter(Boolean).join(';');
-
-      html+='<td class="'+cls+'" data-row="'+ri+'" data-col="'+ci+'" data-ri="'+screenRow+'" onclick="mfSelectCell(this,\''+escQ(val)+'\',\''+colLetter(ci)+'\','+screenRow+')" style="'+(style||'')+'" title="'+escH(val)+'">'+escH(val)+'</td>';
+      var isMatch = fq && val && val.toLowerCase().indexOf(fq) !== -1;
+      var cls = 'gs-cell' + (isDate&&val?' gs-date':'') + (isMatch?' gs-match':'');
+      var bL = (localCol===0&&incIdx>0)?'border-left:3px solid #BBDEFB':'';
+      // data-row = ri (0-based data row index), data-col = ci (absolute col index)
+      html += '<td class="'+cls+'" data-row="'+ri+'" data-col="'+ci+'" data-ri="'+screenRow+'" tabindex="-1"'
+            + ' style="'+(bL||'')+'" title="'+escH(val)+'">'+escH(val)+'</td>';
     }
-    html+='</tr>';
+    html += '</tr>';
   }
-  html+='</tbody></table>';
-
+  html += '</tbody></table>';
   wrap.innerHTML = html;
 
-  // Attach keyboard listener for the sheet scroll area
-  var scroll = document.getElementById('manifestScroll');
-  scroll.setAttribute('tabindex','0');
-  scroll.focus();
+  // ── Attach single delegated click + focus on sheet-scroll ──
+  attachSheetEvents();
   updateMfStatusBar();
 }
 
@@ -1392,76 +1368,131 @@ function svcCls(svc){
   return 'gs-h-service-nd';
 }
 
-// ─── CELL SELECTION ─────────────────────────────────────────
-function mfSelectCell(el, val, colL, rowN) {
-  // Deselect previous
-  if(_selEl){ _selEl.classList.remove('selected'); }
-  _selEl = el;
-  _selCell = { colL:colL, rowN:rowN, value:val, ref:colL+rowN };
-  el.classList.add('selected');
+// ═══════════════════════════════════════════════════════════
+// SHEET EVENT DELEGATION
+// Single click → select cell (no double-click needed)
+// Arrow keys → navigate
+// Ctrl+C → copy
+// ═══════════════════════════════════════════════════════════
+function attachSheetEvents() {
+  var scroll = document.getElementById('manifestScroll');
+  // Remove old listener by replacing scroll's clone (simplest approach)
+  var newScroll = scroll.cloneNode(false);
+  // Move children
+  while(scroll.firstChild) newScroll.appendChild(scroll.firstChild);
+  scroll.parentNode.replaceChild(newScroll, scroll);
 
-  // Update formula bar
-  document.getElementById('fbCellRef').innerText = colL+rowN;
+  // Re-get reference
+  var sc = document.getElementById('manifestScroll');
+
+  // ── CLICK: select cell on single click ──
+  sc.addEventListener('mousedown', function(e) {
+    var td = e.target.closest('td.gs-cell');
+    if(!td) return;
+    e.preventDefault(); // prevent text selection
+    selectCell(td);
+    sc.focus(); // keep focus on scroll area for keyboard
+  });
+
+  // ── KEYBOARD: arrows + ctrl+c ──
+  sc.addEventListener('keydown', function(e) {
+    var key = e.key;
+
+    // Ctrl+C / Cmd+C
+    if((e.ctrlKey||e.metaKey) && (key==='c'||key==='C')) {
+      e.preventDefault();
+      if(_sel.el) doCopy(_sel.el.textContent.trim());
+      return;
+    }
+
+    // Arrow navigation
+    if(key==='ArrowDown'||key==='ArrowUp'||key==='ArrowLeft'||key==='ArrowRight'||key==='Tab'||key==='Enter') {
+      e.preventDefault();
+      var dr=0, dc=0;
+      if(key==='ArrowDown'||key==='Enter') dr=1;
+      else if(key==='ArrowUp') dr=-1;
+      else if(key==='ArrowRight'||(key==='Tab'&&!e.shiftKey)) dc=1;
+      else if(key==='ArrowLeft'||(key==='Tab'&&e.shiftKey)) dc=-1;
+      navigateSel(dr, dc);
+    }
+  });
+
+  // Focus sheet-scroll so keydown works immediately
+  sc.focus();
+}
+
+// ── SELECT CELL ──
+function selectCell(td) {
+  // Deselect old
+  if(_sel.el) _sel.el.classList.remove('gs-selected');
+
+  _sel.row = parseInt(td.getAttribute('data-row'));
+  _sel.col = parseInt(td.getAttribute('data-col'));
+  _sel.el  = td;
+  td.classList.add('gs-selected');
+
+  var colL = colLetter(_sel.col);
+  var rowN = parseInt(td.getAttribute('data-ri'));
+  var val  = td.textContent.trim();
+
+  // Formula bar
+  document.getElementById('fbCellRef').innerText = colL + rowN;
   document.getElementById('fbContent').innerText = val;
 
-  // Update status bar
+  // Status bar
   document.getElementById('sbCell').innerText = 'Sel: '+colL+rowN + (val?' · "'+val+'"':'');
+
+  // Scroll into view (smooth)
+  td.scrollIntoView({ block:'nearest', inline:'nearest' });
 }
 
-// ─── KEYBOARD: Ctrl+C ──────────────────────────────────────
-document.addEventListener('keydown', function(e) {
-  // Only handle when manifest is visible
-  var mfPage = document.getElementById('page-manifest');
-  if(!mfPage || mfPage.style.display==='none') return;
-
-  if((e.ctrlKey||e.metaKey) && e.key==='c') {
-    if(_selCell && _selCell.value!==undefined) {
-      copyToClipboard(_selCell.value);
-      e.preventDefault();
-    }
+// ── NAVIGATE (dr=row delta, dc=col delta) ──
+function navigateSel(dr, dc) {
+  if(_sel.row < 0) {
+    // No selection yet → select first data cell
+    var first = document.querySelector('#manifestScroll td.gs-cell[data-row="0"][data-col="1"]');
+    if(first) selectCell(first);
+    return;
   }
-  // Arrow navigation
-  if(_selEl && (e.key==='ArrowRight'||e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowDown')) {
-    e.preventDefault();
-    navigateCell(e.key);
-  }
-});
-
-function navigateCell(key) {
-  if(!_selEl) return;
-  var row = parseInt(_selEl.getAttribute('data-row'));
-  var col = parseInt(_selEl.getAttribute('data-col'));
-  if(key==='ArrowRight') col++;
-  else if(key==='ArrowLeft') col--;
-  else if(key==='ArrowDown') row++;
-  else if(key==='ArrowUp') row--;
-  if(col<0) col=0; if(row<0) row=0;
-  var next = document.querySelector('[data-row="'+row+'"][data-col="'+col+'"]');
-  if(next) { next.click(); next.scrollIntoView({block:'nearest',inline:'nearest'}); }
+  var newRow = _sel.row + dr;
+  var newCol = _sel.col + dc;
+  if(newRow < 0) newRow = 0;
+  if(newCol < 0) newCol = 0;
+  var next = document.querySelector('#manifestScroll td.gs-cell[data-row="'+newRow+'"][data-col="'+newCol+'"]');
+  if(next) selectCell(next);
 }
 
-function copyToClipboard(text) {
-  if(navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function(){showCopyFeedback(text);}).catch(function(){fallbackCopy(text);});
-  } else { fallbackCopy(text); }
+// ── COPY TO CLIPBOARD ──
+function doCopy(text) {
+  var doIt = function(t) {
+    if(navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(function(){showCopyFeedback(t);}).catch(function(){fallbackCopy(t);});
+    } else { fallbackCopy(t); }
+  };
+  doIt(text);
 }
 function fallbackCopy(text){
-  var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();
+  var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);ta.focus();ta.select();
   try{document.execCommand('copy');}catch(e){}
   document.body.removeChild(ta);showCopyFeedback(text);
 }
 function showCopyFeedback(text) {
-  if(_selEl) { _selEl.classList.add('copy-flash'); setTimeout(function(){if(_selEl)_selEl.classList.remove('copy-flash');},400); }
-  var tip=document.getElementById('copyTooltip');
+  if(_sel.el){ _sel.el.classList.add('copy-flash'); setTimeout(function(){if(_sel.el)_sel.el.classList.remove('copy-flash');},350); }
+  var tip = document.getElementById('copyTooltip');
+  if(_sel.el){
+    var r = _sel.el.getBoundingClientRect();
+    tip.style.left = (r.left + r.width/2 - 30)+'px';
+    tip.style.top  = (r.top - 30)+'px';
+  }
   tip.style.display='block';
-  // Position near selected cell
-  if(_selEl){ var r=_selEl.getBoundingClientRect(); tip.style.left=(r.left+r.width/2-30)+'px'; tip.style.top=(r.top-28)+'px'; }
-  clearTimeout(tip._t); tip._t=setTimeout(function(){tip.style.display='none';},1200);
-  document.getElementById('sbCopy').innerText='Copied: "'+text+'"';
-  document.getElementById('sbCopy').style.color='var(--green)';
-  setTimeout(function(){document.getElementById('sbCopy').innerText='Klik sel → Ctrl+C untuk copy';document.getElementById('sbCopy').style.color='';},2000);
+  clearTimeout(tip._t); tip._t=setTimeout(function(){tip.style.display='none';},1100);
+  document.getElementById('sbCopy').innerText = '✓ Copied: "'+text+'"';
+  document.getElementById('sbCopy').style.color = 'var(--green)';
+  setTimeout(function(){ document.getElementById('sbCopy').innerText='Klik sel → Ctrl+C / ↑↓←→ navigasi'; document.getElementById('sbCopy').style.color=''; },2200);
 }
 
+// ── STATUS BAR ──
 function updateMfStatusBar() {
   var totalAwb=0;
   (_mfBlocks||[]).forEach(function(blk){
@@ -1469,15 +1500,15 @@ function updateMfStatusBar() {
     if(blk.hvsGroup)totalAwb+=blk.hvsGroup.awbs.length;
   });
   var fq=_mfFilter.toLowerCase().trim();
-  var filteredAwb=fq?totalAwb:totalAwb; // If filtered, recount
+  var filtAwb=totalAwb;
   if(fq){
-    filteredAwb=0;
+    filtAwb=0;
     (_mfBlocks||[]).forEach(function(blk){
-      blk.obGroups.forEach(function(og){if(og)filteredAwb+=og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length;});
-      if(blk.hvsGroup)filteredAwb+=blk.hvsGroup.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length;
+      blk.obGroups.forEach(function(og){if(og)filtAwb+=og.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length;});
+      if(blk.hvsGroup)filtAwb+=blk.hvsGroup.awbs.filter(function(a){return a.toLowerCase().indexOf(fq)!==-1;}).length;
     });
   }
-  document.getElementById('sbInfo').innerText = (_mfBlocks.length)+' incharge · '+totalAwb+' AWB total'+(fq?' · '+filteredAwb+' cocok':'');
+  document.getElementById('sbInfo').innerText = (_mfBlocks.length)+' incharge · '+totalAwb+' AWB total'+(fq?' · '+filtAwb+' cocok':'');
 }
 
 function filterManifest(){
@@ -1486,8 +1517,8 @@ function filterManifest(){
 }
 
 function reloadManifest(){
-  _mfLoaded=false;
-  _mfBlocks=[];
+  _mfLoaded=false; _mfBlocks=[];
+  _sel = { row:-1, col:-1, el:null };
   showMiniLoader('Refresh...');
   Promise.all([gasGet('getObList'),gasGet('getHvsList')]).then(function(res){
     obData=res[0].list||[];hvsData=res[1].list||[];
@@ -1512,51 +1543,19 @@ function exportCSV(){
 }
 function exportManifestCSV(){
   if(!_mfBlocks.length){toast('Tidak ada data manifest','error');return;}
-  // Build rows per incharge block (A:W layout)
   var rows=[];
-  // Header row 1: Incharge
-  var h1=[''];
-  _mfBlocks.forEach(function(blk){for(var i=0;i<MF_COLS_PER_INC;i++)h1.push(i===0?blk.incharge:'');});
-  rows.push(h1);
-  // Header row 2: Service
-  var h2=[''];
-  _mfBlocks.forEach(function(blk){
-    for(var i=0;i<MF_COLS_PER_INC;i++){
-      var v='';
-      if(i===0)v=blk.obGroups[0]?blk.obGroups[0].service:'';
-      else if(i===8)v=blk.obGroups[1]?blk.obGroups[1].service:'';
-      else if(i===16)v=blk.obGroups[2]?blk.obGroups[2].service:'';
-      else if(i===20)v=blk.hvsGroup?blk.hvsGroup.service:'';
-      h2.push(v);
-    }
-  });
-  rows.push(h2);
-  // Header row 3: Tujuan
-  var h3=[''];
-  _mfBlocks.forEach(function(blk){
-    for(var i=0;i<MF_COLS_PER_INC;i++){
-      var v='';
-      if(i===0)v=blk.obGroups[0]?blk.obGroups[0].tujuan:'';
-      else if(i===8)v=blk.obGroups[1]?blk.obGroups[1].tujuan:'';
-      else if(i===16)v=blk.obGroups[2]?blk.obGroups[2].tujuan:'';
-      else if(i===20)v=blk.hvsGroup?blk.hvsGroup.tujuan:'';
-      h3.push(v);
-    }
-  });
-  rows.push(h3);
-  // Data rows
+  var h1=[''],h2=[''],h3=[];
+  _mfBlocks.forEach(function(blk){for(var i=0;i<MF_COLS_PER_INC;i++){h1.push(i===0?blk.incharge:'');var s2='';if(i===0)s2=blk.obGroups[0]?blk.obGroups[0].service:'';else if(i===8)s2=blk.obGroups[1]?blk.obGroups[1].service:'';else if(i===16)s2=blk.obGroups[2]?blk.obGroups[2].service:'';else if(i===20)s2=blk.hvsGroup?blk.hvsGroup.service:'';h2.push(s2);}});
+  rows.push(h1);rows.push(h2);
   var maxR=0;
-  _mfBlocks.forEach(function(blk){
-    blk.obGroups.forEach(function(og){if(og&&og.awbs.length>maxR)maxR=og.awbs.length;});
-    if(blk.hvsGroup&&blk.hvsGroup.awbs.length>maxR)maxR=blk.hvsGroup.awbs.length;
-  });
+  _mfBlocks.forEach(function(blk){blk.obGroups.forEach(function(og){if(og&&og.awbs.length>maxR)maxR=og.awbs.length;});if(blk.hvsGroup&&blk.hvsGroup.awbs.length>maxR)maxR=blk.hvsGroup.awbs.length;});
   for(var ri=0;ri<maxR;ri++){
     var row=[''];
     _mfBlocks.forEach(function(blk){
       for(var ci=0;ci<MF_COLS_PER_INC;ci++){
         var v='';
         if(ci===0)v=ri===0&&blk.obGroups[0]?blk.obGroups[0].date:'';
-        else if(ci>=1&&ci<=7)v=blk.obGroups[0]?(blk.obGroups[0].awbs[ri-(ci===1?0:0)]||''):'';
+        else if(ci>=1&&ci<=7)v=blk.obGroups[0]?(blk.obGroups[0].awbs[ri]||''):'';
         else if(ci===8)v=ri===0&&blk.obGroups[1]?blk.obGroups[1].date:'';
         else if(ci>=9&&ci<=15)v=blk.obGroups[1]?(blk.obGroups[1].awbs[ri]||''):'';
         else if(ci===16)v=ri===0&&blk.obGroups[2]?blk.obGroups[2].date:'';
