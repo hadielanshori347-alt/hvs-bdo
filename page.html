@@ -19,17 +19,13 @@
   --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
   --sidebar-w:220px;--topbar-h:54px;
   --r:10px;--shadow:0 2px 8px rgba(0,0,0,.08);--shadow2:0 4px 16px rgba(0,0,0,.12);
-  --sidebar-collapsed:0px;
   --trans:.18s ease;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:100vh;overflow:hidden;display:flex}
 
 /* ── SIDEBAR ── */
-.sidebar{
-  width:var(--sidebar-w);background:var(--blue);display:flex;flex-direction:column;
-  flex-shrink:0;height:100vh;overflow:hidden;transition:width var(--trans);position:relative;z-index:100;
-}
+.sidebar{width:var(--sidebar-w);background:var(--blue);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow:hidden;transition:width var(--trans);position:relative;z-index:100}
 .sidebar.collapsed{width:52px}
 .sidebar-brand{padding:14px 12px 10px;border-bottom:1px solid rgba(255,255,255,.15);display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap}
 .brand-texts{overflow:hidden}
@@ -56,8 +52,6 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .topbar{height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--gray3);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .topbar-title{font-size:15px;font-weight:700;color:var(--gray8);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar-sub{font-size:11px;color:var(--gray5);font-weight:400}
-
-/* Incharge widget */
 .incharge-widget{display:flex;align-items:center;gap:6px;background:var(--blue-light);border:1.5px solid var(--blue-mid);border-radius:8px;padding:4px 8px 4px 10px;flex-shrink:0}
 .incharge-widget-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
 .combobox-wrap{position:relative;min-width:140px}
@@ -67,7 +61,6 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .combobox-dropdown.open{display:block}
 .combobox-option{padding:9px 14px;font-size:13px;cursor:pointer;color:var(--gray7)}
 .combobox-option:hover,.combobox-option.selected{background:var(--blue-light);color:var(--blue2)}
-.combobox-empty{padding:10px 14px;font-size:12px;color:var(--gray5)}
 .incharge-dot{width:7px;height:7px;border-radius:50%;background:var(--gray4);flex-shrink:0;transition:.3s}
 .incharge-dot.on{background:#4CAF50;box-shadow:0 0 0 2px #C8E6C9}
 
@@ -102,19 +95,13 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .form-panel-title .material-icons-round{font-size:17px}
 .form-panel-body{padding:14px 16px;display:none}
 .form-panel-body.open{display:block}
-
-/* Incharge info bar */
 .info-bar{display:flex;align-items:center;gap:7px;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:7px;padding:8px 12px;margin-bottom:12px;font-size:13px;font-weight:600;color:var(--blue2)}
 .info-bar .material-icons-round{font-size:15px;color:var(--blue)}
 .info-bar .hint{font-size:11px;color:var(--blue);font-weight:400;opacity:.7}
 .warn-bar{display:flex;align-items:center;gap:7px;background:#FFF8E1;border:1.5px solid #FFE082;border-radius:7px;padding:9px 12px;font-size:13px;color:#F57F17;margin-bottom:12px}
 .warn-bar .material-icons-round{font-size:17px}
-
-/* Form grid */
 .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px}
-.fg{} .fg label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
-
-/* Searchable combobox inside form */
+.fg label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
 .cb-wrap{position:relative}
 .cb-inp{width:100%;padding:8px 11px;border:1.5px solid var(--gray3);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--gray8);outline:none;background:var(--white);transition:var(--trans);cursor:text}
 .cb-inp:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light)}
@@ -123,10 +110,11 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .cb-opt{padding:8px 12px;font-size:13px;cursor:pointer;color:var(--gray7)}
 .cb-opt:hover,.cb-opt.active{background:var(--blue-light);color:var(--blue2)}
 .cb-opt.empty{color:var(--gray5);cursor:default}
-.cb-opt:hover.empty{background:none}
 
-/* Multi-tujuan scan table */
-.scan-table-wrap{margin-bottom:10px}
+/* Scan */
+.scan-section{border-top:1px solid var(--gray2);padding-top:12px;margin-top:4px}
+.scan-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.scan-header-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px}
 .scan-tujuan-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .scan-tujuan-tab{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;background:var(--gray2);color:var(--gray7);cursor:pointer;border:1.5px solid transparent;transition:var(--trans)}
 .scan-tujuan-tab.active{background:var(--blue-light);color:var(--blue2);border-color:var(--blue-mid)}
@@ -134,11 +122,6 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .scan-tujuan-tab.active .cnt{background:var(--blue)}
 .scan-tujuan-tab .rm-tuj{font-size:14px;color:var(--gray5);margin-left:2px;line-height:1}
 .scan-tujuan-tab .rm-tuj:hover{color:var(--red)}
-
-/* Scan row */
-.scan-section{border-top:1px solid var(--gray2);padding-top:12px;margin-top:4px}
-.scan-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.scan-header-label{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px}
 .scan-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .scan-inp{flex:1;padding:9px 13px;border:1.5px solid var(--blue2);border-radius:7px;font-size:13px;font-family:var(--mono);color:var(--gray8);outline:none;transition:var(--trans)}
 .scan-inp:focus{box-shadow:0 0 0 3px var(--blue-light)}
@@ -147,20 +130,12 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .scan-item:last-child{border-bottom:none}
 .scan-item-awb{color:var(--gray8);font-weight:500}
 .scan-item-tuj{font-size:11px;color:var(--gray5);margin-left:6px}
-.scan-item-edit{display:flex;align-items:center;gap:4px}
 .scan-item-del{color:var(--red);cursor:pointer;font-size:16px;padding:2px;border-radius:4px}
 .scan-item-del:hover{background:var(--red-light)}
 .scan-empty{padding:16px;text-align:center;color:var(--gray5);font-size:12px}
 .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray2)}
 
-/* Summary table before save */
-.save-preview{margin-bottom:10px}
-.save-preview-title{font-size:11px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.save-preview table{width:100%;border-collapse:collapse;font-size:12px}
-.save-preview th{background:var(--gray1);padding:6px 10px;font-weight:700;font-size:10px;color:var(--gray5);text-transform:uppercase;text-align:left;border:1px solid var(--gray3)}
-.save-preview td{padding:6px 10px;border:1px solid var(--gray2);font-family:var(--mono)}
-
-/* ── TABLE ── */
+/* Table */
 .table-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
 .table-toolbar{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray2);flex-wrap:wrap}
 .table-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1;white-space:nowrap}
@@ -185,7 +160,7 @@ tr:hover td{background:var(--gray0)}
 .action-btn.danger:hover{background:var(--red-light);color:var(--red)}
 .action-btn .material-icons-round{font-size:16px}
 
-/* ── MODAL ── */
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.open{display:flex}
 .modal{background:var(--white);border-radius:13px;width:500px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.18)}
@@ -197,8 +172,6 @@ tr:hover td{background:var(--gray0)}
 .awb-list-box{background:var(--gray0);border-radius:7px;border:1px solid var(--gray3);max-height:260px;overflow-y:auto}
 .awb-row{padding:7px 11px;border-bottom:1px solid var(--gray2);font-size:12px;font-family:var(--mono);color:var(--gray7);display:flex;align-items:center;justify-content:space-between}
 .awb-row:last-child{border-bottom:none}
-
-/* Detail modal */
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .d-field .d-label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
 .d-field .d-value{font-size:13px;color:var(--gray8);font-weight:500}
@@ -213,24 +186,17 @@ tr:hover td{background:var(--gray0)}
 .spinner{width:34px;height:34px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .65s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #loadingText{font-size:13px;color:var(--gray6);font-weight:500}
-
-/* Empty */
 .empty-state{padding:36px;text-align:center;color:var(--gray5)}
 .empty-state .material-icons-round{font-size:36px;margin-bottom:6px;color:var(--gray4);display:block}
-
-/* Toast */
 #toast{position:fixed;bottom:24px;right:24px;background:var(--gray8);color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:500;z-index:9999;display:none;box-shadow:var(--shadow2);max-width:320px;animation:slideUp .25s ease}
 @keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
 #toast.success{background:var(--green)}
 #toast.error{background:var(--red)}
 
-/* Manifest special */
+/* Manifest */
 .manifest-info{background:var(--blue-light);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--blue);display:flex;gap:7px;align-items:flex-start}
 .manifest-section{margin-bottom:18px}
 .manifest-section-title{font-size:12px;font-weight:700;color:var(--gray6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding:6px 0;border-bottom:2px solid var(--blue-mid);display:flex;align-items:center;gap:6px}
-.manifest-tujuan-header{background:var(--blue2);color:#fff;padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.manifest-awb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0}
-.manifest-awb-cell{padding:6px 12px;border-bottom:1px solid var(--gray2);border-right:1px solid var(--gray2);font-size:12px;font-family:var(--mono)}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:5px;height:5px}
@@ -282,13 +248,12 @@ tr:hover td{background:var(--gray0)}
     </div>
   </div>
   <div class="sidebar-bottom">
-    <div class="ver">v2.0 — GTW BDO</div>
+    <div class="ver">v2.1 — GTW BDO</div>
   </div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-title" id="topbarTitle">Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span></div>
     <div class="incharge-widget">
@@ -307,7 +272,7 @@ tr:hover td{background:var(--gray0)}
 
   <div class="content" id="mainContent">
 
-    <!-- ===== OB PAGE ===== -->
+    <!-- OB PAGE -->
     <div id="page-ob">
       <div class="stats-row">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="obTotalAwb">0</div></div>
@@ -339,7 +304,6 @@ tr:hover td{background:var(--gray0)}
               <div class="cb-list" id="obTujuanList"></div></div>
             </div>
           </div>
-          <!-- Multi-tujuan tabs & scan -->
           <div class="scan-section" id="obScanSection" style="display:none">
             <div class="scan-header">
               <span class="scan-header-label">Scan AWB</span>
@@ -374,7 +338,7 @@ tr:hover td{background:var(--gray0)}
       </div>
     </div>
 
-    <!-- ===== HVS PAGE ===== -->
+    <!-- HVS PAGE -->
     <div id="page-hvs" style="display:none">
       <div class="stats-row">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="hvsTotalAwb">0</div></div>
@@ -440,7 +404,7 @@ tr:hover td{background:var(--gray0)}
       </div>
     </div>
 
-    <!-- ===== IB PAGE ===== -->
+    <!-- IB PAGE -->
     <div id="page-ib" style="display:none">
       <div class="stats-row">
         <div class="stat-card blue"><div class="stat-label">Total AWB</div><div class="stat-value" id="ibTotalAwb">0</div></div>
@@ -506,11 +470,11 @@ tr:hover td{background:var(--gray0)}
       </div>
     </div>
 
-    <!-- ===== MANIFEST PAGE ===== -->
+    <!-- MANIFEST PAGE -->
     <div id="page-manifest" style="display:none">
       <div class="manifest-info">
         <span class="material-icons-round">info</span>
-        Manifest dikelompokkan berdasarkan TUJUAN dari SCAN_OB dan SCAN_HVS. Kolom D (AWB) dimasukkan sesuai kategori tujuan.
+        Manifest dikelompokkan berdasarkan TUJUAN dari OB dan HVS.
       </div>
       <div class="table-panel">
         <div class="table-toolbar">
@@ -525,7 +489,7 @@ tr:hover td{background:var(--gray0)}
       </div>
     </div>
 
-    <!-- ===== OB&IB PAGE ===== -->
+    <!-- OB&IB PAGE -->
     <div id="page-obib" style="display:none">
       <div class="table-panel">
         <div class="table-toolbar">
@@ -592,11 +556,13 @@ tr:hover td{background:var(--gray0)}
       <button class="modal-close" onclick="closeModal('tujuanModal')"><span class="material-icons-round">close</span></button>
     </div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--gray6);margin-bottom:10px">Pilih tujuan untuk sesi scan baru. AWB akan dikelompokkan per tujuan.</p>
+      <p style="font-size:13px;color:var(--gray6);margin-bottom:10px">Pilih tujuan untuk sesi scan baru.</p>
       <div class="fg"><label>TUJUAN</label>
-        <div class="cb-wrap"><input class="cb-inp" id="newTujuanInput" placeholder="Ketik / pilih tujuan..." autocomplete="off"
-          oninput="filterNewTujuan()" onfocus="openNewTujuanDrop()" onblur="closeNewTujuanDelay()">
-        <div class="cb-list" id="newTujuanList"></div></div>
+        <div class="cb-wrap">
+          <input class="cb-inp" id="newTujuanInput" placeholder="Ketik / pilih tujuan..." autocomplete="off"
+            oninput="filterNewTujuan()" onfocus="openNewTujuanDrop()" onblur="closeNewTujuanDelay()">
+          <div class="cb-list" id="newTujuanList"></div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -607,57 +573,39 @@ tr:hover td{background:var(--gray0)}
 </div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
-var GAS_URL = "https://script.google.com/macros/s/AKfycbw_hmjPsNrHi_ZJStlYZ8NSY3SlGgNgy9f7AI05owjf4x7j2rREXB0JWrQ2mlwsT57Z/exec";
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
+// ✅ FIX: URL diupdate ke deployment terbaru
+var GAS_URL = "https://script.google.com/macros/s/AKfycbxDlOR1jD-7O39k6r4Bf09ko4qvH3Bk-IvVpTPBQzDutmIuJfP8ksSkVwDIKyNWa8KI/exec";
 
-// ─── STATE ────────────────────────────────────────────────
+// ─── STATE ──────────────────────────────────────────────────────────────────
 var masterData = {};
 var obData = [], hvsData = [], ibData = [];
 var globalIncharge = '';
 var allIncharges = [];
 var currentDetailItem = null, currentDetailType = '';
 var pendingTujuanType = '';
+var obScanMap = {}, hvsScanMap = {};
+var ibScanned = [];
+var obActiveTuj = '', hvsActiveTuj = '';
+var obibHeaders = [], obibRows = [];
 
-// Multi-tujuan scan state: { tujuan: [awb, awb, ...] }
-var obScanMap  = {}; // { tujuan: [awb,...] }
-var hvsScanMap = {};
-var ibScanned  = []; // IB single tujuan
-var obActiveTuj  = '';
-var hvsActiveTuj = '';
-
-// Manifest raw data
-var obScanRaw  = []; // from SCAN_OB
-var hvsScanRaw = []; // from SCAN_HVS
-
-// OB&IB
-var obibHeaders=[], obibRows=[];
-
-// ─── API HELPERS ──────────────────────────────────────────
-// GAS melakukan redirect 302 dari script.google.com → script.googleusercontent.com
-// fetch() dengan redirect:'follow' kadang gagal di beberapa browser/env karena CORS pada redirect.
-// Solusi: gunakan XMLHttpRequest yang lebih toleran terhadap redirect GAS.
-
+// ─── API HELPERS ────────────────────────────────────────────────────────────
 function gasGet(action, params) {
   return new Promise(function(resolve, reject) {
     var url = new URL(GAS_URL);
     url.searchParams.set('action', action);
-    if (params) Object.keys(params).forEach(function(k){ url.searchParams.set(k, params[k]); });
-
+    if (params) Object.keys(params).forEach(function(k) { url.searchParams.set(k, params[k]); });
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url.toString(), true);
     xhr.onload = function() {
       try { resolve(JSON.parse(xhr.responseText)); }
-      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,100))); }
+      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,120))); }
     };
     xhr.onerror = function() {
-      // Fallback: coba via fetch dengan mode cors
-      fetch(url.toString(), {redirect:'follow', mode:'cors'})
-        .then(function(r){ return r.json(); })
+      fetch(url.toString(), { redirect: 'follow', mode: 'cors' })
+        .then(function(r) { return r.json(); })
         .then(resolve)
-        .catch(function(){
-          // Last resort: no-cors tidak bisa dibaca, tapi coba quoting trick
-          reject(new Error('Network error — pastikan GAS sudah di-deploy sebagai "Anyone" dan Web App sudah dipublish ulang.'));
-        });
+        .catch(function() { reject(new Error('Network error — pastikan GAS di-deploy sebagai Anyone.')); });
     };
     xhr.send();
   });
@@ -672,451 +620,387 @@ function gasPost(action, data) {
     xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
     xhr.onload = function() {
       try { resolve(JSON.parse(xhr.responseText)); }
-      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,100))); }
+      catch(e) { reject(new Error('Parse error: ' + xhr.responseText.substring(0,120))); }
     };
     xhr.onerror = function() {
-      // Fallback fetch
-      fetch(GAS_URL, {
-        method:'POST', redirect:'follow',
-        headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body: body
-      }).then(function(r){ return r.json(); }).then(resolve)
-        .catch(function(){ reject(new Error('Network error pada POST ke GAS.')); });
+      fetch(GAS_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
+        .then(function(r) { return r.json(); }).then(resolve)
+        .catch(function() { reject(new Error('Network error pada POST ke GAS.')); });
     };
     xhr.send(body);
   });
 }
 
-// ─── UI HELPERS ───────────────────────────────────────────
-function showLoading(t){ document.getElementById('loadingText').innerText=t||'Memuat...'; document.getElementById('loading').style.display='flex'; }
-function hideLoading(){ document.getElementById('loading').style.display='none'; }
-function toast(msg, type){
-  var el=document.getElementById('toast');
-  el.innerText=msg; el.className=type||''; el.style.display='block';
-  clearTimeout(el._t); el._t=setTimeout(function(){el.style.display='none';},3200);
+// ─── UI HELPERS ─────────────────────────────────────────────────────────────
+function showLoading(t) { document.getElementById('loadingText').innerText = t || 'Memuat...'; document.getElementById('loading').style.display = 'flex'; }
+function hideLoading() { document.getElementById('loading').style.display = 'none'; }
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.innerText = msg; el.className = type || ''; el.style.display = 'block';
+  clearTimeout(el._t); el._t = setTimeout(function() { el.style.display = 'none'; }, 3200);
 }
-function openModal(id){ document.getElementById(id).classList.add('open'); }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(function(el){
-  el.addEventListener('click',function(e){ if(e.target===el) el.classList.remove('open'); });
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(function(el) {
+  el.addEventListener('click', function(e) { if (e.target === el) el.classList.remove('open'); });
 });
 
-// ─── SIDEBAR ──────────────────────────────────────────────
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('collapsed');
-}
+// ─── SIDEBAR ────────────────────────────────────────────────────────────────
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
 
-// ─── GLOBAL INCHARGE COMBOBOX ─────────────────────────────
-function populateGlobalIncharge(){
-  var obList = masterData.obIncharges||[];
-  var ibList = masterData.ibIncharges||[];
+// ─── GLOBAL INCHARGE COMBOBOX ───────────────────────────────────────────────
+function populateGlobalIncharge() {
+  var obList = masterData.obIncharges || [];
+  var ibList = masterData.ibIncharges || [];
   var combined = obList.slice();
-  ibList.forEach(function(v){ if(!combined.includes(v)) combined.push(v); });
+  ibList.forEach(function(v) { if (!combined.includes(v)) combined.push(v); });
   allIncharges = combined.sort();
   renderGlobalCbOptions('');
-  if(globalIncharge){
+  if (globalIncharge) {
     document.getElementById('globalInchargeInput').value = globalIncharge;
     document.getElementById('inchargeDot').classList.add('on');
   }
 }
-function renderGlobalCbOptions(q){
+function renderGlobalCbOptions(q) {
   var drop = document.getElementById('globalCbDrop');
-  var filtered = allIncharges.filter(function(v){ return v.toLowerCase().includes(q.toLowerCase()); });
-  if(!filtered.length){ drop.innerHTML='<div class="combobox-option" style="color:var(--gray5)">Tidak ada</div>'; return; }
-  drop.innerHTML = filtered.map(function(v){
-    return '<div class="combobox-option'+(v===globalIncharge?' selected':'')+'" onmousedown="selectGlobalIncharge(\''+v+'\')">'+v+'</div>';
+  var filtered = allIncharges.filter(function(v) { return v.toLowerCase().includes(q.toLowerCase()); });
+  if (!filtered.length) { drop.innerHTML = '<div class="combobox-option" style="color:var(--gray5)">Tidak ada</div>'; return; }
+  drop.innerHTML = filtered.map(function(v) {
+    return '<div class="combobox-option' + (v === globalIncharge ? ' selected' : '') + '" onmousedown="selectGlobalIncharge(\'' + v + '\')">' + v + '</div>';
   }).join('');
 }
-function filterGlobalIncharge(){
-  var q=document.getElementById('globalInchargeInput').value;
+function filterGlobalIncharge() {
+  var q = document.getElementById('globalInchargeInput').value;
   renderGlobalCbOptions(q);
-  if(document.getElementById('globalCbDrop').className.indexOf('open')===-1) openGlobalCb();
+  if (!document.getElementById('globalCbDrop').classList.contains('open')) openGlobalCb();
 }
-function openGlobalCb(){ document.getElementById('globalCbDrop').classList.add('open'); renderGlobalCbOptions(document.getElementById('globalInchargeInput').value); }
-function closeGlobalCbDelay(){ setTimeout(function(){ document.getElementById('globalCbDrop').classList.remove('open'); },200); }
-function selectGlobalIncharge(v){
-  globalIncharge=v;
-  document.getElementById('globalInchargeInput').value=v;
+function openGlobalCb() { document.getElementById('globalCbDrop').classList.add('open'); renderGlobalCbOptions(document.getElementById('globalInchargeInput').value); }
+function closeGlobalCbDelay() { setTimeout(function() { document.getElementById('globalCbDrop').classList.remove('open'); }, 200); }
+function selectGlobalIncharge(v) {
+  globalIncharge = v;
+  document.getElementById('globalInchargeInput').value = v;
   document.getElementById('globalCbDrop').classList.remove('open');
-  document.getElementById('inchargeDot').classList.toggle('on',!!v);
+  document.getElementById('inchargeDot').classList.toggle('on', !!v);
   refreshAllFormIncharges();
 }
 
-// ─── PAGE SWITCHING ───────────────────────────────────────
-var pages=['ob','hvs','ib','manifest','obib'];
-var pageTitles={
-  ob:'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
-  hvs:'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',
-  ib:'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',
-  manifest:'Manifest <span class="topbar-sub">Rekap AWB OB &amp; HVS per tujuan</span>',
-  obib:'OB &amp; IB <span class="topbar-sub">Combined view</span>'
+// ─── PAGE SWITCHING ─────────────────────────────────────────────────────────
+var pages = ['ob', 'hvs', 'ib', 'manifest', 'obib'];
+var pageTitles = {
+  ob: 'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
+  hvs: 'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',
+  ib: 'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',
+  manifest: 'Manifest <span class="topbar-sub">Rekap AWB OB &amp; HVS per tujuan</span>',
+  obib: 'OB &amp; IB <span class="topbar-sub">Combined view</span>'
 };
-function switchPage(page){
-  pages.forEach(function(p){
-    document.getElementById('page-'+p).style.display=(p===page)?'':'none';
-    var n=document.getElementById('nav-'+p); if(n) n.classList.toggle('active',p===page);
+function switchPage(page) {
+  pages.forEach(function(p) {
+    document.getElementById('page-' + p).style.display = (p === page) ? '' : 'none';
+    var n = document.getElementById('nav-' + p); if (n) n.classList.toggle('active', p === page);
   });
-  document.getElementById('topbarTitle').innerHTML=pageTitles[page]||page;
-  if(page==='manifest') renderManifest();
-  if(page==='obib') renderObibTable(obibHeaders,obibRows);
+  document.getElementById('topbarTitle').innerHTML = pageTitles[page] || page;
+  if (page === 'manifest') renderManifest();
+  if (page === 'obib') renderObibTable(obibHeaders, obibRows);
 }
 
-// ─── FORM COMBOBOXES ──────────────────────────────────────
-var cbOptions = {
-  ob:  { service:[], tujuan:[] },
-  hvs: { service:[], tujuan:[] },
-  ib:  { service:[], from:[], tujuan:[] }
-};
-function openCb(type,field){
-  document.getElementById(type+cap(field)+'List').classList.add('open');
-  filterCb(type,field);
-}
-function closeCbDelay(type,field){ setTimeout(function(){ document.getElementById(type+cap(field)+'List').classList.remove('open'); },200); }
-function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
-function filterCb(type,field){
-  var q=(document.getElementById(type+cap(field)).value||'').toLowerCase();
-  var opts=cbOptions[type][field]||[];
-  var list=document.getElementById(type+cap(field)+'List');
-  var filtered=opts.filter(function(v){ return v.toLowerCase().includes(q); });
-  if(!filtered.length){ list.innerHTML='<div class="cb-opt empty">Tidak ada pilihan</div>'; return; }
-  list.innerHTML=filtered.map(function(v){
-    return '<div class="cb-opt" onmousedown="selectCb(\''+type+'\',\''+field+'\',\''+v+'\')">'+v+'</div>';
+// ─── FORM COMBOBOXES ────────────────────────────────────────────────────────
+var cbOptions = { ob: { service: [], tujuan: [] }, hvs: { service: [], tujuan: [] }, ib: { service: [], from: [], tujuan: [] } };
+function openCb(type, field) { document.getElementById(type + cap(field) + 'List').classList.add('open'); filterCb(type, field); }
+function closeCbDelay(type, field) { setTimeout(function() { document.getElementById(type + cap(field) + 'List').classList.remove('open'); }, 200); }
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function filterCb(type, field) {
+  var q = (document.getElementById(type + cap(field)).value || '').toLowerCase();
+  var opts = cbOptions[type][field] || [];
+  var list = document.getElementById(type + cap(field) + 'List');
+  var filtered = opts.filter(function(v) { return v.toLowerCase().includes(q); });
+  if (!filtered.length) { list.innerHTML = '<div class="cb-opt empty">Tidak ada pilihan</div>'; return; }
+  list.innerHTML = filtered.map(function(v) {
+    return '<div class="cb-opt" onmousedown="selectCb(\'' + type + '\',\'' + field + '\',\'' + v + '\')">' + v + '</div>';
   }).join('');
 }
-function selectCb(type,field,val){
-  document.getElementById(type+cap(field)).value=val;
-  document.getElementById(type+cap(field)+'List').classList.remove('open');
-  if(type==='ob'){ checkObForm(); if(field==='tujuan') setObActiveTujuan(val); }
-  if(type==='hvs'){ checkHvsForm(); if(field==='tujuan') setHvsActiveTujuan(val); }
-  if(type==='ib') checkIbForm();
+function selectCb(type, field, val) {
+  document.getElementById(type + cap(field)).value = val;
+  document.getElementById(type + cap(field) + 'List').classList.remove('open');
+  if (type === 'ob') { checkObForm(); if (field === 'tujuan') setObActiveTujuan(val); }
+  if (type === 'hvs') { checkHvsForm(); if (field === 'tujuan') setHvsActiveTujuan(val); }
+  if (type === 'ib') checkIbForm();
+}
+function buildCbOptions() {
+  var d = (masterData.obData || {})[globalIncharge] || {};
+  cbOptions.ob.service = d.services || [];
+  cbOptions.ob.tujuan = d.tujuans || [];
+  cbOptions.hvs.service = d.services || [];
+  cbOptions.hvs.tujuan = d.tujuans || [];
+  var ib = (masterData.ibData || {})[globalIncharge] || {};
+  cbOptions.ib.service = ib.services || [];
+  cbOptions.ib.from = ib.froms || [];
+  cbOptions.ib.tujuan = ib.tujuans || [];
 }
 
-function buildCbOptions(){
-  var obIncharge = globalIncharge;
-  var d = (masterData.obData||{})[obIncharge]||{};
-  cbOptions.ob.service = d.services||[];
-  cbOptions.ob.tujuan  = d.tujuans||[];
-  cbOptions.hvs.service= d.services||[];
-  cbOptions.hvs.tujuan = d.tujuans||[];
-  var ib = (masterData.ibData||{})[obIncharge]||{};
-  cbOptions.ib.service = ib.services||[];
-  cbOptions.ib.from    = ib.froms||[];
-  cbOptions.ib.tujuan  = ib.tujuans||[];
-}
-
-// ─── REFRESH FORM INCHARGE ────────────────────────────────
-function refreshAllFormIncharges(){
+// ─── REFRESH FORM INCHARGE ──────────────────────────────────────────────────
+function refreshAllFormIncharges() {
   buildCbOptions();
   refreshFormIncharge('ob');
   refreshFormIncharge('hvs');
   refreshFormIncharge('ib');
 }
-function refreshFormIncharge(t){
-  var has=!!globalIncharge;
-  document.getElementById(t+'InfoBar').style.display=has?'':'none';
-  document.getElementById(t+'WarnBar').style.display=has?'none':'';
-  document.getElementById(t+'FormGrid').style.display=has?'':'none';
-  document.getElementById(t+'ScanSection').style.display=has?'':'none';
-  document.getElementById(t+'FormActions').style.display=has?'':'none';
-  if(has){
-    document.getElementById(t+'InchargeDisplay').innerText=globalIncharge;
-  }
-  if(t==='ob') checkObForm();
-  else if(t==='hvs') checkHvsForm();
+function refreshFormIncharge(t) {
+  var has = !!globalIncharge;
+  document.getElementById(t + 'InfoBar').style.display = has ? '' : 'none';
+  document.getElementById(t + 'WarnBar').style.display = has ? 'none' : '';
+  document.getElementById(t + 'FormGrid').style.display = has ? '' : 'none';
+  document.getElementById(t + 'ScanSection').style.display = has ? '' : 'none';
+  document.getElementById(t + 'FormActions').style.display = has ? '' : 'none';
+  if (has) document.getElementById(t + 'InchargeDisplay').innerText = globalIncharge;
+  if (t === 'ob') checkObForm();
+  else if (t === 'hvs') checkHvsForm();
   else checkIbForm();
 }
 
-// ─── FORM TOGGLES ─────────────────────────────────────────
-function toggleForm(type){
-  var body=document.getElementById(type+'FormBody');
-  var icon=document.getElementById(type+'FormIcon');
-  var open=body.classList.toggle('open');
-  icon.innerText=open?'expand_less':'expand_more';
-  if(open) refreshFormIncharge(type);
+// ─── FORM TOGGLES ───────────────────────────────────────────────────────────
+function toggleForm(type) {
+  var body = document.getElementById(type + 'FormBody');
+  var icon = document.getElementById(type + 'FormIcon');
+  var open = body.classList.toggle('open');
+  icon.innerText = open ? 'expand_less' : 'expand_more';
+  if (open) refreshFormIncharge(type);
 }
 
-// ─── FORM CHECKS ──────────────────────────────────────────
-function checkObForm(){
-  var ok=globalIncharge&&document.getElementById('obService').value&&document.getElementById('obTujuan').value;
-  document.getElementById('btnSaveOb').disabled=!ok;
-  if(ok){ var tuj=document.getElementById('obTujuan').value; if(tuj&&!obScanMap[tuj]) initObTujuan(tuj); }
+// ─── FORM CHECKS ────────────────────────────────────────────────────────────
+function checkObForm() {
+  var ok = globalIncharge && document.getElementById('obService').value && document.getElementById('obTujuan').value;
+  document.getElementById('btnSaveOb').disabled = !ok;
+  if (ok) { var tuj = document.getElementById('obTujuan').value; if (tuj && !obScanMap[tuj]) initObTujuan(tuj); }
 }
-function checkHvsForm(){
-  var ok=globalIncharge&&document.getElementById('hvsService').value&&document.getElementById('hvsTujuan').value;
-  document.getElementById('btnSaveHvs').disabled=!ok;
-  if(ok){ var tuj=document.getElementById('hvsTujuan').value; if(tuj&&!hvsScanMap[tuj]) initHvsTujuan(tuj); }
+function checkHvsForm() {
+  var ok = globalIncharge && document.getElementById('hvsService').value && document.getElementById('hvsTujuan').value;
+  document.getElementById('btnSaveHvs').disabled = !ok;
+  if (ok) { var tuj = document.getElementById('hvsTujuan').value; if (tuj && !hvsScanMap[tuj]) initHvsTujuan(tuj); }
 }
-function checkIbForm(){
-  var ok=globalIncharge&&document.getElementById('ibService').value&&document.getElementById('ibFrom').value&&document.getElementById('ibTujuan').value;
-  document.getElementById('btnSaveIb').disabled=!ok;
+function checkIbForm() {
+  var ok = globalIncharge && document.getElementById('ibService').value && document.getElementById('ibFrom').value && document.getElementById('ibTujuan').value;
+  document.getElementById('btnSaveIb').disabled = !ok;
 }
 
-// ─── MULTI-TUJUAN OB/HVS ──────────────────────────────────
-function initObTujuan(tuj){
-  if(!obScanMap[tuj]) obScanMap[tuj]=[];
-  obActiveTuj=tuj;
-  renderObTabs(); renderObScanList();
-}
-function initHvsTujuan(tuj){
-  if(!hvsScanMap[tuj]) hvsScanMap[tuj]=[];
-  hvsActiveTuj=tuj;
-  renderHvsTabs(); renderHvsScanList();
-}
-function setObActiveTujuan(tuj){ initObTujuan(tuj); }
-function setHvsActiveTujuan(tuj){ initHvsTujuan(tuj); }
+// ─── MULTI-TUJUAN OB/HVS ───────────────────────────────────────────────────
+function initObTujuan(tuj) { if (!obScanMap[tuj]) obScanMap[tuj] = []; obActiveTuj = tuj; renderObTabs(); renderObScanList(); }
+function initHvsTujuan(tuj) { if (!hvsScanMap[tuj]) hvsScanMap[tuj] = []; hvsActiveTuj = tuj; renderHvsTabs(); renderHvsScanList(); }
+function setObActiveTujuan(tuj) { initObTujuan(tuj); }
+function setHvsActiveTujuan(tuj) { initHvsTujuan(tuj); }
 
-function addMultiTujuan(type){
-  pendingTujuanType=type;
-  document.getElementById('newTujuanInput').value='';
-  var tujuans = cbOptions[type].tujuan||[];
-  renderNewTujuanOptions(tujuans,'');
+function addMultiTujuan(type) {
+  pendingTujuanType = type;
+  document.getElementById('newTujuanInput').value = '';
+  renderNewTujuanOptions(cbOptions[type].tujuan || [], '');
   openModal('tujuanModal');
-  setTimeout(function(){ document.getElementById('newTujuanInput').focus(); },100);
+  setTimeout(function() { document.getElementById('newTujuanInput').focus(); }, 100);
 }
-function filterNewTujuan(){
-  var q=document.getElementById('newTujuanInput').value;
-  var opts=cbOptions[pendingTujuanType].tujuan||[];
-  renderNewTujuanOptions(opts,q);
+function filterNewTujuan() {
+  var q = document.getElementById('newTujuanInput').value;
+  renderNewTujuanOptions(cbOptions[pendingTujuanType].tujuan || [], q);
 }
-function renderNewTujuanOptions(opts,q){
-  var list=document.getElementById('newTujuanList');
-  var filtered=opts.filter(function(v){ return v.toLowerCase().includes(q.toLowerCase()); });
-  list.innerHTML=filtered.map(function(v){
-    return '<div class="cb-opt" onmousedown="selectNewTujuan(\''+v+'\')">'+v+'</div>';
-  }).join('')||'<div class="cb-opt empty">Tidak ada</div>';
+function renderNewTujuanOptions(opts, q) {
+  var list = document.getElementById('newTujuanList');
+  var filtered = opts.filter(function(v) { return v.toLowerCase().includes(q.toLowerCase()); });
+  list.innerHTML = filtered.map(function(v) {
+    return '<div class="cb-opt" onmousedown="selectNewTujuan(\'' + v + '\')">' + v + '</div>';
+  }).join('') || '<div class="cb-opt empty">Tidak ada</div>';
 }
-function openNewTujuanDrop(){ document.getElementById('newTujuanList').classList.add('open'); }
-function closeNewTujuanDelay(){ setTimeout(function(){ document.getElementById('newTujuanList').classList.remove('open'); },200); }
-function selectNewTujuan(v){ document.getElementById('newTujuanInput').value=v; }
-function confirmAddTujuan(){
-  var tuj=document.getElementById('newTujuanInput').value.trim();
-  if(!tuj){ toast('Masukkan tujuan terlebih dahulu','error'); return; }
+function openNewTujuanDrop() { document.getElementById('newTujuanList').classList.add('open'); }
+function closeNewTujuanDelay() { setTimeout(function() { document.getElementById('newTujuanList').classList.remove('open'); }, 200); }
+function selectNewTujuan(v) { document.getElementById('newTujuanInput').value = v; }
+function confirmAddTujuan() {
+  var tuj = document.getElementById('newTujuanInput').value.trim();
+  if (!tuj) { toast('Masukkan tujuan terlebih dahulu', 'error'); return; }
   closeModal('tujuanModal');
-  if(pendingTujuanType==='ob'){ initObTujuan(tuj); document.getElementById('obTujuan').value=tuj; checkObForm(); }
-  else if(pendingTujuanType==='hvs'){ initHvsTujuan(tuj); document.getElementById('hvsTujuan').value=tuj; checkHvsForm(); }
+  if (pendingTujuanType === 'ob') { initObTujuan(tuj); document.getElementById('obTujuan').value = tuj; checkObForm(); }
+  else if (pendingTujuanType === 'hvs') { initHvsTujuan(tuj); document.getElementById('hvsTujuan').value = tuj; checkHvsForm(); }
 }
 
 // OB tabs
-function renderObTabs(){
-  var tabs=document.getElementById('obTujuanTabs');
-  var keys=Object.keys(obScanMap);
-  if(!keys.length){ tabs.innerHTML=''; return; }
-  tabs.innerHTML=keys.map(function(t){
-    var cnt=obScanMap[t].length;
-    return '<span class="scan-tujuan-tab'+(t===obActiveTuj?' active':'')+'" onclick="switchObTuj(\''+t+'\')">'
-      +t+' <span class="cnt">'+cnt+'</span>'
-      +'<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeObTuj(\''+t+'\')">cancel</span>'
-      +'</span>';
+function renderObTabs() {
+  var tabs = document.getElementById('obTujuanTabs');
+  var keys = Object.keys(obScanMap);
+  if (!keys.length) { tabs.innerHTML = ''; return; }
+  tabs.innerHTML = keys.map(function(t) {
+    var cnt = obScanMap[t].length;
+    return '<span class="scan-tujuan-tab' + (t === obActiveTuj ? ' active' : '') + '" onclick="switchObTuj(\'' + t + '\')">'
+      + t + ' <span class="cnt">' + cnt + '</span>'
+      + '<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeObTuj(\'' + t + '\')">cancel</span>'
+      + '</span>';
   }).join('');
   updateObTotalLabel();
 }
-function switchObTuj(t){ obActiveTuj=t; renderObTabs(); renderObScanList(); }
-function removeObTuj(t){
-  delete obScanMap[t];
-  var keys=Object.keys(obScanMap);
-  obActiveTuj=keys.length?keys[0]:'';
-  renderObTabs(); renderObScanList(); checkObForm();
-}
-function renderObScanList(){
-  var list=document.getElementById('obScanList');
-  if(!obActiveTuj||!obScanMap[obActiveTuj]){ list.innerHTML='<div class="scan-empty">Belum ada AWB</div>'; return; }
-  var arr=obScanMap[obActiveTuj];
-  if(!arr.length){ list.innerHTML='<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
-  list.innerHTML=arr.map(function(awb,i){
-    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span><span class="scan-item-tuj">'+obActiveTuj+'</span>'
-      +'<span class="material-icons-round scan-item-del" onclick="removeObAwb('+i+')">delete</span></div>';
+function switchObTuj(t) { obActiveTuj = t; renderObTabs(); renderObScanList(); }
+function removeObTuj(t) { delete obScanMap[t]; var keys = Object.keys(obScanMap); obActiveTuj = keys.length ? keys[0] : ''; renderObTabs(); renderObScanList(); checkObForm(); }
+function renderObScanList() {
+  var list = document.getElementById('obScanList');
+  if (!obActiveTuj || !obScanMap[obActiveTuj]) { list.innerHTML = '<div class="scan-empty">Belum ada AWB</div>'; return; }
+  var arr = obScanMap[obActiveTuj];
+  if (!arr.length) { list.innerHTML = '<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
+  list.innerHTML = arr.map(function(awb, i) {
+    return '<div class="scan-item"><span class="scan-item-awb">' + awb + '</span><span class="scan-item-tuj">' + obActiveTuj + '</span>'
+      + '<span class="material-icons-round scan-item-del" onclick="removeObAwb(' + i + ')">delete</span></div>';
   }).join('');
 }
-function removeObAwb(i){ obScanMap[obActiveTuj].splice(i,1); renderObTabs(); renderObScanList(); }
-function updateObTotalLabel(){
-  var total=Object.values(obScanMap).reduce(function(s,a){ return s+a.length; },0);
-  document.getElementById('obTotalScanLabel').innerText=total+' AWB total';
+function removeObAwb(i) { obScanMap[obActiveTuj].splice(i, 1); renderObTabs(); renderObScanList(); }
+function updateObTotalLabel() {
+  var total = Object.values(obScanMap).reduce(function(s, a) { return s + a.length; }, 0);
+  document.getElementById('obTotalScanLabel').innerText = total + ' AWB total';
 }
 
 // HVS tabs
-function renderHvsTabs(){
-  var tabs=document.getElementById('hvsTujuanTabs');
-  var keys=Object.keys(hvsScanMap);
-  if(!keys.length){ tabs.innerHTML=''; return; }
-  tabs.innerHTML=keys.map(function(t){
-    var cnt=hvsScanMap[t].length;
-    return '<span class="scan-tujuan-tab'+(t===hvsActiveTuj?' active':'')+'" onclick="switchHvsTuj(\''+t+'\')">'
-      +t+' <span class="cnt">'+cnt+'</span>'
-      +'<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeHvsTuj(\''+t+'\')">cancel</span>'
-      +'</span>';
+function renderHvsTabs() {
+  var tabs = document.getElementById('hvsTujuanTabs');
+  var keys = Object.keys(hvsScanMap);
+  if (!keys.length) { tabs.innerHTML = ''; return; }
+  tabs.innerHTML = keys.map(function(t) {
+    var cnt = hvsScanMap[t].length;
+    return '<span class="scan-tujuan-tab' + (t === hvsActiveTuj ? ' active' : '') + '" onclick="switchHvsTuj(\'' + t + '\')">'
+      + t + ' <span class="cnt">' + cnt + '</span>'
+      + '<span class="rm-tuj material-icons-round" onclick="event.stopPropagation();removeHvsTuj(\'' + t + '\')">cancel</span>'
+      + '</span>';
   }).join('');
   updateHvsTotalLabel();
 }
-function switchHvsTuj(t){ hvsActiveTuj=t; renderHvsTabs(); renderHvsScanList(); }
-function removeHvsTuj(t){
-  delete hvsScanMap[t];
-  var keys=Object.keys(hvsScanMap);
-  hvsActiveTuj=keys.length?keys[0]:'';
-  renderHvsTabs(); renderHvsScanList(); checkHvsForm();
-}
-function renderHvsScanList(){
-  var list=document.getElementById('hvsScanList');
-  if(!hvsActiveTuj||!hvsScanMap[hvsActiveTuj]){ list.innerHTML='<div class="scan-empty">Belum ada AWB</div>'; return; }
-  var arr=hvsScanMap[hvsActiveTuj];
-  if(!arr.length){ list.innerHTML='<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
-  list.innerHTML=arr.map(function(awb,i){
-    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span><span class="scan-item-tuj">'+hvsActiveTuj+'</span>'
-      +'<span class="material-icons-round scan-item-del" onclick="removeHvsAwb('+i+')">delete</span></div>';
+function switchHvsTuj(t) { hvsActiveTuj = t; renderHvsTabs(); renderHvsScanList(); }
+function removeHvsTuj(t) { delete hvsScanMap[t]; var keys = Object.keys(hvsScanMap); hvsActiveTuj = keys.length ? keys[0] : ''; renderHvsTabs(); renderHvsScanList(); checkHvsForm(); }
+function renderHvsScanList() {
+  var list = document.getElementById('hvsScanList');
+  if (!hvsActiveTuj || !hvsScanMap[hvsActiveTuj]) { list.innerHTML = '<div class="scan-empty">Belum ada AWB</div>'; return; }
+  var arr = hvsScanMap[hvsActiveTuj];
+  if (!arr.length) { list.innerHTML = '<div class="scan-empty">Belum ada AWB untuk tujuan ini</div>'; return; }
+  list.innerHTML = arr.map(function(awb, i) {
+    return '<div class="scan-item"><span class="scan-item-awb">' + awb + '</span><span class="scan-item-tuj">' + hvsActiveTuj + '</span>'
+      + '<span class="material-icons-round scan-item-del" onclick="removeHvsAwb(' + i + ')">delete</span></div>';
   }).join('');
 }
-function removeHvsAwb(i){ hvsScanMap[hvsActiveTuj].splice(i,1); renderHvsTabs(); renderHvsScanList(); }
-function updateHvsTotalLabel(){
-  var total=Object.values(hvsScanMap).reduce(function(s,a){ return s+a.length; },0);
-  document.getElementById('hvsTotalScanLabel').innerText=total+' AWB total';
+function removeHvsAwb(i) { hvsScanMap[hvsActiveTuj].splice(i, 1); renderHvsTabs(); renderHvsScanList(); }
+function updateHvsTotalLabel() {
+  var total = Object.values(hvsScanMap).reduce(function(s, a) { return s + a.length; }, 0);
+  document.getElementById('hvsTotalScanLabel').innerText = total + ' AWB total';
 }
 
 // IB scan list
-function renderIbScanList(){
-  var list=document.getElementById('ibScanList');
-  var total=ibScanned.length;
-  document.getElementById('ibTotalScanLabel').innerText=total+' AWB total';
-  if(!total){ list.innerHTML='<div class="scan-empty">Belum ada AWB di-scan</div>'; return; }
-  list.innerHTML=ibScanned.map(function(awb,i){
-    return '<div class="scan-item"><span class="scan-item-awb">'+awb+'</span>'
-      +'<span class="material-icons-round scan-item-del" onclick="ibScanned.splice('+i+',1);renderIbScanList()">delete</span></div>';
+function renderIbScanList() {
+  var list = document.getElementById('ibScanList');
+  var total = ibScanned.length;
+  document.getElementById('ibTotalScanLabel').innerText = total + ' AWB total';
+  if (!total) { list.innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>'; return; }
+  list.innerHTML = ibScanned.map(function(awb, i) {
+    return '<div class="scan-item"><span class="scan-item-awb">' + awb + '</span>'
+      + '<span class="material-icons-round scan-item-del" onclick="ibScanned.splice(' + i + ',1);renderIbScanList()">delete</span></div>';
   }).join('');
 }
 
-// ─── SCAN INPUT HANDLER ───────────────────────────────────
-function handleScan(e, type){
-  if(e.key!=='Enter') return;
-  var input=document.getElementById(type+'ScanInput');
-  var val=input.value.trim(); if(!val) return;
-  if(type==='ob'){
-    if(!obActiveTuj){ toast('Pilih tujuan dahulu','error'); return; }
-    if(!obScanMap[obActiveTuj]) obScanMap[obActiveTuj]=[];
-    if(!obScanMap[obActiveTuj].includes(val)) obScanMap[obActiveTuj].unshift(val);
+// ─── SCAN INPUT ─────────────────────────────────────────────────────────────
+function handleScan(e, type) {
+  if (e.key !== 'Enter') return;
+  var input = document.getElementById(type + 'ScanInput');
+  var val = input.value.trim(); if (!val) return;
+  if (type === 'ob') {
+    if (!obActiveTuj) { toast('Pilih tujuan dahulu', 'error'); return; }
+    if (!obScanMap[obActiveTuj]) obScanMap[obActiveTuj] = [];
+    if (!obScanMap[obActiveTuj].includes(val)) obScanMap[obActiveTuj].unshift(val);
     renderObTabs(); renderObScanList();
-  } else if(type==='hvs'){
-    if(!hvsActiveTuj){ toast('Pilih tujuan dahulu','error'); return; }
-    if(!hvsScanMap[hvsActiveTuj]) hvsScanMap[hvsActiveTuj]=[];
-    if(!hvsScanMap[hvsActiveTuj].includes(val)) hvsScanMap[hvsActiveTuj].unshift(val);
+  } else if (type === 'hvs') {
+    if (!hvsActiveTuj) { toast('Pilih tujuan dahulu', 'error'); return; }
+    if (!hvsScanMap[hvsActiveTuj]) hvsScanMap[hvsActiveTuj] = [];
+    if (!hvsScanMap[hvsActiveTuj].includes(val)) hvsScanMap[hvsActiveTuj].unshift(val);
     renderHvsTabs(); renderHvsScanList();
   } else {
-    if(!ibScanned.includes(val)) ibScanned.unshift(val);
+    if (!ibScanned.includes(val)) ibScanned.unshift(val);
     renderIbScanList();
   }
-  input.value='';
+  input.value = '';
 }
 
-// ─── SAVE OB ──────────────────────────────────────────────
-function saveOb(){
-  var service=document.getElementById('obService').value;
-  var tujuan=document.getElementById('obTujuan').value;
-  if(!globalIncharge||!service||!tujuan) return;
-
-  // Flatten all scanned AWBs with their tujuan
-  var entries=[];
-  Object.keys(obScanMap).forEach(function(t){
-    obScanMap[t].forEach(function(awb){ entries.push({awb:awb,tujuan:t}); });
-  });
-  var awbList=entries.map(function(e){ return e.awb; });
-
-  // Use primary tujuan from form; send all as flat list
+// ─── SAVE OB ────────────────────────────────────────────────────────────────
+function saveOb() {
+  var service = document.getElementById('obService').value;
+  var tujuan = document.getElementById('obTujuan').value;
+  if (!globalIncharge || !service || !tujuan) return;
+  var awbList = [];
+  Object.keys(obScanMap).forEach(function(t) { obScanMap[t].forEach(function(awb) { awbList.push(awb); }); });
   showLoading('Menyimpan OB...');
-  gasPost('saveOb',{incharge:globalIncharge,service:service,tujuan:tujuan,awbList:awbList})
-    .then(function(res){
+  gasPost('saveOb', { incharge: globalIncharge, service: service, tujuan: tujuan, awbList: awbList })
+    .then(function(res) {
       hideLoading();
-      if(res.error){ toast('Gagal: '+res.error,'error'); return; }
-      toast('✅ OB disimpan! NO TRACK: '+res.noTrack,'success');
+      if (res.error) { toast('Gagal: ' + res.error, 'error'); return; }
+      toast('✅ OB disimpan! NO TRACK: ' + res.noTrack, 'success');
       resetObForm();
-      // Partial reload: only OB data
-      refreshObOnly();
-    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+      gasGet('getObList').then(function(r) { obData = r.list || []; renderObTable(); updateObStats(); }).catch(function() {});
+    }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
-function refreshObOnly(){
-  gasGet('getObList').then(function(res){
-    obData=res.list||[]; renderObTable(); updateObStats();
-    // Also refresh manifest raw
-    loadScanRaw();
-  }).catch(function(){});
-}
-
-function resetObForm(){
-  document.getElementById('obService').value='';
-  document.getElementById('obTujuan').value='';
-  obScanMap={}; obActiveTuj='';
-  document.getElementById('obTujuanTabs').innerHTML='';
-  document.getElementById('obScanList').innerHTML='<div class="scan-empty">Belum ada AWB di-scan</div>';
-  document.getElementById('obTotalScanLabel').innerText='0 AWB total';
+function resetObForm() {
+  document.getElementById('obService').value = '';
+  document.getElementById('obTujuan').value = '';
+  obScanMap = {}; obActiveTuj = '';
+  document.getElementById('obTujuanTabs').innerHTML = '';
+  document.getElementById('obScanList').innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>';
+  document.getElementById('obTotalScanLabel').innerText = '0 AWB total';
   checkObForm();
   document.getElementById('obFormBody').classList.remove('open');
-  document.getElementById('obFormIcon').innerText='expand_more';
+  document.getElementById('obFormIcon').innerText = 'expand_more';
 }
 
-// ─── SAVE HVS ─────────────────────────────────────────────
-function saveHvs(){
-  var service=document.getElementById('hvsService').value;
-  var tujuan=document.getElementById('hvsTujuan').value;
-  if(!globalIncharge||!service||!tujuan) return;
-  var awbList=[];
-  Object.keys(hvsScanMap).forEach(function(t){ hvsScanMap[t].forEach(function(awb){ awbList.push(awb); }); });
+// ─── SAVE HVS ───────────────────────────────────────────────────────────────
+function saveHvs() {
+  var service = document.getElementById('hvsService').value;
+  var tujuan = document.getElementById('hvsTujuan').value;
+  if (!globalIncharge || !service || !tujuan) return;
+  var awbList = [];
+  Object.keys(hvsScanMap).forEach(function(t) { hvsScanMap[t].forEach(function(awb) { awbList.push(awb); }); });
   showLoading('Menyimpan HVS...');
-  gasPost('saveHvs',{incharge:globalIncharge,service:service,tujuan:tujuan,awbList:awbList})
-    .then(function(res){
+  gasPost('saveHvs', { incharge: globalIncharge, service: service, tujuan: tujuan, awbList: awbList })
+    .then(function(res) {
       hideLoading();
-      if(res.error){ toast('Gagal: '+res.error,'error'); return; }
-      toast('✅ HVS disimpan! NO TRACK: '+res.noTrack,'success');
+      if (res.error) { toast('Gagal: ' + res.error, 'error'); return; }
+      toast('✅ HVS disimpan! NO TRACK: ' + res.noTrack, 'success');
       resetHvsForm();
-      refreshHvsOnly();
-    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+      gasGet('getHvsList').then(function(r) { hvsData = r.list || []; renderHvsTable(); updateHvsStats(); }).catch(function() {});
+    }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
-function refreshHvsOnly(){
-  gasGet('getHvsList').then(function(res){
-    hvsData=res.list||[]; renderHvsTable(); updateHvsStats(); loadScanRaw();
-  }).catch(function(){});
-}
-function resetHvsForm(){
-  document.getElementById('hvsService').value='';
-  document.getElementById('hvsTujuan').value='';
-  hvsScanMap={}; hvsActiveTuj='';
-  document.getElementById('hvsTujuanTabs').innerHTML='';
-  document.getElementById('hvsScanList').innerHTML='<div class="scan-empty">Belum ada AWB di-scan</div>';
-  document.getElementById('hvsTotalScanLabel').innerText='0 AWB total';
+function resetHvsForm() {
+  document.getElementById('hvsService').value = '';
+  document.getElementById('hvsTujuan').value = '';
+  hvsScanMap = {}; hvsActiveTuj = '';
+  document.getElementById('hvsTujuanTabs').innerHTML = '';
+  document.getElementById('hvsScanList').innerHTML = '<div class="scan-empty">Belum ada AWB di-scan</div>';
+  document.getElementById('hvsTotalScanLabel').innerText = '0 AWB total';
   checkHvsForm();
   document.getElementById('hvsFormBody').classList.remove('open');
-  document.getElementById('hvsFormIcon').innerText='expand_more';
+  document.getElementById('hvsFormIcon').innerText = 'expand_more';
 }
 
-// ─── SAVE IB ──────────────────────────────────────────────
-function saveIb(){
-  var service=document.getElementById('ibService').value;
-  var from=document.getElementById('ibFrom').value;
-  var tujuan=document.getElementById('ibTujuan').value;
-  if(!globalIncharge||!service||!from||!tujuan) return;
+// ─── SAVE IB ────────────────────────────────────────────────────────────────
+function saveIb() {
+  var service = document.getElementById('ibService').value;
+  var from = document.getElementById('ibFrom').value;
+  var tujuan = document.getElementById('ibTujuan').value;
+  if (!globalIncharge || !service || !from || !tujuan) return;
   showLoading('Menyimpan IB...');
-  gasPost('saveIb',{incharge:globalIncharge,service:service,from:from,tujuan:tujuan,awbList:ibScanned.slice()})
-    .then(function(res){
+  gasPost('saveIb', { incharge: globalIncharge, service: service, from: from, tujuan: tujuan, awbList: ibScanned.slice() })
+    .then(function(res) {
       hideLoading();
-      if(res.error){ toast('Gagal: '+res.error,'error'); return; }
-      toast('✅ IB disimpan! NO TRACK: '+res.noTrack,'success');
+      if (res.error) { toast('Gagal: ' + res.error, 'error'); return; }
+      toast('✅ IB disimpan! NO TRACK: ' + res.noTrack, 'success');
       resetIbForm();
-      refreshIbOnly();
-    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+      gasGet('getIbList').then(function(r) { ibData = r.list || []; renderIbTable(); updateIbStats(); }).catch(function() {});
+    }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
-function refreshIbOnly(){
-  gasGet('getIbList').then(function(res){
-    ibData=res.list||[]; renderIbTable(); updateIbStats();
-  }).catch(function(){});
-}
-function resetIbForm(){
-  ['ibService','ibFrom','ibTujuan'].forEach(function(id){ document.getElementById(id).value=''; });
-  ibScanned=[]; renderIbScanList(); checkIbForm();
+function resetIbForm() {
+  ['ibService', 'ibFrom', 'ibTujuan'].forEach(function(id) { document.getElementById(id).value = ''; });
+  ibScanned = []; renderIbScanList(); checkIbForm();
   document.getElementById('ibFormBody').classList.remove('open');
-  document.getElementById('ibFormIcon').innerText='expand_more';
+  document.getElementById('ibFormIcon').innerText = 'expand_more';
 }
 
-// ─── INIT ─────────────────────────────────────────────────
+// ─── INIT ───────────────────────────────────────────────────────────────────
 window.onload = function() { reloadAll(); };
 
 function reloadAll() {
   showLoading('Memuat data...');
-  // Sequential calls — GAS lebih stabil sequential vs parallel
   gasGet('getMasterData')
     .then(function(d) {
       if (d.error) throw new Error(d.error);
@@ -1128,7 +1012,6 @@ function reloadAll() {
       buildCbOptions();
       renderObTable(); renderHvsTable(); renderIbTable();
       updateObStats(); updateHvsStats(); updateIbStats();
-      buildManifestFromScan();
       showLoading('Memuat OB & IB view...');
       return gasGet('getOBIB');
     })
@@ -1141,423 +1024,352 @@ function reloadAll() {
     .catch(function(e) {
       hideLoading();
       toast('❌ ' + e.message, 'error');
-      console.error('reloadAll error:', e);
       showNetworkError(e.message);
     });
 }
 
 function showNetworkError(msg) {
-  var pages = ['ob','hvs','ib'];
   var html = '<div style="background:#FFEBEE;border:1.5px solid #EF9A9A;border-radius:9px;padding:16px 18px;margin-bottom:14px;font-size:13px;color:#C62828">'
     + '<strong>❌ Gagal terhubung ke Google Apps Script</strong><br><br>'
     + '<b>Kemungkinan penyebab:</b><ul style="margin:8px 0 0 16px;line-height:1.8">'
-    + '<li>GAS belum di-deploy atau deployment belum dipublish ulang setelah edit</li>'
+    + '<li>GAS belum di-deploy atau belum dipublish ulang setelah edit</li>'
     + '<li>Setting akses GAS bukan <b>"Anyone"</b></li>'
-    + '<li>URL GAS salah atau expired</li>'
-    + '<li>Browser memblokir cross-origin request</li>'
     + '</ul><br>'
-    + '<b>Solusi:</b><ul style="margin:0 0 0 16px;line-height:1.8">'
-    + '<li>Buka GAS → Deploy → Manage Deployments → pastikan <b>Execute as: Me</b> dan <b>Who has access: Anyone</b></li>'
-    + '<li>Klik <b>New Deployment</b> atau <b>Edit</b> lalu Save jika ada perubahan code</li>'
-    + '<li>Coba buka URL GAS langsung di browser: <a href="' + GAS_URL + '?action=getMasterData" target="_blank" style="color:var(--blue2)">Test URL</a></li>'
-    + '</ul>'
-    + '<br><small style="color:#888">Error: ' + msg + '</small>'
-    + '</div>';
+    + '<b>Solusi:</b> Buka GAS → Deploy → Manage Deployments → pastikan <b>Execute as: Me</b> dan <b>Who has access: Anyone</b>'
+    + '<br><br><small style="color:#888">Error: ' + msg + '</small></div>';
   document.getElementById('page-ob').insertAdjacentHTML('afterbegin', html);
 }
 
-// ─── LOAD SCAN RAW for Manifest ───────────────────────────
-function loadScanRaw(){
-  // Tidak ada endpoint getAwbRaw di GAS — skip, langsung render dari data lokal
+// ─── ✅ FIX: loadScanRaw sekarang fungsi valid yang benar-benar tertutup ────
+function loadScanRaw() {
   buildManifestFromScan();
-  return; // dummy — block di bawah tidak dipakai
-  if(false) {
 }
 
-// ─── MANIFEST RENDER ──────────────────────────────────────
-// Manifest structure from sheet:
-// Row1: A:P = SUKAJADI, Q:U = METRO
-// Row2: A:H=SAMEDAY, I:P=NEXTDAY, Q:R=SAMEDAY, T:U=NEXTDAY
-// Row3: A=DATE, B=GTW JAKARTA, C=GTW BAWEN, D=CIANJUR, E=GTW MAJALENGKA, F=TASIK, G=GARUT, H=PH METRO(BDO-02)
-//       I=DATE, J=GTW JAKARTA, K=GTW BAWEN, L=CIANJUR, M=GTW MAJALENGKA, N=TASIK, O=GARUT, P=PH METRO(BDO-02)
-//       Q=GTW JAKARTA, R=LINEHAUL, S=PH SUKAJADI(BDO-01), T=GTW JAKARTA, U=PH SUKAJADI(BDO-01)
-// Row4+: Data from SCAN_OB col D (AWB) grouped by tujuan
-
-// Tujuan mapping to manifest columns:
-var MANIFEST_MAP = {
-  // OB (SUKAJADI SAMEDAY) columns B-H → tujuan keywords
-  'GTW JAKARTA':       {section:'SUKAJADI',sub:'SAMEDAY', col:'B'},
-  'GTW BAWEN':         {section:'SUKAJADI',sub:'SAMEDAY', col:'C'},
-  'CIANJUR':           {section:'SUKAJADI',sub:'SAMEDAY', col:'D'},
-  'GTW MAJALENGKA':    {section:'SUKAJADI',sub:'SAMEDAY', col:'E'},
-  'TASIK':             {section:'SUKAJADI',sub:'SAMEDAY', col:'F'},
-  'GARUT':             {section:'SUKAJADI',sub:'SAMEDAY', col:'G'},
-  'PH METRO (BDO-02)': {section:'SUKAJADI',sub:'SAMEDAY', col:'H'},
-};
-
-function renderManifestFromData(){
-  // Build a tujuan → AWB list map from obData and scan detail
-  // Since we don't have SCAN_OB detail here, we build from obData showing tujuan → total
-  // We call getManifest to get actual sheet data
-  gasGet('getManifest').then(function(r){
-    var headers=r.headers||[];
-    var rows=r.rows||[];
-
-    if(!headers.length && !rows.length){
-      // No MANIFEST sheet — build from OB/HVS scan detail
-      buildManifestFromScan();
-      return;
-    }
-    // Render raw manifest sheet
-    renderManifestRaw(headers, rows);
-  }).catch(function(){
-    buildManifestFromScan();
-  });
-}
-
-function buildManifestFromScan(){
-  // Group obData and hvsData by tujuan
-  var search=document.getElementById('manifestSearch')?document.getElementById('manifestSearch').value.toLowerCase():'';
-  var tujuanMap={};
-
-  function processData(data, type){
-    data.forEach(function(d){
-      var t=d.tujuan||'—';
-      if(!tujuanMap[t]) tujuanMap[t]={ob:[],hvs:[],total:0};
-      if(type==='ob') tujuanMap[t].ob.push(d);
+// ─── MANIFEST ───────────────────────────────────────────────────────────────
+function buildManifestFromScan() {
+  var search = (document.getElementById('manifestSearch') ? document.getElementById('manifestSearch').value : '').toLowerCase();
+  var tujuanMap = {};
+  function processData(data, type) {
+    data.forEach(function(d) {
+      var t = d.tujuan || '—';
+      if (!tujuanMap[t]) tujuanMap[t] = { ob: [], hvs: [], total: 0 };
+      if (type === 'ob') tujuanMap[t].ob.push(d);
       else tujuanMap[t].hvs.push(d);
-      tujuanMap[t].total+=parseInt(d.total_awb)||0;
+      tujuanMap[t].total += parseInt(d.total_awb) || 0;
     });
   }
-  processData(obData,'ob');
-  processData(hvsData,'hvs');
-
-  var el=document.getElementById('manifestContent');
-  var tujuans=Object.keys(tujuanMap).sort();
-  if(!tujuans.length){ el.innerHTML='<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data manifest</div>'; return; }
-
-  var html='';
-  tujuans.forEach(function(t){
-    if(search && !t.toLowerCase().includes(search)) return;
-    var d=tujuanMap[t];
-    html+='<div class="manifest-section">';
-    html+='<div class="manifest-section-title"><span class="material-icons-round" style="font-size:15px">place</span>'+t+' <span style="font-weight:400;color:var(--gray5)">('+d.total+' AWB)</span></div>';
-
-    // OB table
-    if(d.ob.length){
-      html+='<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND BDO</div>';
-      html+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
-      html+='<thead><tr><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left;letter-spacing:.5px">NO TRACK</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th><th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th></tr></thead><tbody>';
-      d.ob.forEach(function(r){
-        html+='<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--blue2);cursor:pointer" onclick="switchPage(\'ob\');openDetailModal(\'ob\',\''+r.no_track+'\')">'+r.no_track+'</span></td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.incharge+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.service+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">'+r.total_awb+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+statusBadge(r.status)+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">'+r.created_date+'</td></tr>';
+  processData(obData, 'ob');
+  processData(hvsData, 'hvs');
+  var el = document.getElementById('manifestContent');
+  var tujuans = Object.keys(tujuanMap).sort();
+  if (!tujuans.length) { el.innerHTML = '<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data manifest</div>'; return; }
+  var html = '';
+  tujuans.forEach(function(t) {
+    if (search && !t.toLowerCase().includes(search)) return;
+    var d = tujuanMap[t];
+    html += '<div class="manifest-section">';
+    html += '<div class="manifest-section-title"><span class="material-icons-round" style="font-size:15px">place</span>' + t + ' <span style="font-weight:400;color:var(--gray5)">(' + d.total + ' AWB)</span></div>';
+    if (d.ob.length) {
+      html += '<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND BDO</div>';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">NO TRACK</th>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th>'
+        + '<th style="background:var(--blue2);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th>'
+        + '</tr></thead><tbody>';
+      d.ob.forEach(function(r) {
+        html += '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--blue2);cursor:pointer" onclick="switchPage(\'ob\');openDetailModal(\'ob\',\'' + escQ(r.no_track) + '\')">' + r.no_track + '</span></td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.incharge + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.service + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">' + r.total_awb + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + statusBadge(r.status) + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">' + r.created_date + '</td></tr>';
       });
-      html+='</tbody></table></div>';
+      html += '</tbody></table></div>';
     }
-    // HVS table
-    if(d.hvs.length){
-      html+='<div><div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND HVS</div>';
-      html+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
-      html+='<thead><tr><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left;letter-spacing:.5px">NO TRACK</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th><th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th></tr></thead><tbody>';
-      d.hvs.forEach(function(r){
-        html+='<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--purple);cursor:pointer" onclick="switchPage(\'hvs\');openDetailModal(\'hvs\',\''+r.no_track+'\')">'+r.no_track+'</span></td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.incharge+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+r.service+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">'+r.total_awb+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">'+statusBadge(r.status)+'</td>'
-          +'<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">'+r.created_date+'</td></tr>';
+    if (d.hvs.length) {
+      html += '<div><div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OUTBOUND HVS</div>';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">NO TRACK</th>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">INCHARGE</th>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">SERVICE</th>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:center">TOTAL AWB</th>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">STATUS</th>'
+        + '<th style="background:var(--purple);color:#fff;padding:5px 10px;font-size:10px;font-weight:700;text-align:left">DATE</th>'
+        + '</tr></thead><tbody>';
+      d.hvs.forEach(function(r) {
+        html += '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-family:var(--mono);font-size:11px"><span style="color:var(--purple);cursor:pointer" onclick="switchPage(\'hvs\');openDetailModal(\'hvs\',\'' + escQ(r.no_track) + '\')">' + r.no_track + '</span></td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.incharge + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + r.service + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);text-align:center;font-weight:700">' + r.total_awb + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2)">' + statusBadge(r.status) + '</td>'
+          + '<td style="padding:6px 10px;border-bottom:1px solid var(--gray2);font-size:11px;color:var(--gray6)">' + r.created_date + '</td></tr>';
       });
-      html+='</tbody></table></div>';
+      html += '</tbody></table></div>';
     }
-    html+='</div>';
+    html += '</div>';
   });
-
-  el.innerHTML=html||'<div class="empty-state"><span class="material-icons-round">search_off</span>Tidak ada hasil pencarian</div>';
+  el.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">search_off</span>Tidak ada hasil</div>';
 }
 
-function renderManifestRaw(headers, rows){
-  var el=document.getElementById('manifestContent');
-  if(!headers.length){ buildManifestFromScan(); return; }
-  var search=(document.getElementById('manifestSearch').value||'').toLowerCase();
-  var filtered=rows.filter(function(r){ return !search||r.join(' ').toLowerCase().includes(search); });
-  var html='<div class="table-wrap"><table><thead><tr>'+headers.map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr></thead><tbody>';
-  html+=filtered.map(function(r){ return '<tr>'+r.map(function(c){ return '<td style="font-size:12px">'+c+'</td>'; }).join('')+'</tr>'; }).join('');
-  html+='</tbody></table></div>';
-  el.innerHTML=html||'<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
-}
-
-function renderManifest(){
-  // Re-render based on current data
-  buildManifestFromScan();
-}
-function reloadManifest(){
+function renderManifest() { buildManifestFromScan(); }
+function reloadManifest() {
   showLoading('Memuat manifest...');
-  Promise.all([gasGet('getObList'),gasGet('getHvsList')]).then(function(res){
-    obData=res[0].list||[];
-    hvsData=res[1].list||[];
+  Promise.all([gasGet('getObList'), gasGet('getHvsList')]).then(function(res) {
+    obData = res[0].list || [];
+    hvsData = res[1].list || [];
     updateObStats(); updateHvsStats();
     renderObTable(); renderHvsTable();
     hideLoading();
     buildManifestFromScan();
-  }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+  }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
 
-// ─── OB&IB TABLE ──────────────────────────────────────────
-function renderObibTable(headers, rows, filter){
-  var data=rows;
-  if(filter){ var v=filter.toLowerCase(); data=data.filter(function(r){ return r.join(' ').toLowerCase().includes(v); }); }
-  var wrap=document.getElementById('obibTableWrap');
-  if(!headers.length){ wrap.innerHTML='<div class="empty-state"><span class="material-icons-round">table_view</span>Sheet OB&IB masih kosong atau belum ada data</div>'; return; }
-  var html='<table><thead><tr>'+headers.map(function(h){ return '<th>'+(h||'')+'</th>'; }).join('')+'</tr></thead><tbody>';
-  html+=data.map(function(r){ return '<tr>'+r.map(function(c){ return '<td style="font-size:12px">'+(c||'')+'</td>'; }).join('')+'</tr>'; }).join('');
-  html+='</tbody></table>';
-  wrap.innerHTML=html||'<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
+// ─── OB&IB TABLE ────────────────────────────────────────────────────────────
+function renderObibTable(headers, rows, filter) {
+  var data = rows;
+  if (filter) { var v = filter.toLowerCase(); data = data.filter(function(r) { return r.join(' ').toLowerCase().includes(v); }); }
+  var wrap = document.getElementById('obibTableWrap');
+  if (!headers.length) { wrap.innerHTML = '<div class="empty-state"><span class="material-icons-round">table_view</span>Sheet OB&IB masih kosong</div>'; return; }
+  var html = '<table><thead><tr>' + headers.map(function(h) { return '<th>' + (h || '') + '</th>'; }).join('') + '</tr></thead><tbody>';
+  html += data.map(function(r) { return '<tr>' + r.map(function(c) { return '<td style="font-size:12px">' + (c || '') + '</td>'; }).join('') + '</tr>'; }).join('');
+  html += '</tbody></table>';
+  wrap.innerHTML = html || '<div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div>';
 }
-function filterObib(){ renderObibTable(obibHeaders,obibRows,document.getElementById('obibSearch').value); }
+function filterObib() { renderObibTable(obibHeaders, obibRows, document.getElementById('obibSearch').value); }
 
-// ─── STATS ────────────────────────────────────────────────
-function updateObStats(){
-  var total=obData.reduce(function(s,d){ return s+(+d.total_awb||0); },0);
-  var selesai=obData.filter(function(d){ return d.status==='SELESAI'; }).length;
-  document.getElementById('obTotalAwb').innerText=total;
-  document.getElementById('obSelesai').innerText=selesai;
-  document.getElementById('obProses').innerText=obData.length-selesai;
+// ─── STATS ──────────────────────────────────────────────────────────────────
+function updateObStats() {
+  var total = obData.reduce(function(s, d) { return s + (+d.total_awb || 0); }, 0);
+  var selesai = obData.filter(function(d) { return d.status === 'SELESAI'; }).length;
+  document.getElementById('obTotalAwb').innerText = total;
+  document.getElementById('obSelesai').innerText = selesai;
+  document.getElementById('obProses').innerText = obData.length - selesai;
 }
-function updateHvsStats(){
-  var total=hvsData.reduce(function(s,d){ return s+(+d.total_awb||0); },0);
-  var selesai=hvsData.filter(function(d){ return d.status==='SELESAI'; }).length;
-  document.getElementById('hvsTotalAwb').innerText=total;
-  document.getElementById('hvsSelesai').innerText=selesai;
-  document.getElementById('hvsProses').innerText=hvsData.length-selesai;
+function updateHvsStats() {
+  var total = hvsData.reduce(function(s, d) { return s + (+d.total_awb || 0); }, 0);
+  var selesai = hvsData.filter(function(d) { return d.status === 'SELESAI'; }).length;
+  document.getElementById('hvsTotalAwb').innerText = total;
+  document.getElementById('hvsSelesai').innerText = selesai;
+  document.getElementById('hvsProses').innerText = hvsData.length - selesai;
 }
-function updateIbStats(){
-  var total=ibData.reduce(function(s,d){ return s+(+d.total_awb||0); },0);
-  var selesai=ibData.filter(function(d){ return d.status==='SELESAI'; }).length;
-  document.getElementById('ibTotalAwb').innerText=total;
-  document.getElementById('ibSelesai').innerText=selesai;
-  document.getElementById('ibProses').innerText=ibData.length-selesai;
+function updateIbStats() {
+  var total = ibData.reduce(function(s, d) { return s + (+d.total_awb || 0); }, 0);
+  var selesai = ibData.filter(function(d) { return d.status === 'SELESAI'; }).length;
+  document.getElementById('ibTotalAwb').innerText = total;
+  document.getElementById('ibSelesai').innerText = selesai;
+  document.getElementById('ibProses').innerText = ibData.length - selesai;
 }
 
-// ─── TABLE RENDERS ────────────────────────────────────────
-function statusBadge(s){
-  return (s==='SELESAI'||s==='selesai')
-    ?'<span class="badge badge-selesai">✓ Selesai</span>'
-    :'<span class="badge badge-proses">● On Proses</span>';
+// ─── TABLE RENDERS ──────────────────────────────────────────────────────────
+function statusBadge(s) {
+  return (s === 'SELESAI' || s === 'selesai')
+    ? '<span class="badge badge-selesai">✓ Selesai</span>'
+    : '<span class="badge badge-proses">● On Proses</span>';
 }
-function fotoThumb(url){
-  if(!url) return '<span style="font-size:11px;color:var(--gray4)">—</span>';
-  return '<a href="'+url+'" target="_blank"><img src="'+url+'" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';
+function fotoThumb(url) {
+  if (!url) return '<span style="font-size:11px;color:var(--gray4)">—</span>';
+  return '<a href="' + url + '" target="_blank"><img src="' + url + '" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';
 }
-function escQ(s){ return (s||'').replace(/'/g,"\\'"); }
+function escQ(s) { return (s || '').replace(/'/g, "\\'"); }
 
-function renderObTable(filter){
-  var data=filter?obData.filter(function(d){ var v=filter.toLowerCase(); return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }):obData;
-  document.getElementById('obTableCount').innerText=data.length+' record';
-  var tbody=document.getElementById('obTbody');
-  if(!data.length){ tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
-  tbody.innerHTML=data.map(function(d,i){
-    return '<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ob\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td>'
-      +'<td>'+d.incharge+'</td>'
-      +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
-      +'<td>'+d.tujuan+'</td>'
-      +'<td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td>'
-      +'<td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td>'
-      +'<td>'+statusBadge(d.status)+'</td>'
-      +'<td>'+fotoThumb(d.foto_url)+'</td>'
-      +'<td><div style="display:flex;gap:3px">'
-      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ob\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
-      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ob\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button>'
-      +'</div></td></tr>';
+function renderObTable(filter) {
+  var data = filter ? obData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().includes(v); }) : obData;
+  document.getElementById('obTableCount').innerText = data.length + ' record';
+  var tbody = document.getElementById('obTbody');
+  if (!data.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
+  tbody.innerHTML = data.map(function(d, i) {
+    return '<tr><td style="color:var(--gray5);font-size:11px">' + (i + 1) + '</td>'
+      + '<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ob\',\'' + escQ(d.no_track) + '\')">' + d.no_track + '</span></td>'
+      + '<td>' + d.incharge + '</td>'
+      + '<td><span class="badge badge-blue">' + d.service + '</span></td>'
+      + '<td>' + d.tujuan + '</td>'
+      + '<td style="font-size:11px;color:var(--gray6)">' + d.created_date + '</td>'
+      + '<td style="text-align:center;font-weight:700;font-family:var(--mono)">' + d.total_awb + '</td>'
+      + '<td>' + statusBadge(d.status) + '</td>'
+      + '<td>' + fotoThumb(d.foto_url) + '</td>'
+      + '<td><div style="display:flex;gap:3px">'
+      + (d.status !== 'SELESAI' ? '<button class="action-btn" title="Selesai" onclick="markSelesai(\'ob\',\'' + escQ(d.no_track) + '\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>' : '')
+      + '<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ob\',\'' + escQ(d.no_track) + '\')"><span class="material-icons-round">delete</span></button>'
+      + '</div></td></tr>';
   }).join('');
 }
-function renderHvsTable(filter){
-  var data=filter?hvsData.filter(function(d){ var v=filter.toLowerCase(); return (d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().includes(v); }):hvsData;
-  document.getElementById('hvsTableCount').innerText=data.length+' record';
-  var tbody=document.getElementById('hvsTbody');
-  if(!data.length){ tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
-  tbody.innerHTML=data.map(function(d,i){
-    return '<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'hvs\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td>'
-      +'<td>'+d.incharge+'</td>'
-      +'<td><span class="badge badge-purple">'+d.service+'</span></td>'
-      +'<td>'+d.tujuan+'</td>'
-      +'<td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td>'
-      +'<td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td>'
-      +'<td>'+statusBadge(d.status)+'</td>'
-      +'<td>'+fotoThumb(d.foto_url)+'</td>'
-      +'<td><div style="display:flex;gap:3px">'
-      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'hvs\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
-      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'hvs\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button>'
-      +'</div></td></tr>';
+function renderHvsTable(filter) {
+  var data = filter ? hvsData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + d.status).toLowerCase().includes(v); }) : hvsData;
+  document.getElementById('hvsTableCount').innerText = data.length + ' record';
+  var tbody = document.getElementById('hvsTbody');
+  if (!data.length) { tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
+  tbody.innerHTML = data.map(function(d, i) {
+    return '<tr><td style="color:var(--gray5);font-size:11px">' + (i + 1) + '</td>'
+      + '<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'hvs\',\'' + escQ(d.no_track) + '\')">' + d.no_track + '</span></td>'
+      + '<td>' + d.incharge + '</td>'
+      + '<td><span class="badge badge-purple">' + d.service + '</span></td>'
+      + '<td>' + d.tujuan + '</td>'
+      + '<td style="font-size:11px;color:var(--gray6)">' + d.created_date + '</td>'
+      + '<td style="text-align:center;font-weight:700;font-family:var(--mono)">' + d.total_awb + '</td>'
+      + '<td>' + statusBadge(d.status) + '</td>'
+      + '<td>' + fotoThumb(d.foto_url) + '</td>'
+      + '<td><div style="display:flex;gap:3px">'
+      + (d.status !== 'SELESAI' ? '<button class="action-btn" title="Selesai" onclick="markSelesai(\'hvs\',\'' + escQ(d.no_track) + '\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>' : '')
+      + '<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'hvs\',\'' + escQ(d.no_track) + '\')"><span class="material-icons-round">delete</span></button>'
+      + '</div></td></tr>';
   }).join('');
 }
-function renderIbTable(filter){
-  var data=filter?ibData.filter(function(d){ var v=filter.toLowerCase(); return (d.no_track+d.incharge+d.service+d.tujuan+(d.from||'')+d.status).toLowerCase().includes(v); }):ibData;
-  document.getElementById('ibTableCount').innerText=data.length+' record';
-  var tbody=document.getElementById('ibTbody');
-  if(!data.length){ tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
-  tbody.innerHTML=data.map(function(d,i){
-    return '<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ib\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td>'
-      +'<td>'+d.incharge+'</td>'
-      +'<td><span class="badge badge-blue">'+d.service+'</span></td>'
-      +'<td>'+(d.from||'—')+'</td>'
-      +'<td>'+d.tujuan+'</td>'
-      +'<td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td>'
-      +'<td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td>'
-      +'<td>'+statusBadge(d.status)+'</td>'
-      +'<td>'+fotoThumb(d.foto_url)+'</td>'
-      +'<td><div style="display:flex;gap:3px">'
-      +(d.status!=='SELESAI'?'<button class="action-btn" title="Selesai" onclick="markSelesai(\'ib\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')
-      +'<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ib\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button>'
-      +'</div></td></tr>';
+function renderIbTable(filter) {
+  var data = filter ? ibData.filter(function(d) { var v = filter.toLowerCase(); return (d.no_track + d.incharge + d.service + d.tujuan + (d.from || '') + d.status).toLowerCase().includes(v); }) : ibData;
+  document.getElementById('ibTableCount').innerText = data.length + ' record';
+  var tbody = document.getElementById('ibTbody');
+  if (!data.length) { tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>'; return; }
+  tbody.innerHTML = data.map(function(d, i) {
+    return '<tr><td style="color:var(--gray5);font-size:11px">' + (i + 1) + '</td>'
+      + '<td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ib\',\'' + escQ(d.no_track) + '\')">' + d.no_track + '</span></td>'
+      + '<td>' + d.incharge + '</td>'
+      + '<td><span class="badge badge-blue">' + d.service + '</span></td>'
+      + '<td>' + (d.from || '—') + '</td>'
+      + '<td>' + d.tujuan + '</td>'
+      + '<td style="font-size:11px;color:var(--gray6)">' + d.created_date + '</td>'
+      + '<td style="text-align:center;font-weight:700;font-family:var(--mono)">' + d.total_awb + '</td>'
+      + '<td>' + statusBadge(d.status) + '</td>'
+      + '<td>' + fotoThumb(d.foto_url) + '</td>'
+      + '<td><div style="display:flex;gap:3px">'
+      + (d.status !== 'SELESAI' ? '<button class="action-btn" title="Selesai" onclick="markSelesai(\'ib\',\'' + escQ(d.no_track) + '\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>' : '')
+      + '<button class="action-btn danger" title="Hapus" onclick="confirmDelete(\'ib\',\'' + escQ(d.no_track) + '\')"><span class="material-icons-round">delete</span></button>'
+      + '</div></td></tr>';
   }).join('');
 }
+function filterObTable() { renderObTable(document.getElementById('obSearch').value || ''); }
+function filterHvsTable() { renderHvsTable(document.getElementById('hvsSearch').value || ''); }
+function filterIbTable() { renderIbTable(document.getElementById('ibSearch').value || ''); }
 
-function filterObTable(){ renderObTable(document.getElementById('obSearch').value||''); }
-function filterHvsTable(){ renderHvsTable(document.getElementById('hvsSearch').value||''); }
-function filterIbTable(){ renderIbTable(document.getElementById('ibSearch').value||''); }
-
-// ─── MARK SELESAI (no full reload) ────────────────────────
-function markSelesai(type, noTrack){
-  var action=type==='ob'?'updateObStatus':type==='hvs'?'updateHvsStatus':'updateIbStatus';
-  if(!confirm('Tandai '+noTrack+' sebagai SELESAI?')) return;
+// ─── MARK SELESAI ───────────────────────────────────────────────────────────
+function markSelesai(type, noTrack) {
+  var action = type === 'ob' ? 'updateObStatus' : type === 'hvs' ? 'updateHvsStatus' : 'updateIbStatus';
+  if (!confirm('Tandai ' + noTrack + ' sebagai SELESAI?')) return;
   showLoading('Mengubah status...');
-  gasPost(action,{noTrack:noTrack,newStatus:'SELESAI'}).then(function(res){
+  gasPost(action, { noTrack: noTrack, newStatus: 'SELESAI' }).then(function(res) {
     hideLoading();
-    if(res.success){
-      // Update local data only — no full reload
-      var arr=type==='ob'?obData:type==='hvs'?hvsData:ibData;
-      var item=arr.find(function(d){ return d.no_track===noTrack; });
-      if(item) item.status='SELESAI';
-      if(type==='ob'){ renderObTable(); updateObStats(); }
-      else if(type==='hvs'){ renderHvsTable(); updateHvsStats(); }
+    if (res.success) {
+      var arr = type === 'ob' ? obData : type === 'hvs' ? hvsData : ibData;
+      var item = arr.find(function(d) { return d.no_track === noTrack; });
+      if (item) item.status = 'SELESAI';
+      if (type === 'ob') { renderObTable(); updateObStats(); }
+      else if (type === 'hvs') { renderHvsTable(); updateHvsStats(); }
       else { renderIbTable(); updateIbStats(); }
-      toast('Status diubah ke SELESAI','success');
+      toast('Status diubah ke SELESAI', 'success');
       closeModal('detailModal');
-    } else toast('Gagal: '+(res.error||''),'error');
-  }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+    } else toast('Gagal: ' + (res.error || ''), 'error');
+  }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
 }
 
-// ─── DELETE ───────────────────────────────────────────────
-function confirmDelete(type, noTrack){
-  document.getElementById('confirmTitle').innerText='Hapus Data';
-  document.getElementById('confirmMsg').innerText='Hapus '+noTrack+'? Semua AWB terkait juga akan dihapus. Tidak bisa dibatalkan.';
-  var action=type==='ob'?'deleteOb':type==='hvs'?'deleteHvs':'deleteIb';
-  document.getElementById('confirmBtn').onclick=function(){
+// ─── DELETE ─────────────────────────────────────────────────────────────────
+function confirmDelete(type, noTrack) {
+  document.getElementById('confirmTitle').innerText = 'Hapus Data';
+  document.getElementById('confirmMsg').innerText = 'Hapus ' + noTrack + '? Semua AWB terkait juga akan dihapus. Tidak bisa dibatalkan.';
+  var action = type === 'ob' ? 'deleteOb' : type === 'hvs' ? 'deleteHvs' : 'deleteIb';
+  document.getElementById('confirmBtn').onclick = function() {
     closeModal('confirmModal'); closeModal('detailModal');
     showLoading('Menghapus...');
-    gasPost(action,{noTrack:noTrack}).then(function(res){
+    gasPost(action, { noTrack: noTrack }).then(function(res) {
       hideLoading();
-      if(res.success){
-        // Remove from local
-        if(type==='ob'){ obData=obData.filter(function(d){ return d.no_track!==noTrack; }); renderObTable(); updateObStats(); }
-        else if(type==='hvs'){ hvsData=hvsData.filter(function(d){ return d.no_track!==noTrack; }); renderHvsTable(); updateHvsStats(); }
-        else { ibData=ibData.filter(function(d){ return d.no_track!==noTrack; }); renderIbTable(); updateIbStats(); }
-        toast('Data dihapus','success');
-      } else toast('Gagal: '+(res.error||''),'error');
-    }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+      if (res.success) {
+        if (type === 'ob') { obData = obData.filter(function(d) { return d.no_track !== noTrack; }); renderObTable(); updateObStats(); }
+        else if (type === 'hvs') { hvsData = hvsData.filter(function(d) { return d.no_track !== noTrack; }); renderHvsTable(); updateHvsStats(); }
+        else { ibData = ibData.filter(function(d) { return d.no_track !== noTrack; }); renderIbTable(); updateIbStats(); }
+        toast('Data dihapus', 'success');
+      } else toast('Gagal: ' + (res.error || ''), 'error');
+    }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
   };
   openModal('confirmModal');
 }
 
-// ─── DETAIL MODAL ─────────────────────────────────────────
-function openDetailModal(type, noTrack){
-  var data=type==='ob'?obData:type==='hvs'?hvsData:ibData;
-  var item=data.find(function(d){ return d.no_track===noTrack; });
-  if(!item) return;
-  currentDetailItem=item; currentDetailType=type;
-  document.getElementById('detailModalTitle').innerText=noTrack;
-  var pb=document.getElementById('detailPhotoBox');
-  pb.innerHTML=item.foto_url?'<img src="'+item.foto_url+'" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">':'<span class="no-img">No Image</span>';
-
-  var fields=type==='ib'
-    ?[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['FROM',item.from||'—'],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]]
-    :[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]];
-  document.getElementById('detailGrid').innerHTML=fields.map(function(f){
-    return '<div class="d-field"><div class="d-label">'+f[0]+'</div><div class="d-value">'+f[1]+'</div></div>';
+// ─── DETAIL MODAL ───────────────────────────────────────────────────────────
+function openDetailModal(type, noTrack) {
+  var data = type === 'ob' ? obData : type === 'hvs' ? hvsData : ibData;
+  var item = data.find(function(d) { return d.no_track === noTrack; });
+  if (!item) return;
+  currentDetailItem = item; currentDetailType = type;
+  document.getElementById('detailModalTitle').innerText = noTrack;
+  var pb = document.getElementById('detailPhotoBox');
+  pb.innerHTML = item.foto_url ? '<img src="' + item.foto_url + '" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">' : '<span class="no-img">No Image</span>';
+  var fields = type === 'ib'
+    ? [['NO TRACK', item.no_track], ['INCHARGE', item.incharge], ['SERVICE', item.service], ['FROM', item.from || '—'], ['TUJUAN', item.tujuan], ['DATE', item.created_date], ['STATUS', item.status], ['TOTAL AWB', item.total_awb]]
+    : [['NO TRACK', item.no_track], ['INCHARGE', item.incharge], ['SERVICE', item.service], ['TUJUAN', item.tujuan], ['DATE', item.created_date], ['STATUS', item.status], ['TOTAL AWB', item.total_awb]];
+  document.getElementById('detailGrid').innerHTML = fields.map(function(f) {
+    return '<div class="d-field"><div class="d-label">' + f[0] + '</div><div class="d-value">' + f[1] + '</div></div>';
   }).join('');
-
-  document.getElementById('detailAwbList').innerHTML='<div class="awb-row" style="color:var(--gray5)">Memuat AWB...</div>';
-  document.getElementById('awbCount').innerText='...';
-
-  gasGet('getAwbList',{noTrack:noTrack,type:type.toUpperCase()}).then(function(res){
-    var list=res.list||[];
-    document.getElementById('awbCount').innerText=list.length;
-    var awbEl=document.getElementById('detailAwbList');
-    awbEl.innerHTML=!list.length
-      ?'<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>'
-      :list.map(function(r){ return '<div class="awb-row"><span>'+(r.awb||r)+'</span>'+(r.tujuan?'<span style="color:var(--gray5);font-size:11px">'+r.tujuan+'</span>':'')+'</div>'; }).join('');
-  }).catch(function(){});
-
-  var selesaiBtn=item.status!=='SELESAI'?'<button class="btn btn-success btn-sm" onclick="markSelesai(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">check_circle</span> Selesai</button>':'';
-  document.getElementById('detailModalFooter').innerHTML=
+  document.getElementById('detailAwbList').innerHTML = '<div class="awb-row" style="color:var(--gray5)">Memuat AWB...</div>';
+  document.getElementById('awbCount').innerText = '...';
+  gasGet('getAwbList', { noTrack: noTrack, type: type.toUpperCase() }).then(function(res) {
+    var list = res.list || [];
+    document.getElementById('awbCount').innerText = list.length;
+    var awbEl = document.getElementById('detailAwbList');
+    awbEl.innerHTML = !list.length
+      ? '<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>'
+      : list.map(function(r) { return '<div class="awb-row"><span>' + (r.awb || r) + '</span>' + (r.tujuan ? '<span style="color:var(--gray5);font-size:11px">' + r.tujuan + '</span>' : '') + '</div>'; }).join('');
+  }).catch(function() {});
+  var selesaiBtn = item.status !== 'SELESAI' ? '<button class="btn btn-success btn-sm" onclick="markSelesai(\'' + type + '\',\'' + escQ(noTrack) + '\')"><span class="material-icons-round">check_circle</span> Selesai</button>' : '';
+  document.getElementById('detailModalFooter').innerHTML =
     '<button class="btn btn-outline btn-sm" onclick="closeModal(\'detailModal\')">Tutup</button>'
-    +selesaiBtn
-    +'<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">delete</span></button>';
-
+    + selesaiBtn
+    + '<button class="btn btn-danger btn-sm" onclick="confirmDelete(\'' + type + '\',\'' + escQ(noTrack) + '\')"><span class="material-icons-round">delete</span></button>';
   openModal('detailModal');
 }
 
-// ─── FOTO UPDATE ──────────────────────────────────────────
-function onFotoChange(e){
-  var file=e.target.files[0]; if(!file||!currentDetailItem) return;
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    var b64=ev.target.result.split(',')[1];
+// ─── FOTO UPDATE ────────────────────────────────────────────────────────────
+function onFotoChange(e) {
+  var file = e.target.files[0]; if (!file || !currentDetailItem) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var b64 = ev.target.result.split(',')[1];
     showLoading('Mengupload foto...');
-    gasPost('updateFoto',{noTrack:currentDetailItem.no_track,type:currentDetailType.toUpperCase(),base64Data:b64})
-      .then(function(res){
+    gasPost('updateFoto', { noTrack: currentDetailItem.no_track, type: currentDetailType.toUpperCase(), base64Data: b64 })
+      .then(function(res) {
         hideLoading();
-        if(res.success&&res.url){
-          document.getElementById('detailPhotoBox').innerHTML='<img src="'+res.url+'">';
-          currentDetailItem.foto_url=res.url;
-          toast('Foto berhasil diperbarui','success');
-          // Update local table cell without full reload
-          var arr=currentDetailType==='ob'?obData:currentDetailType==='hvs'?hvsData:ibData;
-          var item=arr.find(function(d){ return d.no_track===currentDetailItem.no_track; });
-          if(item) item.foto_url=res.url;
-          if(currentDetailType==='ob') renderObTable();
-          else if(currentDetailType==='hvs') renderHvsTable();
+        if (res.success && res.url) {
+          document.getElementById('detailPhotoBox').innerHTML = '<img src="' + res.url + '">';
+          currentDetailItem.foto_url = res.url;
+          toast('Foto berhasil diperbarui', 'success');
+          var arr = currentDetailType === 'ob' ? obData : currentDetailType === 'hvs' ? hvsData : ibData;
+          var item = arr.find(function(d) { return d.no_track === currentDetailItem.no_track; });
+          if (item) item.foto_url = res.url;
+          if (currentDetailType === 'ob') renderObTable();
+          else if (currentDetailType === 'hvs') renderHvsTable();
           else renderIbTable();
-        } else toast('Gagal upload: '+(res.error||''),'error');
-      }).catch(function(e){ hideLoading(); toast('Error: '+e.message,'error'); });
+        } else toast('Gagal upload: ' + (res.error || ''), 'error');
+      }).catch(function(e) { hideLoading(); toast('Error: ' + e.message, 'error'); });
   };
   reader.readAsDataURL(file);
-  e.target.value='';
+  e.target.value = '';
 }
 
-// ─── CSV EXPORT ───────────────────────────────────────────
-function exportCSV(){
-  var activePage=document.querySelector('.nav-item.active .nav-label');
-  var page=activePage?activePage.innerText:'';
-  var data,headers,filename;
-  if(page.includes('Outbound BDO')){ data=obData; headers=['no_track','incharge','service','tujuan','created_date','status','total_awb']; filename='OB_export.csv'; }
-  else if(page.includes('Outbound HVS')){ data=hvsData; headers=['no_track','incharge','service','tujuan','created_date','status','total_awb']; filename='HVS_export.csv'; }
-  else if(page.includes('Inbound HVS')){ data=ibData; headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb']; filename='IB_export.csv'; }
-  else{ toast('Pilih halaman OB/HVS/IB dulu','error'); return; }
-  var csv=headers.join(',')+'\n'+data.map(function(d){ return headers.map(function(h){ return '"'+(d[h]||'')+'"'; }).join(','); }).join('\n');
-  dlCSV(csv,filename);
+// ─── CSV EXPORT ─────────────────────────────────────────────────────────────
+function exportCSV() {
+  var activePage = document.querySelector('.nav-item.active .nav-label');
+  var page = activePage ? activePage.innerText : '';
+  var data, headers, filename;
+  if (page.includes('Outbound BDO')) { data = obData; headers = ['no_track', 'incharge', 'service', 'tujuan', 'created_date', 'status', 'total_awb']; filename = 'OB_export.csv'; }
+  else if (page.includes('Outbound HVS')) { data = hvsData; headers = ['no_track', 'incharge', 'service', 'tujuan', 'created_date', 'status', 'total_awb']; filename = 'HVS_export.csv'; }
+  else if (page.includes('Inbound HVS')) { data = ibData; headers = ['no_track', 'incharge', 'service', 'from', 'tujuan', 'created_date', 'status', 'total_awb']; filename = 'IB_export.csv'; }
+  else { toast('Pilih halaman OB/HVS/IB dulu', 'error'); return; }
+  var csv = headers.join(',') + '\n' + data.map(function(d) { return headers.map(function(h) { return '"' + (d[h] || '') + '"'; }).join(','); }).join('\n');
+  dlCSV(csv, filename);
 }
-function exportManifestCSV(){
-  var rows=[['TUJUAN','TYPE','NO_TRACK','INCHARGE','SERVICE','TOTAL_AWB','STATUS','DATE']];
-  obData.forEach(function(d){ rows.push([d.tujuan,'OB',d.no_track,d.incharge,d.service,d.total_awb,d.status,d.created_date]); });
-  hvsData.forEach(function(d){ rows.push([d.tujuan,'HVS',d.no_track,d.incharge,d.service,d.total_awb,d.status,d.created_date]); });
-  dlCSV(rows.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n'),'manifest_export.csv');
+function exportManifestCSV() {
+  var rows = [['TUJUAN', 'TYPE', 'NO_TRACK', 'INCHARGE', 'SERVICE', 'TOTAL_AWB', 'STATUS', 'DATE']];
+  obData.forEach(function(d) { rows.push([d.tujuan, 'OB', d.no_track, d.incharge, d.service, d.total_awb, d.status, d.created_date]); });
+  hvsData.forEach(function(d) { rows.push([d.tujuan, 'HVS', d.no_track, d.incharge, d.service, d.total_awb, d.status, d.created_date]); });
+  dlCSV(rows.map(function(r) { return r.map(function(c) { return '"' + c + '"'; }).join(','); }).join('\n'), 'manifest_export.csv');
 }
-function exportObibCSV(){
-  if(!obibRows.length){ toast('Tidak ada data OB&IB','error'); return; }
-  var csv=obibHeaders.join(',')+'\n'+obibRows.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n');
-  dlCSV(csv,'OBIB_export.csv');
+function exportObibCSV() {
+  if (!obibRows.length) { toast('Tidak ada data OB&IB', 'error'); return; }
+  var csv = obibHeaders.join(',') + '\n' + obibRows.map(function(r) { return r.map(function(c) { return '"' + c + '"'; }).join(','); }).join('\n');
+  dlCSV(csv, 'OBIB_export.csv');
 }
-function dlCSV(csv,fn){
-  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=fn; a.click();
+function dlCSV(csv, fn) {
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
 }
 </script>
 </body>
