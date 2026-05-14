@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OUTBOUND GTW BDO — v3.6</title>
+<title>OUTBOUND GTW BDO — v4.0</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -23,6 +23,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:100vh;overflow:hidden;display:flex}
+
+/* ═══ SIDEBAR ═══ */
 .sidebar{width:var(--sidebar-w);background:var(--blue);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow:hidden;transition:width var(--trans);position:relative;z-index:100}
 .sidebar.collapsed{width:52px}
 .sidebar-brand{padding:14px 12px 10px;border-bottom:1px solid rgba(255,255,255,.15);display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap}
@@ -40,8 +42,25 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .nav-item .material-icons-round{font-size:19px;flex-shrink:0}
 .nav-label{overflow:hidden;transition:var(--trans)}
 .sidebar.collapsed .nav-label{opacity:0;width:0}
+
+/* Search AWB di sidebar */
+.sidebar-search-section{padding:8px 10px;border-top:1px solid rgba(255,255,255,.12);flex-shrink:0}
+.sidebar-search-label{color:rgba(255,255,255,.5);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:4px;overflow:hidden;white-space:nowrap}
+.sidebar-search-label .material-icons-round{font-size:12px}
+.sidebar-search-box{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:6px 8px;transition:var(--trans)}
+.sidebar-search-box:focus-within{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
+.sidebar-search-box input{background:transparent;border:none;outline:none;color:#fff;font-size:12px;font-family:var(--font);width:100%;min-width:0}
+.sidebar-search-box input::placeholder{color:rgba(255,255,255,.4)}
+.sidebar-search-box .material-icons-round{font-size:15px;color:rgba(255,255,255,.5);flex-shrink:0}
+.sidebar.collapsed .sidebar-search-section{padding:8px 6px}
+.sidebar.collapsed .sidebar-search-label{display:none}
+.sidebar.collapsed .sidebar-search-box{padding:6px;justify-content:center}
+.sidebar.collapsed .sidebar-search-box input{display:none}
+
 .sidebar-bottom{padding:10px 14px;border-top:1px solid rgba(255,255,255,.12);overflow:hidden;white-space:nowrap}
 .sidebar-bottom .ver{color:rgba(255,255,255,.35);font-size:10px;font-family:var(--mono)}
+
+/* ═══ MAIN ═══ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .topbar{height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--gray3);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .topbar-title{font-size:15px;font-weight:700;color:var(--gray8);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -134,7 +153,7 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .multi-tuj-info{background:#E8F5E9;border:1px solid #A5D6A7;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:12px;color:var(--green);display:flex;align-items:center;gap:6px}
 .multi-tuj-info .material-icons-round{font-size:15px}
 
-/* ═══════ TABLE PANEL ═══════ */
+/* ═══ TABLE ═══ */
 .table-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
 .table-toolbar{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray2);flex-wrap:wrap}
 .table-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1;white-space:nowrap}
@@ -153,60 +172,78 @@ tr:hover td{background:var(--gray0)}
 .badge-selesai{background:var(--green-light);color:var(--green)}
 .badge-blue{background:var(--blue-light);color:var(--blue)}
 .badge-purple{background:var(--purple-light);color:var(--purple)}
-.badge-sd{background:#E3F2FD;color:#1565C0}
-.badge-nd{background:#E8F5E9;color:#2E7D32}
+.badge-ob{background:#E3F2FD;color:#1565C0}
 .badge-hvs{background:var(--purple-light);color:var(--purple)}
+.badge-ib{background:#E8F5E9;color:#2E7D32}
 .mono{font-family:var(--mono);font-size:12px}
 .action-btn{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;color:var(--gray5);transition:var(--trans);display:inline-flex;align-items:center}
 .action-btn:hover{background:var(--gray2);color:var(--gray8)}
 .action-btn.danger:hover{background:var(--red-light);color:var(--red)}
 .action-btn .material-icons-round{font-size:16px}
 
-/* ═══════ MANIFEST SPREADSHEET ═══════ */
+/* ═══ MANIFEST SPREADSHEET ═══ */
 #page-manifest{display:flex;flex-direction:column;height:100%;overflow:hidden}
 .mf-toolbar{display:flex;align-items:center;gap:8px;padding:8px 0 10px;flex-wrap:wrap;flex-shrink:0}
 .mf-stats-row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0}
 .mf-stats-row .stat-card{padding:8px 14px}
 .mf-stats-row .stat-value{font-size:20px}
-
-/* Copy toast */
 .copy-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(21,101,192,.92);color:#fff;padding:7px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s}
 .copy-flash.show{opacity:1}
-
-/* Spreadsheet container */
 .mf-sheet-outer{flex:1;overflow:auto;border:1px solid var(--gray3);border-radius:var(--r);background:var(--white);box-shadow:var(--shadow);position:relative;outline:none}
 .mf-sheet-outer:focus{outline:2px solid var(--blue3);outline-offset:-1px}
-
-/* Spreadsheet table */
 .mf-table{border-collapse:collapse;font-size:12px;font-family:var(--mono);user-select:none;min-width:100%}
 .mf-table th,.mf-table td{border:1px solid var(--gray3);white-space:nowrap}
-
-/* Row number col */
 .mf-rn{background:var(--gray1);color:var(--gray5);font-size:10px;text-align:center;padding:2px 6px;min-width:34px;border-right:2px solid var(--gray3);position:sticky;left:0;z-index:3}
 .mf-table thead .mf-rn{z-index:5}
-
-/* Header rows */
 .mf-hdr-incharge{background:#1565C0;color:#fff;font-weight:700;font-size:11px;text-align:center;padding:5px 10px;letter-spacing:.3px}
 .mf-hdr-service{background:#1976D2;color:#fff;font-weight:700;font-size:11px;text-align:center;padding:4px 10px}
 .mf-hdr-tujuan{background:#E3F2FD;color:#0D47A1;font-weight:700;font-size:11px;text-align:center;padding:5px 10px;border-bottom:2px solid var(--blue)}
 .mf-hdr-date{background:#F5F5F5;color:var(--gray6);font-weight:700;font-size:10px;text-align:center;padding:5px 6px;letter-spacing:.5px;text-transform:uppercase}
-
-/* Data cells */
 .mf-cell-awb{padding:4px 8px;cursor:default;color:var(--gray8);font-size:12px;min-width:100px;max-width:180px;text-overflow:ellipsis;overflow:hidden}
 .mf-cell-date{padding:4px 6px;cursor:default;color:var(--gray6);font-size:10px;text-align:center;min-width:80px;background:#FFFDE7}
 .mf-cell-empty{padding:4px 8px;color:transparent;min-width:100px}
-
-/* Selected cell */
 .mf-cell-selected{background:#BBDEFB !important;outline:2px solid #1976D2;outline-offset:-2px;position:relative;z-index:2}
-
-/* Row hover */
 .mf-data-row:hover .mf-cell-awb,.mf-data-row:hover .mf-cell-date,.mf-data-row:hover .mf-cell-empty{background:var(--gray0)}
 .mf-data-row:hover .mf-cell-selected{background:#BBDEFB !important}
-
-/* Freeze header */
 .mf-table thead{position:sticky;top:0;z-index:4}
 
-/* ═══════════ */
+/* ═══ SEARCH AWB PAGE ═══ */
+#page-search{display:flex;flex-direction:column}
+.search-awb-hero{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);padding:20px 20px 16px;margin-bottom:14px}
+.search-awb-hero-title{font-size:15px;font-weight:700;color:var(--gray8);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.search-awb-hero-title .material-icons-round{color:var(--blue2);font-size:20px}
+.search-awb-hero-sub{font-size:12px;color:var(--gray5);margin-bottom:14px}
+.search-awb-input-row{display:flex;gap:8px;align-items:center}
+.search-awb-main-input{flex:1;padding:11px 16px;border:2px solid var(--blue2);border-radius:8px;font-size:14px;font-family:var(--mono);color:var(--gray8);outline:none;transition:var(--trans)}
+.search-awb-main-input:focus{box-shadow:0 0 0 3px var(--blue-light)}
+.search-awb-result{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
+.search-awb-result-hdr{padding:10px 14px;background:var(--gray1);border-bottom:1px solid var(--gray2);font-size:12px;font-weight:700;color:var(--gray6);display:flex;align-items:center;gap:6px}
+.search-awb-result-hdr .material-icons-round{font-size:15px}
+.search-awb-result-body{max-height:calc(100vh - 320px);overflow-y:auto}
+.search-awb-item{padding:12px 14px;border-bottom:1px solid var(--gray2);display:flex;align-items:flex-start;gap:12px;transition:.1s}
+.search-awb-item:last-child{border-bottom:none}
+.search-awb-item:hover{background:var(--gray0)}
+.search-awb-item-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.search-awb-item-icon.ob{background:var(--blue-light)}
+.search-awb-item-icon.ob .material-icons-round{color:var(--blue2);font-size:18px}
+.search-awb-item-icon.hvs{background:var(--purple-light)}
+.search-awb-item-icon.hvs .material-icons-round{color:var(--purple);font-size:18px}
+.search-awb-item-icon.ib{background:var(--green-light)}
+.search-awb-item-icon.ib .material-icons-round{color:var(--green);font-size:18px}
+.search-awb-item-main{flex:1;min-width:0}
+.search-awb-item-awb{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--gray8);margin-bottom:3px}
+.search-awb-item-awb mark{background:#FFF176;color:var(--gray8);border-radius:2px;padding:0 2px}
+.search-awb-item-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:var(--gray5)}
+.search-awb-item-notrack{font-family:var(--mono);font-size:11px;color:var(--blue2);cursor:pointer;text-decoration:underline}
+.search-awb-item-notrack:hover{color:var(--blue)}
+.search-awb-empty{padding:36px;text-align:center;color:var(--gray5)}
+.search-awb-empty .material-icons-round{font-size:36px;color:var(--gray4);display:block;margin-bottom:8px}
+.search-awb-type-tag{display:inline-flex;align-items:center;padding:1px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.search-awb-type-tag.ob{background:var(--blue-light);color:var(--blue)}
+.search-awb-type-tag.hvs{background:var(--purple-light);color:var(--purple)}
+.search-awb-type-tag.ib{background:var(--green-light);color:var(--green)}
+
+/* ═══ MISC ═══ */
 @keyframes spin{to{transform:rotate(360deg)}}
 #loading{position:fixed;inset:0;background:rgba(255,255,255,.88);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 .spinner{width:34px;height:34px;border:3px solid var(--gray3);border-top:3px solid var(--blue2);border-radius:50%;animation:spin .65s linear infinite}
@@ -259,8 +296,19 @@ tr:hover td{background:var(--gray0)}
     <div class="nav-item" onclick="switchPage('ib')" id="nav-ib"><span class="material-icons-round">move_to_inbox</span><span class="nav-label">Inbound HVS</span></div>
     <div class="nav-item" onclick="switchPage('manifest')" id="nav-manifest"><span class="material-icons-round">grid_on</span><span class="nav-label">Manifest</span></div>
     <div class="nav-item" onclick="switchPage('obib')" id="nav-obib"><span class="material-icons-round">table_view</span><span class="nav-label">OB &amp; IB</span></div>
+    <div class="nav-item" onclick="switchPage('search')" id="nav-search"><span class="material-icons-round">manage_search</span><span class="nav-label">Cari AWB</span></div>
   </div>
-  <div class="sidebar-bottom"><div class="ver">v3.6 — GTW BDO</div></div>
+
+  <!-- Search AWB di Sidebar -->
+  <div class="sidebar-search-section">
+    <div class="sidebar-search-label"><span class="material-icons-round">search</span><span class="nav-label">Cari AWB</span></div>
+    <div class="sidebar-search-box">
+      <span class="material-icons-round">qr_code_scanner</span>
+      <input id="sidebarSearchInput" placeholder="Scan / ketik AWB..." onkeydown="handleSidebarSearch(event)" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="sidebar-bottom"><div class="ver">v4.0 — GTW BDO</div></div>
 </div>
 
 <div class="main">
@@ -389,9 +437,8 @@ tr:hover td{background:var(--gray0)}
       </div>
     </div>
 
-    <!-- ═══════════ MANIFEST PAGE — SPREADSHEET LAYOUT ═══════════ -->
+    <!-- MANIFEST PAGE -->
     <div id="page-manifest" style="display:none">
-      <!-- Toolbar -->
       <div class="mf-toolbar">
         <span style="font-weight:700;font-size:14px;color:var(--gray8);flex:1">Manifest AWB</span>
         <div class="search-box"><span class="material-icons-round">search</span><input id="manifestSearch" placeholder="Cari AWB / tujuan..." oninput="filterManifest()" style="width:170px"></div>
@@ -402,16 +449,12 @@ tr:hover td{background:var(--gray0)}
           Klik sel → Ctrl+C copy
         </span>
       </div>
-
-      <!-- Stats -->
       <div class="mf-stats-row">
         <div class="stat-card blue"><div class="stat-label">Total Kolom</div><div class="stat-value" id="mfTotalCols">0</div></div>
         <div class="stat-card green"><div class="stat-label">Total AWB</div><div class="stat-value" id="mfTotalAwb">0</div></div>
         <div class="stat-card orange"><div class="stat-label">Incharge</div><div class="stat-value" id="mfTotalInc">0</div></div>
         <div class="stat-card" style="border-color:var(--gray3)"><div class="stat-label">Sel Aktif</div><div class="stat-value" id="mfActiveCell" style="font-size:13px;color:var(--gray6);font-family:var(--mono)">—</div></div>
       </div>
-
-      <!-- Spreadsheet area -->
       <div class="mf-sheet-outer" id="mfSheetOuter" tabindex="0">
         <div id="mfSheetPlaceholder" style="padding:40px;text-align:center;color:var(--gray5)">
           <span class="material-icons-round" style="font-size:40px;color:var(--gray4);display:block;margin-bottom:8px">grid_on</span>
@@ -425,6 +468,31 @@ tr:hover td{background:var(--gray0)}
       <div class="table-panel">
         <div class="table-toolbar"><div class="table-toolbar-title">OB &amp; IB — Combined View</div><div class="search-box"><span class="material-icons-round">search</span><input id="obibSearch" placeholder="Cari..." oninput="filterObib()"></div><button class="export-btn" onclick="exportObibCSV()"><span class="material-icons-round">file_download</span> Export</button></div>
         <div class="table-wrap" id="obibTableWrap"><div class="empty-state"><span class="material-icons-round">table_view</span>Loading...</div></div>
+      </div>
+    </div>
+
+    <!-- SEARCH AWB PAGE -->
+    <div id="page-search" style="display:none">
+      <div class="search-awb-hero">
+        <div class="search-awb-hero-title"><span class="material-icons-round">manage_search</span> Cari AWB</div>
+        <div class="search-awb-hero-sub">Cari nomor AWB di seluruh data: Outbound BDO, Outbound HVS, dan Inbound HVS</div>
+        <div class="search-awb-input-row">
+          <input class="search-awb-main-input" id="searchAwbMainInput" placeholder="Ketik atau scan nomor AWB..." autocomplete="off"
+            oninput="doSearchAwb(this.value)" onkeydown="if(event.key==='Enter')doSearchAwb(this.value)">
+          <button class="btn btn-primary" onclick="doSearchAwb(document.getElementById('searchAwbMainInput').value)">
+            <span class="material-icons-round">search</span> Cari
+          </button>
+          <button class="btn btn-outline" onclick="clearSearchAwb()"><span class="material-icons-round">clear</span></button>
+        </div>
+      </div>
+      <div class="search-awb-result" id="searchAwbResult">
+        <div class="search-awb-result-hdr"><span class="material-icons-round">info</span> Masukkan nomor AWB untuk mencari</div>
+        <div class="search-awb-result-body" id="searchAwbResultBody">
+          <div class="search-awb-empty">
+            <span class="material-icons-round">search</span>
+            Ketik nomor AWB di atas untuk mencari di semua data
+          </div>
+        </div>
       </div>
     </div>
 
@@ -490,17 +558,19 @@ var ibScanned = [];
 var obActiveTuj = '', hvsActiveTuj = '';
 var obibHeaders = [], obibRows = [];
 
-// ★ Manifest state
-var _mfData = null;      // { headerRows, colDefs, awbRows, totalCols }
+// ── AWB Search cache (from SCAN sheets) ──
+var allScanAwbs = []; // [{awb, noTrack, incharge, service, tujuan, type, date}]
+
+// ── Manifest state ──
+var _mfData = null;
 var _mfLoaded = false;
 var _mfFilter = '';
-var _mfSelRow = -1;      // selected data row index (-1 = none)
-var _mfSelCol = -1;      // selected col index
-var _mfFilteredRows = []; // rows after filter
-var _mfColDefs = [];      // colDefs setelah filter
+var _mfSelRow = -1;
+var _mfSelCol = -1;
+var _mfFilteredRows = [];
 
 // ═══════════════════════════════════════════════════════════
-// SMART COMBOBOX (sama persis)
+// SMART COMBOBOX
 // ═══════════════════════════════════════════════════════════
 var cbRegistry = {};
 function registerCb(cbId,inputId,dropId,options,onSelect,readOnly){var inputEl=document.getElementById(inputId);var dropEl=document.getElementById(dropId);var cbEl=document.getElementById(cbId);cbRegistry[cbId]={options:options,value:'',onSelect:onSelect,inputEl:inputEl,dropEl:dropEl,cbEl:cbEl,focusIdx:-1};if(readOnly){inputEl.setAttribute('readonly',true);inputEl.style.cursor='pointer';}inputEl.addEventListener('click',function(){if(!inputEl.disabled)openCb2(cbId);});inputEl.addEventListener('input',function(){if(!readOnly&&!inputEl.disabled)filterCb2(cbId);});inputEl.addEventListener('keydown',function(e){if(!inputEl.disabled)handleCbKey(e,cbId);});inputEl.addEventListener('blur',function(){setTimeout(function(){closeCb2(cbId);},200);});renderCbOptions(cbId,'');}
@@ -584,8 +654,15 @@ function selectGlobalIncharge(v){
 // ═══════════════════════════════════════════════════════════
 // PAGE SWITCHING
 // ═══════════════════════════════════════════════════════════
-var pageTitles={ob:'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',hvs:'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',ib:'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',manifest:'Manifest <span class="topbar-sub">Rekap AWB per incharge & tujuan — layout GSheet</span>',obib:'OB &amp; IB <span class="topbar-sub">Combined view</span>'};
-var pages=['ob','hvs','ib','manifest','obib'];
+var pageTitles={
+  ob:'Outbound BDO <span class="topbar-sub">Log pengiriman keluar dari hub</span>',
+  hvs:'Outbound HVS <span class="topbar-sub">High Value Shipment keluar</span>',
+  ib:'Inbound HVS <span class="topbar-sub">High Value Shipment masuk</span>',
+  manifest:'Manifest <span class="topbar-sub">Rekap AWB per incharge & tujuan — layout GSheet</span>',
+  obib:'OB &amp; IB <span class="topbar-sub">Combined view</span>',
+  search:'Cari AWB <span class="topbar-sub">Pencarian AWB di semua data OB, HVS, IB</span>'
+};
+var pages=['ob','hvs','ib','manifest','obib','search'];
 function switchPage(page){
   pages.forEach(function(p){
     document.getElementById('page-'+p).style.display=(p===page)?'':'none';
@@ -594,6 +671,9 @@ function switchPage(page){
   document.getElementById('topbarTitle').innerHTML=pageTitles[page]||page;
   if(page==='manifest')loadManifestPage();
   if(page==='obib')renderObibTable(obibHeaders,obibRows);
+  if(page==='search'){
+    setTimeout(function(){document.getElementById('searchAwbMainInput').focus();},100);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -664,11 +744,11 @@ function handleScan(e,type){if(e.key!=='Enter')return;var input=document.getElem
 // ═══════════════════════════════════════════════════════════
 // SAVE
 // ═══════════════════════════════════════════════════════════
-function saveOb(){var service=document.getElementById('obService').value;if(!globalIncharge||!service)return;var tujuanKeys=Object.keys(obScanMap);if(!tujuanKeys.length){toast('Tambahkan minimal 1 tujuan','error');return;}showLoading('Menyimpan...');Promise.all(tujuanKeys.map(function(tuj){return gasPost('saveOb',{incharge:globalIncharge,service:service,tujuan:tuj,awbList:obScanMap[tuj]||[]});})).then(function(results){hideLoading();var errors=results.filter(function(r){return r.error;});if(errors.length){toast('Ada error: '+errors[0].error,'error');return;}toast('✅ '+results.length+' NO TRACK dibuat','success');resetObForm();_mfLoaded=false;gasGet('getObList').then(function(r){obData=r.list||[];renderObTable();updateObStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
+function saveOb(){var service=document.getElementById('obService').value;if(!globalIncharge||!service)return;var tujuanKeys=Object.keys(obScanMap);if(!tujuanKeys.length){toast('Tambahkan minimal 1 tujuan','error');return;}showLoading('Menyimpan...');Promise.all(tujuanKeys.map(function(tuj){return gasPost('saveOb',{incharge:globalIncharge,service:service,tujuan:tuj,awbList:obScanMap[tuj]||[]});})).then(function(results){hideLoading();var errors=results.filter(function(r){return r.error;});if(errors.length){toast('Ada error: '+errors[0].error,'error');return;}toast('✅ '+results.length+' NO TRACK dibuat','success');resetObForm();_mfLoaded=false;buildAllScanAwbs();gasGet('getObList').then(function(r){obData=r.list||[];renderObTable();updateObStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
 function resetObForm(){document.getElementById('obService').value='';document.getElementById('obTujuan').value='';if(cbRegistry['obServiceCb'])cbRegistry['obServiceCb'].value='';if(cbRegistry['obTujuanCb'])cbRegistry['obTujuanCb'].value='';setCbDisabled('obTujuanCb',true);obScanMap={};obActiveTuj='';document.getElementById('obTujuanTabs').innerHTML='';document.getElementById('obScanList').innerHTML='<div class="scan-empty">Pilih service dan tujuan terlebih dahulu</div>';document.getElementById('obTotalScanLabel').innerText='0 AWB total';document.getElementById('obScanInput').disabled=true;if(document.getElementById('obAddTujBtn'))document.getElementById('obAddTujBtn').disabled=true;document.getElementById('obServiceHint').style.display='';checkObForm();document.getElementById('obFormBody').classList.remove('open');document.getElementById('obFormIcon').innerText='expand_more';}
-function saveHvs(){var service=document.getElementById('hvsService').value;if(!globalIncharge||!service)return;var tujuanKeys=Object.keys(hvsScanMap);if(!tujuanKeys.length){toast('Tambahkan minimal 1 tujuan','error');return;}showLoading('Menyimpan...');Promise.all(tujuanKeys.map(function(tuj){return gasPost('saveHvs',{incharge:globalIncharge,service:service,tujuan:tuj,awbList:hvsScanMap[tuj]||[]});})).then(function(results){hideLoading();var errors=results.filter(function(r){return r.error;});if(errors.length){toast('Ada error: '+errors[0].error,'error');return;}toast('✅ '+results.length+' NO TRACK dibuat','success');resetHvsForm();_mfLoaded=false;gasGet('getHvsList').then(function(r){hvsData=r.list||[];renderHvsTable();updateHvsStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
+function saveHvs(){var service=document.getElementById('hvsService').value;if(!globalIncharge||!service)return;var tujuanKeys=Object.keys(hvsScanMap);if(!tujuanKeys.length){toast('Tambahkan minimal 1 tujuan','error');return;}showLoading('Menyimpan...');Promise.all(tujuanKeys.map(function(tuj){return gasPost('saveHvs',{incharge:globalIncharge,service:service,tujuan:tuj,awbList:hvsScanMap[tuj]||[]});})).then(function(results){hideLoading();var errors=results.filter(function(r){return r.error;});if(errors.length){toast('Ada error: '+errors[0].error,'error');return;}toast('✅ '+results.length+' NO TRACK dibuat','success');resetHvsForm();_mfLoaded=false;buildAllScanAwbs();gasGet('getHvsList').then(function(r){hvsData=r.list||[];renderHvsTable();updateHvsStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
 function resetHvsForm(){document.getElementById('hvsService').value='';document.getElementById('hvsTujuan').value='';if(cbRegistry['hvsServiceCb'])cbRegistry['hvsServiceCb'].value='';if(cbRegistry['hvsTujuanCb'])cbRegistry['hvsTujuanCb'].value='';setCbDisabled('hvsTujuanCb',true);hvsScanMap={};hvsActiveTuj='';document.getElementById('hvsTujuanTabs').innerHTML='';document.getElementById('hvsScanList').innerHTML='<div class="scan-empty">Pilih service dan tujuan terlebih dahulu</div>';document.getElementById('hvsTotalScanLabel').innerText='0 AWB total';document.getElementById('hvsScanInput').disabled=true;if(document.getElementById('hvsAddTujBtn'))document.getElementById('hvsAddTujBtn').disabled=true;document.getElementById('hvsServiceHint').style.display='';checkHvsForm();document.getElementById('hvsFormBody').classList.remove('open');document.getElementById('hvsFormIcon').innerText='expand_more';}
-function saveIb(){var service=document.getElementById('ibService').value;var from=document.getElementById('ibFrom').value;var tujuan=document.getElementById('ibTujuan').value;if(!globalIncharge||!service||!from||!tujuan)return;showLoading('Menyimpan...');gasPost('saveIb',{incharge:globalIncharge,service:service,from:from,tujuan:tujuan,awbList:ibScanned.slice()}).then(function(res){hideLoading();if(res.error){toast('Gagal: '+res.error,'error');return;}toast('✅ IB disimpan! NO TRACK: '+res.noTrack,'success');resetIbForm();gasGet('getIbList').then(function(r){ibData=r.list||[];renderIbTable();updateIbStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
+function saveIb(){var service=document.getElementById('ibService').value;var from=document.getElementById('ibFrom').value;var tujuan=document.getElementById('ibTujuan').value;if(!globalIncharge||!service||!from||!tujuan)return;showLoading('Menyimpan...');gasPost('saveIb',{incharge:globalIncharge,service:service,from:from,tujuan:tujuan,awbList:ibScanned.slice()}).then(function(res){hideLoading();if(res.error){toast('Gagal: '+res.error,'error');return;}toast('✅ IB disimpan! NO TRACK: '+res.noTrack,'success');resetIbForm();buildAllScanAwbs();gasGet('getIbList').then(function(r){ibData=r.list||[];renderIbTable();updateIbStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
 function resetIbForm(){['ibService','ibFrom','ibTujuan'].forEach(function(id){document.getElementById(id).value='';if(cbRegistry[id+'Cb'])cbRegistry[id+'Cb'].value='';});setCbDisabled('ibFromCb',true);setCbDisabled('ibTujuanCb',true);document.getElementById('ibScanInput').disabled=true;document.getElementById('ibServiceHint').style.display='';ibScanned=[];renderIbScanList();checkIbForm();document.getElementById('ibFormBody').classList.remove('open');document.getElementById('ibFormIcon').innerText='expand_more';}
 
 // ═══════════════════════════════════════════════════════════
@@ -684,10 +764,95 @@ function reloadAll(){
     renderObTable();renderHvsTable();renderIbTable();
     updateObStats();updateHvsStats();updateIbStats();
     _mfLoaded=false;
+    // Load scan AWBs untuk search
+    return gasGet('getAllScanAwbs');
+  }).then(function(r){
+    if(r&&r.list)allScanAwbs=r.list;
     return gasGet('getOBIB');
-  }).then(function(r){obibHeaders=r.headers||[];obibRows=r.rows||[];hideLoading();})
-  .catch(function(e){hideLoading();toast('❌ '+e.message,'error');});
+  }).then(function(r){
+    obibHeaders=r.headers||[];obibRows=r.rows||[];
+    hideLoading();
+  }).catch(function(e){hideLoading();toast('❌ '+e.message,'error');});
 }
+
+// ═══════════════════════════════════════════════════════════
+// BUILD ALL SCAN AWBs (untuk search) — dari data lokal
+// ═══════════════════════════════════════════════════════════
+// Dipanggil setelah data OB/HVS/IB dimuat.
+// Karena kita tidak selalu bisa fetch semua scan AWB sekaligus,
+// kita gunakan endpoint getAllScanAwbs dari GAS.
+function buildAllScanAwbs(){
+  gasGet('getAllScanAwbs').then(function(r){
+    if(r&&r.list)allScanAwbs=r.list;
+  }).catch(function(){});
+}
+
+// ═══════════════════════════════════════════════════════════
+// ★ SEARCH AWB (sidebar + halaman)
+// ═══════════════════════════════════════════════════════════
+function handleSidebarSearch(e){
+  var input=document.getElementById('sidebarSearchInput');
+  var val=input.value.trim();
+  if(e.key==='Enter'&&val){
+    // Pindah ke halaman search dan isi query
+    switchPage('search');
+    document.getElementById('searchAwbMainInput').value=val;
+    doSearchAwb(val);
+    input.value='';
+  }
+}
+
+function doSearchAwb(q){
+  q=(q||'').trim();
+  var hdr=document.getElementById('searchAwbResult').querySelector('.search-awb-result-hdr');
+  var body=document.getElementById('searchAwbResultBody');
+  if(!q){
+    hdr.innerHTML='<span class="material-icons-round">info</span> Masukkan nomor AWB untuk mencari';
+    body.innerHTML='<div class="search-awb-empty"><span class="material-icons-round">search</span>Ketik nomor AWB di atas untuk mencari di semua data</div>';
+    return;
+  }
+  var ql=q.toLowerCase();
+  // Cari di allScanAwbs
+  var results=allScanAwbs.filter(function(item){
+    return(item.awb||'').toLowerCase().indexOf(ql)!==-1;
+  });
+  hdr.innerHTML='<span class="material-icons-round">'+(results.length?'check_circle':'search_off')+'</span> '+(results.length?results.length+' hasil ditemukan untuk "'+escH(q)+'"':'Tidak ada hasil untuk "'+escH(q)+'"');
+  if(!results.length){
+    body.innerHTML='<div class="search-awb-empty"><span class="material-icons-round">search_off</span>AWB tidak ditemukan di semua data OB, HVS, dan IB</div>';
+    return;
+  }
+  var typeLabel={OB:'Outbound BDO',HVS:'Outbound HVS',IB:'Inbound HVS'};
+  var typeIcon={OB:'local_shipping',HVS:'inventory_2',IB:'move_to_inbox'};
+  body.innerHTML=results.map(function(item){
+    var t=(item.type||'OB').toUpperCase();
+    var awbHl=escH(item.awb).replace(new RegExp('('+escRegex(escH(q))+')','gi'),'<mark>$1</mark>');
+    return'<div class="search-awb-item">'+
+      '<div class="search-awb-item-icon '+t.toLowerCase()+'"><span class="material-icons-round">'+typeIcon[t]+'</span></div>'+
+      '<div class="search-awb-item-main">'+
+        '<div class="search-awb-item-awb">'+awbHl+'</div>'+
+        '<div class="search-awb-item-meta">'+
+          '<span class="search-awb-type-tag '+t.toLowerCase()+'">'+typeLabel[t]+'</span>'+
+          '<span>'+escH(item.incharge||'—')+'</span>'+
+          '<span>•</span>'+
+          '<span>'+escH(item.service||'—')+'</span>'+
+          '<span>•</span>'+
+          '<span>→ '+escH(item.tujuan||'—')+'</span>'+
+          (item.from?'<span>• FROM: '+escH(item.from)+'</span>':'')+
+          '<span>•</span>'+
+          '<span style="color:var(--gray4)">'+escH(item.date||'')+'</span>'+
+        '</div>'+
+        '<div style="margin-top:3px">NO TRACK: <span class="search-awb-item-notrack" onclick="openDetailModal(\''+t.toLowerCase()+'\',\''+escQ(item.noTrack)+'\')">'+escH(item.noTrack)+'</span></div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function clearSearchAwb(){
+  document.getElementById('searchAwbMainInput').value='';
+  doSearchAwb('');
+}
+
+function escRegex(s){return(s||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 
 // ═══════════════════════════════════════════════════════════
 // STATS
@@ -702,7 +867,6 @@ function updateIbStats(){var d=filteredData(ibData);var t=d.reduce(function(s,x)
 // ═══════════════════════════════════════════════════════════
 function statusBadge(s){return(s==='SELESAI'||s==='selesai')?'<span class="badge badge-selesai">✓ Selesai</span>':'<span class="badge badge-proses">● On Proses</span>';}
 function fotoThumb(url){if(!url)return'<span style="font-size:11px;color:var(--gray4)">—</span>';return'<a href="'+url+'" target="_blank"><img src="'+url+'" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';}
-
 function renderObTable(filter){var data=filteredData(obData);if(filter){var v=filter.toLowerCase();data=data.filter(function(d){return(d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().indexOf(v)!==-1;});}document.getElementById('obTableCount').innerText=data.length+' record';var tbody=document.getElementById('obTbody');if(!data.length){tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>';return;}tbody.innerHTML=data.map(function(d,i){return'<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td><td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ob\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td><td>'+d.incharge+'</td><td><span class="badge badge-blue">'+d.service+'</span></td><td>'+d.tujuan+'</td><td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td><td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td><td>'+statusBadge(d.status)+'</td><td>'+fotoThumb(d.foto_url)+'</td><td><div style="display:flex;gap:3px">'+(d.status!=='SELESAI'?'<button class="action-btn" onclick="markSelesai(\'ob\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')+'<button class="action-btn danger" onclick="confirmDelete(\'ob\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button></div></td></tr>';}).join('');}
 function renderHvsTable(filter){var data=filteredData(hvsData);if(filter){var v=filter.toLowerCase();data=data.filter(function(d){return(d.no_track+d.incharge+d.service+d.tujuan+d.status).toLowerCase().indexOf(v)!==-1;});}document.getElementById('hvsTableCount').innerText=data.length+' record';var tbody=document.getElementById('hvsTbody');if(!data.length){tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>';return;}tbody.innerHTML=data.map(function(d,i){return'<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td><td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'hvs\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td><td>'+d.incharge+'</td><td><span class="badge badge-purple">'+d.service+'</span></td><td>'+d.tujuan+'</td><td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td><td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td><td>'+statusBadge(d.status)+'</td><td>'+fotoThumb(d.foto_url)+'</td><td><div style="display:flex;gap:3px">'+(d.status!=='SELESAI'?'<button class="action-btn" onclick="markSelesai(\'hvs\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')+'<button class="action-btn danger" onclick="confirmDelete(\'hvs\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button></div></td></tr>';}).join('');}
 function renderIbTable(filter){var data=filteredData(ibData);if(filter){var v=filter.toLowerCase();data=data.filter(function(d){return(d.no_track+d.incharge+d.service+d.tujuan+(d.from||'')+d.status).toLowerCase().indexOf(v)!==-1;});}document.getElementById('ibTableCount').innerText=data.length+' record';var tbody=document.getElementById('ibTbody');if(!data.length){tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><span class="material-icons-round">inbox</span>Tidak ada data</div></td></tr>';return;}tbody.innerHTML=data.map(function(d,i){return'<tr><td style="color:var(--gray5);font-size:11px">'+(i+1)+'</td><td class="mono"><span style="color:var(--blue2);cursor:pointer" onclick="openDetailModal(\'ib\',\''+escQ(d.no_track)+'\')">'+d.no_track+'</span></td><td>'+d.incharge+'</td><td><span class="badge badge-blue">'+d.service+'</span></td><td>'+(d.from||'—')+'</td><td>'+d.tujuan+'</td><td style="font-size:11px;color:var(--gray6)">'+d.created_date+'</td><td style="text-align:center;font-weight:700;font-family:var(--mono)">'+d.total_awb+'</td><td>'+statusBadge(d.status)+'</td><td>'+fotoThumb(d.foto_url)+'</td><td><div style="display:flex;gap:3px">'+(d.status!=='SELESAI'?'<button class="action-btn" onclick="markSelesai(\'ib\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round" style="color:var(--green)">check_circle</span></button>':'')+'<button class="action-btn danger" onclick="confirmDelete(\'ib\',\''+escQ(d.no_track)+'\')"><span class="material-icons-round">delete</span></button></div></td></tr>';}).join('');}
@@ -711,21 +875,16 @@ function filterHvsTable(){renderHvsTable(document.getElementById('hvsSearch').va
 function filterIbTable(){renderIbTable(document.getElementById('ibSearch').value||'');}
 
 // ═══════════════════════════════════════════════════════════
-// ★ MANIFEST — SPREADSHEET LAYOUT ★
+// ★ MANIFEST — SPREADSHEET LAYOUT (FIXED v4.0)
 // ═══════════════════════════════════════════════════════════
-
 function loadManifestPage(){
   if(_mfLoaded){renderManifestSheet();return;}
   showLoading('Memuat manifest...');
   gasGet('getManifestData').then(function(res){
     hideLoading();
     if(res.error){toast('Error manifest: '+res.error,'error');return;}
-    _mfData=res;
-    _mfLoaded=true;
-    _mfSelRow=-1;_mfSelCol=-1;
-    renderManifestSheet();
-    // Setup keyboard nav setelah render
-    setupMfKeyboard();
+    _mfData=res;_mfLoaded=true;_mfSelRow=-1;_mfSelCol=-1;
+    renderManifestSheet();setupMfKeyboard();
   }).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});
 }
 
@@ -735,10 +894,8 @@ function reloadManifest(){
   gasGet('getManifestData').then(function(res){
     hideLoading();
     if(res.error){toast('Error: '+res.error,'error');return;}
-    _mfData=res;
-    _mfLoaded=true;
-    renderManifestSheet();
-    setupMfKeyboard();
+    _mfData=res;_mfLoaded=true;
+    renderManifestSheet();setupMfKeyboard();
   }).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});
 }
 
@@ -749,32 +906,31 @@ function filterManifest(){
 
 function renderManifestSheet(){
   if(!_mfData){
-    document.getElementById('mfSheetOuter').innerHTML='<div id="mfSheetPlaceholder" style="padding:40px;text-align:center;color:var(--gray5)"><span class="material-icons-round" style="font-size:40px;color:var(--gray4);display:block;margin-bottom:8px">grid_on</span>Klik Manifest di sidebar untuk memuat data</div>';
+    document.getElementById('mfSheetOuter').innerHTML='<div style="padding:40px;text-align:center;color:var(--gray5)"><span class="material-icons-round" style="font-size:40px;color:var(--gray4);display:block;margin-bottom:8px">grid_on</span>Klik Manifest di sidebar untuk memuat data</div>';
     return;
   }
-  var hRows=_mfData.headerRows||[];  // [incharge[], service[], tujuan[]]
+  var hRows=_mfData.headerRows||[];
   var colDefs=_mfData.colDefs||[];
   var awbRows=_mfData.awbRows||[];
   var totalCols=_mfData.totalCols||0;
 
-  // Filter baris berdasarkan pencarian
+  // Filter baris
   var fq=_mfFilter.toLowerCase().trim();
   var filteredAwbRows=awbRows;
   if(fq){
-    filteredAwbRows=awbRows.filter(function(row){
-      return row.some(function(cell){return(cell||'').toLowerCase().indexOf(fq)!==-1;});
-    });
-    // Juga tampilkan baris yang kolom tujuannya cocok
-    // Cek juga header match
-    var headerMatch=false;
-    if(hRows[2]){hRows[2].forEach(function(v){if((v||'').toLowerCase().indexOf(fq)!==-1)headerMatch=true;});}
-    if(headerMatch)filteredAwbRows=awbRows; // tampilkan semua kalau tujuan match
+    // Cek apakah ada kolom tujuan yang cocok dg filter
+    var tujuanMatch=false;
+    if(hRows[2])hRows[2].forEach(function(v){if((v||'').toLowerCase().indexOf(fq)!==-1)tujuanMatch=true;});
+    if(!tujuanMatch){
+      filteredAwbRows=awbRows.filter(function(row){
+        return row.some(function(cell){return(cell||'').toLowerCase().indexOf(fq)!==-1;});
+      });
+    }
   }
   _mfFilteredRows=filteredAwbRows;
 
   // Stats
-  var incSet={};
-  colDefs.forEach(function(c){if(c.incharge)incSet[c.incharge]=true;});
+  var incSet={};colDefs.forEach(function(c){if(c.incharge)incSet[c.incharge]=true;});
   var tujCols=colDefs.filter(function(c){return!c.isDate&&c.tujuan;});
   var totalAwb=tujCols.reduce(function(s,c){
     var cnt=awbRows.filter(function(r){return r[c.colIdx]&&r[c.colIdx].trim();}).length;
@@ -784,65 +940,41 @@ function renderManifestSheet(){
   document.getElementById('mfTotalAwb').innerText=totalAwb;
   document.getElementById('mfTotalInc').innerText=Object.keys(incSet).length;
 
-  // Build table HTML
   var nCols=totalCols;
 
-  // -- HEADER ROWS --
-  // Row 0: # | Incharge (colspan per grup)
-  // Row 1: # | Service (colspan per grup)
-  // Row 2: # | Tujuan/DATE per kolom
-  // Compute colspan for incharge/service by tracking runs
-  function buildSpannedRow(hArr,rowClass,cellClassFn){
-    // hArr sudah di-expand per colDef tapi mungkin empty untuk merged cells
-    // kita bangun colspan dengan run-length encoding
+  // Build header row 0 & 1 with colspan (run-length encoding)
+  function buildSpannedRow(hArr,cellClass){
     var cells=[];var i=0;
     while(i<nCols){
       var val=hArr[i]||'';
-      if(!val){cells.push({val:'',span:1,ci:i});i++;continue;}
+      if(!val){cells.push({val:'',span:1});i++;continue;}
       var span=1;
       while(i+span<nCols&&(!hArr[i+span]||hArr[i+span]===''))span++;
-      cells.push({val:val,span:span,ci:i});
-      i+=span;
+      cells.push({val:val,span:span});i+=span;
     }
-    return '<tr>'+
-      '<th class="mf-rn" rowspan="1" style="z-index:5">#</th>'+
-      cells.map(function(c){
-        return'<th colspan="'+c.span+'" class="'+cellClassFn(c.val,c.ci)+'">'+escH(c.val)+'</th>';
-      }).join('')+
+    return'<tr><th class="mf-rn" style="z-index:5">#</th>'+
+      cells.map(function(c){return'<th colspan="'+c.span+'" class="'+cellClass+'">'+escH(c.val)+'</th>';}).join('')+
     '</tr>';
   }
 
-  var row0Html=buildSpannedRow(
-    hRows[0]||[],
-    'mf-hdr-incharge',
-    function(v){return'mf-hdr-incharge';}
-  );
-  var row1Html=buildSpannedRow(
-    hRows[1]||[],
-    'mf-hdr-service',
-    function(v){return'mf-hdr-service';}
-  );
-  // Row 2: per-cell (DATE vs tujuan)
+  var row0Html=buildSpannedRow(hRows[0]||[],'mf-hdr-incharge');
+  var row1Html=buildSpannedRow(hRows[1]||[],'mf-hdr-service');
   var row2Html='<tr><th class="mf-rn">—</th>'+
-    colDefs.map(function(c,ci){
+    colDefs.map(function(c){
       if(c.isDate)return'<th class="mf-hdr-date">DATE</th>';
       return'<th class="mf-hdr-tujuan">'+escH(c.tujuan)+'</th>';
     }).join('')+
   '</tr>';
 
-  // -- DATA ROWS --
+  // Data rows
   var dataHtml=filteredAwbRows.length?filteredAwbRows.map(function(row,ri){
     return'<tr class="mf-data-row" data-ri="'+ri+'">'+
       '<td class="mf-rn">'+(ri+1)+'</td>'+
       colDefs.map(function(c,ci){
         var val=row[c.colIdx]||'';
         var isSel=(_mfSelRow===ri&&_mfSelCol===ci);
-        if(c.isDate){
-          return'<td class="mf-cell-date'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')">'+escH(val)+'</td>';
-        }
-        if(!val){
-          return'<td class="mf-cell-empty'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')"></td>';
-        }
+        if(c.isDate)return'<td class="mf-cell-date'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')">'+escH(val)+'</td>';
+        if(!val)return'<td class="mf-cell-empty'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')"></td>';
         return'<td class="mf-cell-awb'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')" title="'+escH(val)+'">'+escH(val)+'</td>';
       }).join('')+
     '</tr>';
@@ -853,10 +985,8 @@ function renderManifestSheet(){
   updateMfActiveCellLabel();
 }
 
-// ─── Cell selection ───
 function mfSelectCell(ri,ci){
   _mfSelRow=ri;_mfSelCol=ci;
-  // update highlight
   document.querySelectorAll('.mf-cell-selected').forEach(function(el){el.classList.remove('mf-cell-selected');});
   var target=document.querySelector('[data-ri="'+ri+'"][data-ci="'+ci+'"]');
   if(target){target.classList.add('mf-cell-selected');target.scrollIntoView({block:'nearest',inline:'nearest'});}
@@ -865,43 +995,32 @@ function mfSelectCell(ri,ci){
 }
 
 function updateMfActiveCellLabel(){
-  var el=document.getElementById('mfActiveCell');
-  if(!el)return;
+  var el=document.getElementById('mfActiveCell');if(!el)return;
   if(_mfSelRow<0||_mfSelCol<0||!_mfData){el.innerText='—';return;}
   var row=_mfFilteredRows[_mfSelRow];
   var colDefs=_mfData.colDefs||[];
   var c=colDefs[_mfSelCol];
   if(!row||!c){el.innerText='—';return;}
-  var val=row[c.colIdx]||'';
-  el.innerText=val||'(kosong)';
+  el.innerText=(row[c.colIdx]||'(kosong)');
 }
 
-// ─── Keyboard navigation ───
 function setupMfKeyboard(){
   var outer=document.getElementById('mfSheetOuter');
   if(!outer||outer._kbSetup)return;
   outer._kbSetup=true;
-
   outer.addEventListener('keydown',function(e){
     if(!_mfData)return;
     var colDefs=_mfData.colDefs||[];
-    var nRows=_mfFilteredRows.length;
-    var nCols=colDefs.length;
+    var nRows=_mfFilteredRows.length;var nCols=colDefs.length;
     if(!nRows||!nCols)return;
-
-    // Inisialisasi jika belum ada sel aktif
     if(_mfSelRow<0){_mfSelRow=0;_mfSelCol=0;}
-
     var moved=false;
     if(e.key==='ArrowDown'){e.preventDefault();_mfSelRow=Math.min(_mfSelRow+1,nRows-1);moved=true;}
     else if(e.key==='ArrowUp'){e.preventDefault();_mfSelRow=Math.max(_mfSelRow-1,0);moved=true;}
     else if(e.key==='ArrowRight'){e.preventDefault();_mfSelCol=Math.min(_mfSelCol+1,nCols-1);moved=true;}
     else if(e.key==='ArrowLeft'){e.preventDefault();_mfSelCol=Math.max(_mfSelCol-1,0);moved=true;}
     else if(e.key==='Tab'){e.preventDefault();_mfSelCol=(_mfSelCol+1)%nCols;if(_mfSelCol===0)_mfSelRow=Math.min(_mfSelRow+1,nRows-1);moved=true;}
-    else if(e.key==='c'&&(e.ctrlKey||e.metaKey)){
-      e.preventDefault();copyMfCell();return;
-    }
-
+    else if(e.key==='c'&&(e.ctrlKey||e.metaKey)){e.preventDefault();copyMfCell();return;}
     if(moved){
       document.querySelectorAll('.mf-cell-selected').forEach(function(el){el.classList.remove('mf-cell-selected');});
       var target=document.querySelector('[data-ri="'+_mfSelRow+'"][data-ci="'+_mfSelCol+'"]');
@@ -919,12 +1038,8 @@ function copyMfCell(){
   if(!row||!c)return;
   var val=row[c.colIdx]||'';
   if(!val){toast('Sel kosong','error');return;}
-  navigator.clipboard.writeText(val).then(function(){
-    showCopyFlash(val);
-  }).catch(function(){
-    // Fallback
-    var ta=document.createElement('textarea');
-    ta.value=val;ta.style.position='fixed';ta.style.opacity='0';
+  navigator.clipboard.writeText(val).then(function(){showCopyFlash(val);}).catch(function(){
+    var ta=document.createElement('textarea');ta.value=val;ta.style.position='fixed';ta.style.opacity='0';
     document.body.appendChild(ta);ta.select();
     try{document.execCommand('copy');showCopyFlash(val);}catch(ex){toast('Gagal copy','error');}
     document.body.removeChild(ta);
@@ -933,10 +1048,8 @@ function copyMfCell(){
 
 function showCopyFlash(val){
   var el=document.getElementById('copyFlash');
-  el.innerText='✓ Copied: '+val;
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t=setTimeout(function(){el.classList.remove('show');},1200);
+  el.innerText='✓ Copied: '+val;el.classList.add('show');
+  clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},1200);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -949,12 +1062,40 @@ function filterObib(){renderObibTable(obibHeaders,obibRows,document.getElementBy
 // MARK SELESAI & DELETE
 // ═══════════════════════════════════════════════════════════
 function markSelesai(type,noTrack){var action=type==='ob'?'updateObStatus':type==='hvs'?'updateHvsStatus':'updateIbStatus';if(!confirm('Tandai '+noTrack+' sebagai SELESAI?'))return;showLoading('Mengubah status...');gasPost(action,{noTrack:noTrack,newStatus:'SELESAI'}).then(function(res){hideLoading();if(res.success){var arr=type==='ob'?obData:type==='hvs'?hvsData:ibData;var item=arr.find(function(d){return d.no_track===noTrack;});if(item)item.status='SELESAI';if(type==='ob'){renderObTable();updateObStats();}else if(type==='hvs'){renderHvsTable();updateHvsStats();}else{renderIbTable();updateIbStats();}toast('Status diubah ke SELESAI','success');closeModal('detailModal');}else toast('Gagal: '+(res.error||''),'error');}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
-function confirmDelete(type,noTrack){document.getElementById('confirmTitle').innerText='Hapus Data';document.getElementById('confirmMsg').innerText='Hapus '+noTrack+'? Semua AWB terkait juga akan dihapus.';var action=type==='ob'?'deleteOb':type==='hvs'?'deleteHvs':'deleteIb';document.getElementById('confirmBtn').onclick=function(){closeModal('confirmModal');closeModal('detailModal');showLoading('Menghapus...');gasPost(action,{noTrack:noTrack}).then(function(res){hideLoading();if(res.success){if(type==='ob'){obData=obData.filter(function(d){return d.no_track!==noTrack;});renderObTable();updateObStats();}else if(type==='hvs'){hvsData=hvsData.filter(function(d){return d.no_track!==noTrack;});renderHvsTable();updateHvsStats();}else{ibData=ibData.filter(function(d){return d.no_track!==noTrack;});renderIbTable();updateIbStats();}_mfLoaded=false;toast('Data dihapus','success');}else toast('Gagal: '+(res.error||''),'error');}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});};openModal('confirmModal');}
+function confirmDelete(type,noTrack){document.getElementById('confirmTitle').innerText='Hapus Data';document.getElementById('confirmMsg').innerText='Hapus '+noTrack+'? Semua AWB terkait juga akan dihapus.';var action=type==='ob'?'deleteOb':type==='hvs'?'deleteHvs':'deleteIb';document.getElementById('confirmBtn').onclick=function(){closeModal('confirmModal');closeModal('detailModal');showLoading('Menghapus...');gasPost(action,{noTrack:noTrack}).then(function(res){hideLoading();if(res.success){if(type==='ob'){obData=obData.filter(function(d){return d.no_track!==noTrack;});renderObTable();updateObStats();}else if(type==='hvs'){hvsData=hvsData.filter(function(d){return d.no_track!==noTrack;});renderHvsTable();updateHvsStats();}else{ibData=ibData.filter(function(d){return d.no_track!==noTrack;});renderIbTable();updateIbStats();}_mfLoaded=false;buildAllScanAwbs();toast('Data dihapus','success');}else toast('Gagal: '+(res.error||''),'error');}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});};openModal('confirmModal');}
 
 // ═══════════════════════════════════════════════════════════
 // DETAIL MODAL
 // ═══════════════════════════════════════════════════════════
-function openDetailModal(type,noTrack){var data=type==='ob'?obData:type==='hvs'?hvsData:ibData;var item=data.find(function(d){return d.no_track===noTrack;});if(!item)return;currentDetailItem=item;currentDetailType=type;document.getElementById('detailModalTitle').innerText=noTrack;var pb=document.getElementById('detailPhotoBox');pb.innerHTML=item.foto_url?'<img src="'+item.foto_url+'" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">':'<span class="no-img">No Image</span>';var fields=type==='ib'?[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['FROM',item.from||'—'],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]]:[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]];document.getElementById('detailGrid').innerHTML=fields.map(function(f){return'<div class="d-field"><div class="d-label">'+f[0]+'</div><div class="d-value">'+f[1]+'</div></div>';}).join('');document.getElementById('detailAwbList').innerHTML='<div class="awb-row" style="color:var(--gray5)">Memuat AWB...</div>';document.getElementById('awbCount').innerText='...';gasGet('getAwbList',{noTrack:noTrack,type:type.toUpperCase()}).then(function(res){var list=res.list||[];document.getElementById('awbCount').innerText=list.length;document.getElementById('detailAwbList').innerHTML=!list.length?'<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>':list.map(function(r){return'<div class="awb-row"><span>'+(r.awb||r)+'</span>'+(r.tujuan?'<span style="color:var(--gray5);font-size:11px">'+r.tujuan+'</span>':'')+'</div>';}).join('');}).catch(function(){});document.getElementById('detailModalFooter').innerHTML='<button class="btn btn-outline btn-sm" onclick="closeModal(\'detailModal\')">Tutup</button>'+(item.status!=='SELESAI'?'<button class="btn btn-success btn-sm" onclick="markSelesai(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">check_circle</span> Selesai</button>':'')+'<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">delete</span></button>';openModal('detailModal');}
+function openDetailModal(type,noTrack){
+  var data=type==='ob'?obData:type==='hvs'?hvsData:ibData;
+  var item=data.find(function(d){return d.no_track===noTrack;});
+  if(!item){
+    // Coba cari dari semua data (mungkin dipanggil dari search)
+    var allData=obData.concat(hvsData).concat(ibData);
+    item=allData.find(function(d){return d.no_track===noTrack;});
+    if(!item){toast('Data tidak ditemukan','error');return;}
+    // Tentukan type dari no_track prefix
+    if(noTrack.indexOf('OB_')===0)type='ob';
+    else if(noTrack.indexOf('HVS_')===0)type='hvs';
+    else if(noTrack.indexOf('IB_')===0)type='ib';
+  }
+  currentDetailItem=item;currentDetailType=type;
+  document.getElementById('detailModalTitle').innerText=noTrack;
+  var pb=document.getElementById('detailPhotoBox');
+  pb.innerHTML=item.foto_url?'<img src="'+item.foto_url+'" onerror="this.parentElement.innerHTML=\'<span class=no-img>Foto gagal dimuat</span>\'">':'<span class="no-img">No Image</span>';
+  var fields=type==='ib'?[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['FROM',item.from||'—'],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]]:[['NO TRACK',item.no_track],['INCHARGE',item.incharge],['SERVICE',item.service],['TUJUAN',item.tujuan],['DATE',item.created_date],['STATUS',item.status],['TOTAL AWB',item.total_awb]];
+  document.getElementById('detailGrid').innerHTML=fields.map(function(f){return'<div class="d-field"><div class="d-label">'+f[0]+'</div><div class="d-value">'+f[1]+'</div></div>';}).join('');
+  document.getElementById('detailAwbList').innerHTML='<div class="awb-row" style="color:var(--gray5)">Memuat AWB...</div>';
+  document.getElementById('awbCount').innerText='...';
+  gasGet('getAwbList',{noTrack:noTrack,type:type.toUpperCase()}).then(function(res){
+    var list=res.list||[];
+    document.getElementById('awbCount').innerText=list.length;
+    document.getElementById('detailAwbList').innerHTML=!list.length?'<div class="awb-row" style="color:var(--gray5)">Belum ada AWB</div>':list.map(function(r){return'<div class="awb-row"><span>'+(r.awb||r)+'</span>'+(r.tujuan?'<span style="color:var(--gray5);font-size:11px">'+r.tujuan+'</span>':'')+'</div>';}).join('');
+  }).catch(function(){});
+  document.getElementById('detailModalFooter').innerHTML='<button class="btn btn-outline btn-sm" onclick="closeModal(\'detailModal\')">Tutup</button>'+(item.status!=='SELESAI'?'<button class="btn btn-success btn-sm" onclick="markSelesai(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">check_circle</span> Selesai</button>':'')+'<button class="btn btn-danger btn-sm" onclick="confirmDelete(\''+type+'\',\''+escQ(noTrack)+'\')"><span class="material-icons-round">delete</span></button>';
+  openModal('detailModal');
+}
 
 // ═══════════════════════════════════════════════════════════
 // FOTO
@@ -964,26 +1105,18 @@ function onFotoChange(e){var file=e.target.files[0];if(!file||!currentDetailItem
 // ═══════════════════════════════════════════════════════════
 // EXPORT
 // ═══════════════════════════════════════════════════════════
-function exportCSV(){var page=document.querySelector('.nav-item.active .nav-label');var pname=page?page.innerText:'';var data,headers,filename;if(pname.indexOf('Outbound BDO')!==-1){data=filteredData(obData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='OB_export.csv';}else if(pname.indexOf('Outbound HVS')!==-1){data=filteredData(hvsData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='HVS_export.csv';}else if(pname.indexOf('Inbound HVS')!==-1){data=filteredData(ibData);headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb'];filename='IB_export.csv';}else{toast('Pilih halaman OB/HVS/IB dulu','error');return;}var csv=headers.join(',')+'\n'+data.map(function(d){return headers.map(function(h){return'"'+(d[h]||'')+'"';}).join(',');}).join('\n');dlCSV(csv,filename);}
-
-function exportManifestCSV(){
-  if(!_mfData){toast('Manifest belum dimuat','error');return;}
-  var colDefs=_mfData.colDefs||[];
-  var awbRows=_mfData.awbRows||[];
-  var hRows=_mfData.headerRows||[];
-  if(!colDefs.length){toast('Tidak ada data manifest','error');return;}
-  // Header: baris 1 = incharge, baris 2 = service, baris 3 = tujuan/DATE, lalu data
-  var h0=hRows[0]||[];var h1=hRows[1]||[];var h2=hRows[2]||[];
-  var csvRows=[];
-  csvRows.push(['#'].concat(h0).map(function(v){return'"'+v+'"';}).join(','));
-  csvRows.push([''].concat(h1).map(function(v){return'"'+v+'"';}).join(','));
-  csvRows.push([''].concat(h2).map(function(v){return'"'+v+'"';}).join(','));
-  awbRows.forEach(function(row,i){
-    csvRows.push(['"'+(i+1)+'"'].concat(row.map(function(c){return'"'+(c||'')+'"';})).join(','));
-  });
-  dlCSV(csvRows.join('\n'),'manifest_export.csv');
+function exportCSV(){
+  var page=document.querySelector('.nav-item.active .nav-label');
+  var pname=page?page.innerText:'';
+  var data,headers,filename;
+  if(pname.indexOf('Outbound BDO')!==-1){data=filteredData(obData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='OB_export.csv';}
+  else if(pname.indexOf('Outbound HVS')!==-1){data=filteredData(hvsData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='HVS_export.csv';}
+  else if(pname.indexOf('Inbound HVS')!==-1){data=filteredData(ibData);headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb'];filename='IB_export.csv';}
+  else{toast('Pilih halaman OB/HVS/IB dulu','error');return;}
+  var csv=headers.join(',')+'\n'+data.map(function(d){return headers.map(function(h){return'"'+(d[h]||'')+'"';}).join(',');}).join('\n');
+  dlCSV(csv,filename);
 }
-
+function exportManifestCSV(){if(!_mfData){toast('Manifest belum dimuat','error');return;}var colDefs=_mfData.colDefs||[];var awbRows=_mfData.awbRows||[];var hRows=_mfData.headerRows||[];if(!colDefs.length){toast('Tidak ada data manifest','error');return;}var h0=hRows[0]||[];var h1=hRows[1]||[];var h2=hRows[2]||[];var csvRows=[];csvRows.push(['#'].concat(h0).map(function(v){return'"'+v+'"';}).join(','));csvRows.push([''].concat(h1).map(function(v){return'"'+v+'"';}).join(','));csvRows.push([''].concat(h2).map(function(v){return'"'+v+'"';}).join(','));awbRows.forEach(function(row,i){csvRows.push(['"'+(i+1)+'"'].concat(row.map(function(c){return'"'+(c||'')+'"';})).join(','));});dlCSV(csvRows.join('\n'),'manifest_export.csv');}
 function exportObibCSV(){if(!obibRows.length){toast('Tidak ada data OB&IB','error');return;}dlCSV(obibHeaders.join(',')+'\n'+obibRows.map(function(r){return r.map(function(c){return'"'+c+'"';}).join(',');}).join('\n'),'OBIB_export.csv');}
 function dlCSV(csv,fn){var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;a.click();}
 </script>
