@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OUTBOUND GTW BDO — v4.0</title>
+<title>OUTBOUND GTW BDO — v4.1</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
@@ -42,8 +42,6 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .nav-item .material-icons-round{font-size:19px;flex-shrink:0}
 .nav-label{overflow:hidden;transition:var(--trans)}
 .sidebar.collapsed .nav-label{opacity:0;width:0}
-
-/* Search AWB di sidebar */
 .sidebar-search-section{padding:8px 10px;border-top:1px solid rgba(255,255,255,.12);flex-shrink:0}
 .sidebar-search-label{color:rgba(255,255,255,.5);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:4px;overflow:hidden;white-space:nowrap}
 .sidebar-search-label .material-icons-round{font-size:12px}
@@ -56,7 +54,6 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .sidebar.collapsed .sidebar-search-label{display:none}
 .sidebar.collapsed .sidebar-search-box{padding:6px;justify-content:center}
 .sidebar.collapsed .sidebar-search-box input{display:none}
-
 .sidebar-bottom{padding:10px 14px;border-top:1px solid rgba(255,255,255,.12);overflow:hidden;white-space:nowrap}
 .sidebar-bottom .ver{color:rgba(255,255,255,.35);font-size:10px;font-family:var(--mono)}
 
@@ -124,6 +121,9 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .warn-bar .material-icons-round{font-size:17px}
 .service-hint{display:flex;align-items:center;gap:7px;background:#E8EAF6;border:1px solid #C5CAE9;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:12px;color:#283593}
 .service-hint .material-icons-round{font-size:15px}
+/* ★ IB scan hint - wajib isi from & tujuan dulu */
+.ib-scan-hint{display:flex;align-items:center;gap:7px;background:#FFF3E0;border:1px solid #FFD54F;border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:12px;color:#E65100}
+.ib-scan-hint .material-icons-round{font-size:15px}
 .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px}
 .fg label{font-size:10px;font-weight:700;color:var(--gray5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
 .scan-section{border-top:1px solid var(--gray2);padding-top:12px;margin-top:4px}
@@ -157,6 +157,7 @@ body{font-family:var(--font);background:var(--gray1);color:var(--gray8);height:1
 .table-panel{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);overflow:hidden}
 .table-toolbar{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray2);flex-wrap:wrap}
 .table-toolbar-title{font-weight:700;font-size:13px;color:var(--gray8);flex:1;white-space:nowrap}
+.search-box{display:flex;align-items:background:var(--gray1);border:1px solid var(--gray3);border-radius:6px;padding:5px 9px;gap:5px}
 .search-box{display:flex;align-items:center;background:var(--gray1);border:1px solid var(--gray3);border-radius:6px;padding:5px 9px;gap:5px}
 .search-box input{border:none;outline:none;background:transparent;font-size:13px;width:160px;font-family:var(--font)}
 .search-box .material-icons-round{font-size:15px;color:var(--gray5)}
@@ -172,16 +173,21 @@ tr:hover td{background:var(--gray0)}
 .badge-selesai{background:var(--green-light);color:var(--green)}
 .badge-blue{background:var(--blue-light);color:var(--blue)}
 .badge-purple{background:var(--purple-light);color:var(--purple)}
-.badge-ob{background:#E3F2FD;color:#1565C0}
-.badge-hvs{background:var(--purple-light);color:var(--purple)}
-.badge-ib{background:#E8F5E9;color:#2E7D32}
 .mono{font-family:var(--mono);font-size:12px}
 .action-btn{background:none;border:none;cursor:pointer;padding:3px 5px;border-radius:5px;color:var(--gray5);transition:var(--trans);display:inline-flex;align-items:center}
 .action-btn:hover{background:var(--gray2);color:var(--gray8)}
 .action-btn.danger:hover{background:var(--red-light);color:var(--red)}
 .action-btn .material-icons-round{font-size:16px}
 
-/* ═══ MANIFEST SPREADSHEET ═══ */
+/* ═══ OBIB TABLE — INBOUND_HVS column ═══ */
+.ib-section-block{margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--gray3)}
+.ib-section-block:last-child{border-bottom:none;margin-bottom:0}
+.ib-section-header{font-size:11px;font-weight:700;color:var(--blue2);font-family:var(--mono);margin-bottom:3px;word-break:break-all}
+.ib-section-awb{font-size:11px;font-family:var(--mono);color:var(--gray7);padding-left:8px;line-height:1.7}
+.ib-section-awb-item{display:block}
+.ib-no-data{color:var(--gray4);font-size:11px;font-style:italic}
+
+/* ═══ MANIFEST ═══ */
 #page-manifest{display:flex;flex-direction:column;height:100%;overflow:hidden}
 .mf-toolbar{display:flex;align-items:center;gap:8px;padding:8px 0 10px;flex-wrap:wrap;flex-shrink:0}
 .mf-stats-row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0}
@@ -207,7 +213,7 @@ tr:hover td{background:var(--gray0)}
 .mf-data-row:hover .mf-cell-selected{background:#BBDEFB !important}
 .mf-table thead{position:sticky;top:0;z-index:4}
 
-/* ═══ SEARCH AWB PAGE ═══ */
+/* ═══ SEARCH AWB ═══ */
 #page-search{display:flex;flex-direction:column}
 .search-awb-hero{background:var(--white);border-radius:var(--r);border:1px solid var(--gray3);box-shadow:var(--shadow);padding:20px 20px 16px;margin-bottom:14px}
 .search-awb-hero-title{font-size:15px;font-weight:700;color:var(--gray8);margin-bottom:4px;display:flex;align-items:center;gap:8px}
@@ -298,8 +304,6 @@ tr:hover td{background:var(--gray0)}
     <div class="nav-item" onclick="switchPage('obib')" id="nav-obib"><span class="material-icons-round">table_view</span><span class="nav-label">OB &amp; IB</span></div>
     <div class="nav-item" onclick="switchPage('search')" id="nav-search"><span class="material-icons-round">manage_search</span><span class="nav-label">Cari AWB</span></div>
   </div>
-
-  <!-- Search AWB di Sidebar -->
   <div class="sidebar-search-section">
     <div class="sidebar-search-label"><span class="material-icons-round">search</span><span class="nav-label">Cari AWB</span></div>
     <div class="sidebar-search-box">
@@ -307,8 +311,7 @@ tr:hover td{background:var(--gray0)}
       <input id="sidebarSearchInput" placeholder="Scan / ketik AWB..." onkeydown="handleSidebarSearch(event)" autocomplete="off">
     </div>
   </div>
-
-  <div class="sidebar-bottom"><div class="ver">v4.0 — GTW BDO</div></div>
+  <div class="sidebar-bottom"><div class="ver">v4.1 — GTW BDO</div></div>
 </div>
 
 <div class="main">
@@ -419,14 +422,16 @@ tr:hover td{background:var(--gray0)}
           <div id="ibWarnBar" class="warn-bar"><span class="material-icons-round">warning</span>Pilih <strong>Incharge</strong> terlebih dahulu.</div>
           <div id="ibFormGrid" class="form-grid" style="display:none">
             <div class="fg"><label>SERVICE *</label><div class="form-smart-cb" id="ibServiceCb"><input class="form-smart-cb-input" id="ibService" placeholder="Pilih service dulu..." autocomplete="off"><span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibServiceCb')">expand_more</span><div class="form-smart-cb-dropdown" id="ibServiceDrop"></div></div></div>
-            <div class="fg"><label>FROM</label><div class="form-smart-cb" id="ibFromCb"><input class="form-smart-cb-input" id="ibFrom" placeholder="Pilih service dulu..." autocomplete="off" disabled><span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibFromCb')">expand_more</span><div class="form-smart-cb-dropdown" id="ibFromDrop"></div></div></div>
-            <div class="fg"><label>TUJUAN</label><div class="form-smart-cb" id="ibTujuanCb"><input class="form-smart-cb-input" id="ibTujuan" placeholder="Pilih service dulu..." autocomplete="off" disabled><span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibTujuanCb')">expand_more</span><div class="form-smart-cb-dropdown" id="ibTujuanDrop"></div></div></div>
+            <div class="fg"><label>FROM *</label><div class="form-smart-cb" id="ibFromCb"><input class="form-smart-cb-input" id="ibFrom" placeholder="Pilih service dulu..." autocomplete="off" disabled><span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibFromCb')">expand_more</span><div class="form-smart-cb-dropdown" id="ibFromDrop"></div></div></div>
+            <div class="fg"><label>TUJUAN *</label><div class="form-smart-cb" id="ibTujuanCb"><input class="form-smart-cb-input" id="ibTujuan" placeholder="Pilih service dulu..." autocomplete="off" disabled><span class="material-icons-round form-smart-cb-arrow" onclick="toggleFormCb('ibTujuanCb')">expand_more</span><div class="form-smart-cb-dropdown" id="ibTujuanDrop"></div></div></div>
           </div>
           <div id="ibServiceHint" class="service-hint" style="display:none"><span class="material-icons-round">info</span>Pilih <strong>SERVICE</strong> dulu sebelum mengisi FROM, TUJUAN, dan scan AWB.</div>
+          <!-- ★ Hint: wajib isi FROM & TUJUAN sebelum scan -->
+          <div id="ibScanHint" class="ib-scan-hint" style="display:none"><span class="material-icons-round">warning_amber</span>Wajib isi <strong>FROM</strong> dan <strong>TUJUAN</strong> terlebih dahulu sebelum scan AWB.</div>
           <div class="scan-section" id="ibScanSection" style="display:none">
             <div class="scan-header"><span class="scan-header-label">Scan AWB</span><span style="font-size:11px;color:var(--gray5)" id="ibTotalScanLabel">0 AWB total</span></div>
-            <div class="scan-row"><input class="scan-inp" id="ibScanInput" placeholder="Pilih service, from & tujuan dulu..." disabled onkeydown="handleScan(event,'ib')"></div>
-            <div class="scan-list" id="ibScanList"><div class="scan-empty">Pilih service dan tujuan terlebih dahulu</div></div>
+            <div class="scan-row"><input class="scan-inp" id="ibScanInput" placeholder="Isi FROM & TUJUAN dulu..." disabled onkeydown="handleScan(event,'ib')"></div>
+            <div class="scan-list" id="ibScanList"><div class="scan-empty">Isi FROM dan TUJUAN terlebih dahulu</div></div>
           </div>
           <div class="form-actions" id="ibFormActions" style="display:none"><button class="btn btn-outline btn-sm" onclick="resetIbForm()">Batal</button><button class="btn btn-primary btn-sm" id="btnSaveIb" disabled onclick="saveIb()"><span class="material-icons-round">save</span> Simpan</button></div>
         </div>
@@ -466,7 +471,11 @@ tr:hover td{background:var(--gray0)}
     <!-- OB&IB PAGE -->
     <div id="page-obib" style="display:none">
       <div class="table-panel">
-        <div class="table-toolbar"><div class="table-toolbar-title">OB &amp; IB — Combined View</div><div class="search-box"><span class="material-icons-round">search</span><input id="obibSearch" placeholder="Cari..." oninput="filterObib()"></div><button class="export-btn" onclick="exportObibCSV()"><span class="material-icons-round">file_download</span> Export</button></div>
+        <div class="table-toolbar">
+          <div class="table-toolbar-title">OB &amp; IB — Combined View</div>
+          <div class="search-box"><span class="material-icons-round">search</span><input id="obibSearch" placeholder="Cari..." oninput="filterObib()"></div>
+          <button class="export-btn" onclick="exportObibCSV()"><span class="material-icons-round">file_download</span> Export</button>
+        </div>
         <div class="table-wrap" id="obibTableWrap"><div class="empty-state"><span class="material-icons-round">table_view</span>Loading...</div></div>
       </div>
     </div>
@@ -556,12 +565,10 @@ var pendingTujuanType = '';
 var obScanMap = {}, hvsScanMap = {};
 var ibScanned = [];
 var obActiveTuj = '', hvsActiveTuj = '';
-var obibHeaders = [], obibRows = [];
+var obibHeaders = [], obibRows = [], obibIbSections = [];
+var allScanAwbs = [];
 
-// ── AWB Search cache (from SCAN sheets) ──
-var allScanAwbs = []; // [{awb, noTrack, incharge, service, tujuan, type, date}]
-
-// ── Manifest state ──
+// Manifest state
 var _mfData = null;
 var _mfLoaded = false;
 var _mfFilter = '';
@@ -670,10 +677,8 @@ function switchPage(page){
   });
   document.getElementById('topbarTitle').innerHTML=pageTitles[page]||page;
   if(page==='manifest')loadManifestPage();
-  if(page==='obib')renderObibTable(obibHeaders,obibRows);
-  if(page==='search'){
-    setTimeout(function(){document.getElementById('searchAwbMainInput').focus();},100);
-  }
+  if(page==='obib')renderObibPage();
+  if(page==='search'){setTimeout(function(){document.getElementById('searchAwbMainInput').focus();},100);}
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -697,26 +702,96 @@ function initAllCbs(){
   registerCb('hvsServiceCb','hvsService','hvsServiceDrop',cbOptions.hvs.service,function(v){onHvsServiceSelect(v);});
   registerCb('hvsTujuanCb','hvsTujuan','hvsTujuanDrop',cbOptions.hvs.tujuan,function(v){if(v&&!hvsScanMap[v])initHvsTujuan(v);checkHvsForm();});
   registerCb('ibServiceCb','ibService','ibServiceDrop',cbOptions.ib.service,function(v){onIbServiceSelect(v);});
-  registerCb('ibFromCb','ibFrom','ibFromDrop',cbOptions.ib.from,function(){checkIbForm();});
-  registerCb('ibTujuanCb','ibTujuan','ibTujuanDrop',cbOptions.ib.tujuan,function(){checkIbForm();});
+  // ★ FROM & TUJUAN IB — setelah select, re-check apakah scan bisa aktif
+  registerCb('ibFromCb','ibFrom','ibFromDrop',cbOptions.ib.from,function(){checkIbScanReady();checkIbForm();});
+  registerCb('ibTujuanCb','ibTujuan','ibTujuanDrop',cbOptions.ib.tujuan,function(){checkIbScanReady();checkIbForm();});
   registerCb('newTujuanCb','newTujuanInput','newTujuanDrop',[],function(){});
 }
 function onObServiceSelect(v){var has=!!v;setCbDisabled('obTujuanCb',!has);document.getElementById('obTujuan').placeholder=has?'Ketik / pilih...':'Pilih service dulu...';document.getElementById('obScanInput').disabled=!has||!obActiveTuj;document.getElementById('obAddTujBtn').disabled=!has;document.getElementById('obServiceHint').style.display=has?'none':'';if(cbRegistry['obTujuanCb']){cbRegistry['obTujuanCb'].value='';document.getElementById('obTujuan').value='';}obScanMap={};obActiveTuj='';document.getElementById('obTujuanTabs').innerHTML='';document.getElementById('obScanList').innerHTML='<div class="scan-empty">Pilih tujuan terlebih dahulu</div>';updateObTotalLabel();checkObForm();}
 function onHvsServiceSelect(v){var has=!!v;setCbDisabled('hvsTujuanCb',!has);document.getElementById('hvsTujuan').placeholder=has?'Ketik / pilih...':'Pilih service dulu...';document.getElementById('hvsScanInput').disabled=!has||!hvsActiveTuj;document.getElementById('hvsAddTujBtn').disabled=!has;document.getElementById('hvsServiceHint').style.display=has?'none':'';if(cbRegistry['hvsTujuanCb']){cbRegistry['hvsTujuanCb'].value='';document.getElementById('hvsTujuan').value='';}hvsScanMap={};hvsActiveTuj='';document.getElementById('hvsTujuanTabs').innerHTML='';document.getElementById('hvsScanList').innerHTML='<div class="scan-empty">Pilih tujuan terlebih dahulu</div>';updateHvsTotalLabel();checkHvsForm();}
-function onIbServiceSelect(v){var has=!!v;setCbDisabled('ibFromCb',!has);setCbDisabled('ibTujuanCb',!has);document.getElementById('ibFrom').placeholder=has?'Ketik / pilih...':'Pilih service dulu...';document.getElementById('ibTujuan').placeholder=has?'Ketik / pilih...':'Pilih service dulu...';document.getElementById('ibScanInput').disabled=!has;document.getElementById('ibServiceHint').style.display=has?'none':'';if(cbRegistry['ibFromCb']){cbRegistry['ibFromCb'].value='';document.getElementById('ibFrom').value='';}if(cbRegistry['ibTujuanCb']){cbRegistry['ibTujuanCb'].value='';document.getElementById('ibTujuan').value='';}ibScanned=[];renderIbScanList();checkIbForm();}
+
+// ★ IB: aktifkan FROM & TUJUAN setelah pilih service, tapi scan hanya aktif jika keduanya terisi
+function onIbServiceSelect(v){
+  var has=!!v;
+  setCbDisabled('ibFromCb',!has);
+  setCbDisabled('ibTujuanCb',!has);
+  document.getElementById('ibFrom').placeholder=has?'Ketik / pilih...':'Pilih service dulu...';
+  document.getElementById('ibTujuan').placeholder=has?'Ketik / pilih...':'Pilih service dulu...';
+  document.getElementById('ibServiceHint').style.display=has?'none':'';
+  if(cbRegistry['ibFromCb']){cbRegistry['ibFromCb'].value='';document.getElementById('ibFrom').value='';}
+  if(cbRegistry['ibTujuanCb']){cbRegistry['ibTujuanCb'].value='';document.getElementById('ibTujuan').value='';}
+  ibScanned=[];renderIbScanList();
+  checkIbScanReady();
+  checkIbForm();
+}
+
+// ★ Cek apakah FROM & TUJUAN sudah terisi — baru aktifkan scan input
+function checkIbScanReady(){
+  var svc=document.getElementById('ibService').value;
+  var from=document.getElementById('ibFrom').value;
+  var tuj=document.getElementById('ibTujuan').value;
+  var ready=!!(svc&&from&&tuj);
+  var scanInp=document.getElementById('ibScanInput');
+  var hint=document.getElementById('ibScanHint');
+  scanInp.disabled=!ready;
+  if(svc&&!ready){
+    // Service sudah, tapi FROM/TUJUAN belum
+    scanInp.placeholder='Isi FROM & TUJUAN dulu...';
+    if(hint)hint.style.display='';
+  } else if(!svc){
+    scanInp.placeholder='Pilih service dulu...';
+    if(hint)hint.style.display='none';
+  } else {
+    // ready
+    scanInp.placeholder='Scan nomor AWB...';
+    if(hint)hint.style.display='none';
+  }
+}
 
 // ═══════════════════════════════════════════════════════════
 // FORM INCHARGE
 // ═══════════════════════════════════════════════════════════
 function refreshAllFormIncharges(){['ob','hvs','ib'].forEach(function(t){refreshFormIncharge(t);});}
-function refreshFormIncharge(t){var has=!!globalIncharge;document.getElementById(t+'InfoBar').style.display=has?'':'none';document.getElementById(t+'WarnBar').style.display=has?'none':'';document.getElementById(t+'FormGrid').style.display=has?'':'none';document.getElementById(t+'ScanSection').style.display=has?'':'none';document.getElementById(t+'FormActions').style.display=has?'':'none';if(has)document.getElementById(t+'InchargeDisplay').innerText=globalIncharge;if(has){document.getElementById(t+'ServiceHint').style.display='';if(t==='ob'||t==='hvs'){setCbDisabled(t+'TujuanCb',true);document.getElementById(t+'ScanInput').disabled=true;if(document.getElementById(t+'AddTujBtn'))document.getElementById(t+'AddTujBtn').disabled=true;}else{setCbDisabled('ibFromCb',true);setCbDisabled('ibTujuanCb',true);document.getElementById('ibScanInput').disabled=true;}}if(t==='ob')checkObForm();else if(t==='hvs')checkHvsForm();else checkIbForm();}
+function refreshFormIncharge(t){
+  var has=!!globalIncharge;
+  document.getElementById(t+'InfoBar').style.display=has?'':'none';
+  document.getElementById(t+'WarnBar').style.display=has?'none':'';
+  document.getElementById(t+'FormGrid').style.display=has?'':'none';
+  document.getElementById(t+'ScanSection').style.display=has?'':'none';
+  document.getElementById(t+'FormActions').style.display=has?'':'none';
+  if(has)document.getElementById(t+'InchargeDisplay').innerText=globalIncharge;
+  if(has){
+    document.getElementById(t+'ServiceHint').style.display='';
+    if(t==='ob'||t==='hvs'){
+      setCbDisabled(t+'TujuanCb',true);
+      document.getElementById(t+'ScanInput').disabled=true;
+      if(document.getElementById(t+'AddTujBtn'))document.getElementById(t+'AddTujBtn').disabled=true;
+    } else {
+      // IB: reset ke awal
+      setCbDisabled('ibFromCb',true);
+      setCbDisabled('ibTujuanCb',true);
+      document.getElementById('ibScanInput').disabled=true;
+      var hint=document.getElementById('ibScanHint');
+      if(hint)hint.style.display='none';
+    }
+  }
+  if(t==='ob')checkObForm();
+  else if(t==='hvs')checkHvsForm();
+  else checkIbForm();
+}
 function toggleForm(type){var body=document.getElementById(type+'FormBody');var icon=document.getElementById(type+'FormIcon');var open=body.classList.toggle('open');icon.innerText=open?'expand_less':'expand_more';if(open)refreshFormIncharge(type);}
 function checkObForm(){var hasService=!!(document.getElementById('obService')&&document.getElementById('obService').value);var hasTuj=Object.keys(obScanMap).length>0;document.getElementById('btnSaveOb').disabled=!(globalIncharge&&hasService&&hasTuj);}
 function checkHvsForm(){var hasService=!!(document.getElementById('hvsService')&&document.getElementById('hvsService').value);var hasTuj=Object.keys(hvsScanMap).length>0;document.getElementById('btnSaveHvs').disabled=!(globalIncharge&&hasService&&hasTuj);}
-function checkIbForm(){document.getElementById('btnSaveIb').disabled=!(globalIncharge&&document.getElementById('ibService').value&&document.getElementById('ibFrom').value&&document.getElementById('ibTujuan').value);}
+// ★ IB: Save hanya aktif jika semua field terisi DAN ada AWB (opsional: bisa tanpa AWB)
+function checkIbForm(){
+  var svc=document.getElementById('ibService').value;
+  var from=document.getElementById('ibFrom').value;
+  var tuj=document.getElementById('ibTujuan').value;
+  document.getElementById('btnSaveIb').disabled=!(globalIncharge&&svc&&from&&tuj);
+}
 
 // ═══════════════════════════════════════════════════════════
-// MULTI TUJUAN
+// MULTI TUJUAN (OB / HVS)
 // ═══════════════════════════════════════════════════════════
 function initObTujuan(tuj){if(!obScanMap[tuj])obScanMap[tuj]=[];obActiveTuj=tuj;document.getElementById('obScanInput').disabled=false;renderObTabs();renderObScanList();}
 function initHvsTujuan(tuj){if(!hvsScanMap[tuj])hvsScanMap[tuj]=[];hvsActiveTuj=tuj;document.getElementById('hvsScanInput').disabled=false;renderHvsTabs();renderHvsScanList();}
@@ -739,7 +814,36 @@ function renderIbScanList(){var list=document.getElementById('ibScanList');var t
 // ═══════════════════════════════════════════════════════════
 // SCAN INPUT
 // ═══════════════════════════════════════════════════════════
-function handleScan(e,type){if(e.key!=='Enter')return;var input=document.getElementById(type+'ScanInput');var val=input.value.trim();if(!val)return;var svcEl=document.getElementById(type+'Service');if(!svcEl||!svcEl.value){toast('Pilih SERVICE dulu','error');input.value='';return;}if(type==='ob'){if(!obActiveTuj){toast('Pilih tujuan dahulu','error');return;}if(!obScanMap[obActiveTuj])obScanMap[obActiveTuj]=[];if(obScanMap[obActiveTuj].indexOf(val)===-1)obScanMap[obActiveTuj].unshift(val);else{toast('AWB sudah ada','error');input.value='';return;}renderObTabs();renderObScanList();}else if(type==='hvs'){if(!hvsActiveTuj){toast('Pilih tujuan dahulu','error');return;}if(!hvsScanMap[hvsActiveTuj])hvsScanMap[hvsActiveTuj]=[];if(hvsScanMap[hvsActiveTuj].indexOf(val)===-1)hvsScanMap[hvsActiveTuj].unshift(val);else{toast('AWB sudah ada','error');input.value='';return;}renderHvsTabs();renderHvsScanList();}else{var tujEl=document.getElementById('ibTujuan');if(!tujEl||!tujEl.value){toast('Pilih TUJUAN dulu','error');input.value='';return;}if(ibScanned.indexOf(val)===-1)ibScanned.unshift(val);else{toast('AWB sudah ada','error');input.value='';return;}renderIbScanList();}input.value='';}
+function handleScan(e,type){
+  if(e.key!=='Enter')return;
+  var input=document.getElementById(type+'ScanInput');
+  var val=input.value.trim();
+  if(!val)return;
+  var svcEl=document.getElementById(type+'Service');
+  if(!svcEl||!svcEl.value){toast('Pilih SERVICE dulu','error');input.value='';return;}
+  if(type==='ob'){
+    if(!obActiveTuj){toast('Pilih tujuan dahulu','error');return;}
+    if(!obScanMap[obActiveTuj])obScanMap[obActiveTuj]=[];
+    if(obScanMap[obActiveTuj].indexOf(val)===-1)obScanMap[obActiveTuj].unshift(val);
+    else{toast('AWB sudah ada','error');input.value='';return;}
+    renderObTabs();renderObScanList();
+  } else if(type==='hvs'){
+    if(!hvsActiveTuj){toast('Pilih tujuan dahulu','error');return;}
+    if(!hvsScanMap[hvsActiveTuj])hvsScanMap[hvsActiveTuj]=[];
+    if(hvsScanMap[hvsActiveTuj].indexOf(val)===-1)hvsScanMap[hvsActiveTuj].unshift(val);
+    else{toast('AWB sudah ada','error');input.value='';return;}
+    renderHvsTabs();renderHvsScanList();
+  } else {
+    // IB — ★ wajib cek FROM & TUJUAN dulu
+    var from=document.getElementById('ibFrom').value;
+    var tuj=document.getElementById('ibTujuan').value;
+    if(!from||!tuj){toast('Isi FROM & TUJUAN dulu','error');input.value='';return;}
+    if(ibScanned.indexOf(val)===-1)ibScanned.unshift(val);
+    else{toast('AWB sudah ada','error');input.value='';return;}
+    renderIbScanList();
+  }
+  input.value='';
+}
 
 // ═══════════════════════════════════════════════════════════
 // SAVE
@@ -748,8 +852,8 @@ function saveOb(){var service=document.getElementById('obService').value;if(!glo
 function resetObForm(){document.getElementById('obService').value='';document.getElementById('obTujuan').value='';if(cbRegistry['obServiceCb'])cbRegistry['obServiceCb'].value='';if(cbRegistry['obTujuanCb'])cbRegistry['obTujuanCb'].value='';setCbDisabled('obTujuanCb',true);obScanMap={};obActiveTuj='';document.getElementById('obTujuanTabs').innerHTML='';document.getElementById('obScanList').innerHTML='<div class="scan-empty">Pilih service dan tujuan terlebih dahulu</div>';document.getElementById('obTotalScanLabel').innerText='0 AWB total';document.getElementById('obScanInput').disabled=true;if(document.getElementById('obAddTujBtn'))document.getElementById('obAddTujBtn').disabled=true;document.getElementById('obServiceHint').style.display='';checkObForm();document.getElementById('obFormBody').classList.remove('open');document.getElementById('obFormIcon').innerText='expand_more';}
 function saveHvs(){var service=document.getElementById('hvsService').value;if(!globalIncharge||!service)return;var tujuanKeys=Object.keys(hvsScanMap);if(!tujuanKeys.length){toast('Tambahkan minimal 1 tujuan','error');return;}showLoading('Menyimpan...');Promise.all(tujuanKeys.map(function(tuj){return gasPost('saveHvs',{incharge:globalIncharge,service:service,tujuan:tuj,awbList:hvsScanMap[tuj]||[]});})).then(function(results){hideLoading();var errors=results.filter(function(r){return r.error;});if(errors.length){toast('Ada error: '+errors[0].error,'error');return;}toast('✅ '+results.length+' NO TRACK dibuat','success');resetHvsForm();_mfLoaded=false;buildAllScanAwbs();gasGet('getHvsList').then(function(r){hvsData=r.list||[];renderHvsTable();updateHvsStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
 function resetHvsForm(){document.getElementById('hvsService').value='';document.getElementById('hvsTujuan').value='';if(cbRegistry['hvsServiceCb'])cbRegistry['hvsServiceCb'].value='';if(cbRegistry['hvsTujuanCb'])cbRegistry['hvsTujuanCb'].value='';setCbDisabled('hvsTujuanCb',true);hvsScanMap={};hvsActiveTuj='';document.getElementById('hvsTujuanTabs').innerHTML='';document.getElementById('hvsScanList').innerHTML='<div class="scan-empty">Pilih service dan tujuan terlebih dahulu</div>';document.getElementById('hvsTotalScanLabel').innerText='0 AWB total';document.getElementById('hvsScanInput').disabled=true;if(document.getElementById('hvsAddTujBtn'))document.getElementById('hvsAddTujBtn').disabled=true;document.getElementById('hvsServiceHint').style.display='';checkHvsForm();document.getElementById('hvsFormBody').classList.remove('open');document.getElementById('hvsFormIcon').innerText='expand_more';}
-function saveIb(){var service=document.getElementById('ibService').value;var from=document.getElementById('ibFrom').value;var tujuan=document.getElementById('ibTujuan').value;if(!globalIncharge||!service||!from||!tujuan)return;showLoading('Menyimpan...');gasPost('saveIb',{incharge:globalIncharge,service:service,from:from,tujuan:tujuan,awbList:ibScanned.slice()}).then(function(res){hideLoading();if(res.error){toast('Gagal: '+res.error,'error');return;}toast('✅ IB disimpan! NO TRACK: '+res.noTrack,'success');resetIbForm();buildAllScanAwbs();gasGet('getIbList').then(function(r){ibData=r.list||[];renderIbTable();updateIbStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
-function resetIbForm(){['ibService','ibFrom','ibTujuan'].forEach(function(id){document.getElementById(id).value='';if(cbRegistry[id+'Cb'])cbRegistry[id+'Cb'].value='';});setCbDisabled('ibFromCb',true);setCbDisabled('ibTujuanCb',true);document.getElementById('ibScanInput').disabled=true;document.getElementById('ibServiceHint').style.display='';ibScanned=[];renderIbScanList();checkIbForm();document.getElementById('ibFormBody').classList.remove('open');document.getElementById('ibFormIcon').innerText='expand_more';}
+function saveIb(){var service=document.getElementById('ibService').value;var from=document.getElementById('ibFrom').value;var tujuan=document.getElementById('ibTujuan').value;if(!globalIncharge||!service||!from||!tujuan){toast('Lengkapi semua field','error');return;}showLoading('Menyimpan...');gasPost('saveIb',{incharge:globalIncharge,service:service,from:from,tujuan:tujuan,awbList:ibScanned.slice()}).then(function(res){hideLoading();if(res.error){toast('Gagal: '+res.error,'error');return;}toast('✅ IB disimpan! NO TRACK: '+res.noTrack,'success');resetIbForm();buildAllScanAwbs();gasGet('getIbList').then(function(r){ibData=r.list||[];renderIbTable();updateIbStats();}).catch(function(){});}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
+function resetIbForm(){['ibService','ibFrom','ibTujuan'].forEach(function(id){document.getElementById(id).value='';if(cbRegistry[id+'Cb'])cbRegistry[id+'Cb'].value='';});setCbDisabled('ibFromCb',true);setCbDisabled('ibTujuanCb',true);document.getElementById('ibScanInput').disabled=true;document.getElementById('ibScanInput').placeholder='Isi FROM & TUJUAN dulu...';document.getElementById('ibServiceHint').style.display='';var hint=document.getElementById('ibScanHint');if(hint)hint.style.display='none';ibScanned=[];renderIbScanList();checkIbForm();document.getElementById('ibFormBody').classList.remove('open');document.getElementById('ibFormIcon').innerText='expand_more';}
 
 // ═══════════════════════════════════════════════════════════
 // INIT & RELOAD
@@ -764,23 +868,18 @@ function reloadAll(){
     renderObTable();renderHvsTable();renderIbTable();
     updateObStats();updateHvsStats();updateIbStats();
     _mfLoaded=false;
-    // Load scan AWBs untuk search
     return gasGet('getAllScanAwbs');
   }).then(function(r){
     if(r&&r.list)allScanAwbs=r.list;
     return gasGet('getOBIB');
   }).then(function(r){
-    obibHeaders=r.headers||[];obibRows=r.rows||[];
+    obibHeaders=r.headers||[];
+    obibRows=r.rows||[];
+    obibIbSections=r.ibSections||[];
     hideLoading();
   }).catch(function(e){hideLoading();toast('❌ '+e.message,'error');});
 }
 
-// ═══════════════════════════════════════════════════════════
-// BUILD ALL SCAN AWBs (untuk search) — dari data lokal
-// ═══════════════════════════════════════════════════════════
-// Dipanggil setelah data OB/HVS/IB dimuat.
-// Karena kita tidak selalu bisa fetch semua scan AWB sekaligus,
-// kita gunakan endpoint getAllScanAwbs dari GAS.
 function buildAllScanAwbs(){
   gasGet('getAllScanAwbs').then(function(r){
     if(r&&r.list)allScanAwbs=r.list;
@@ -788,20 +887,18 @@ function buildAllScanAwbs(){
 }
 
 // ═══════════════════════════════════════════════════════════
-// ★ SEARCH AWB (sidebar + halaman)
+// SEARCH AWB
 // ═══════════════════════════════════════════════════════════
 function handleSidebarSearch(e){
   var input=document.getElementById('sidebarSearchInput');
   var val=input.value.trim();
   if(e.key==='Enter'&&val){
-    // Pindah ke halaman search dan isi query
     switchPage('search');
     document.getElementById('searchAwbMainInput').value=val;
     doSearchAwb(val);
     input.value='';
   }
 }
-
 function doSearchAwb(q){
   q=(q||'').trim();
   var hdr=document.getElementById('searchAwbResult').querySelector('.search-awb-result-hdr');
@@ -812,15 +909,9 @@ function doSearchAwb(q){
     return;
   }
   var ql=q.toLowerCase();
-  // Cari di allScanAwbs
-  var results=allScanAwbs.filter(function(item){
-    return(item.awb||'').toLowerCase().indexOf(ql)!==-1;
-  });
+  var results=allScanAwbs.filter(function(item){return(item.awb||'').toLowerCase().indexOf(ql)!==-1;});
   hdr.innerHTML='<span class="material-icons-round">'+(results.length?'check_circle':'search_off')+'</span> '+(results.length?results.length+' hasil ditemukan untuk "'+escH(q)+'"':'Tidak ada hasil untuk "'+escH(q)+'"');
-  if(!results.length){
-    body.innerHTML='<div class="search-awb-empty"><span class="material-icons-round">search_off</span>AWB tidak ditemukan di semua data OB, HVS, dan IB</div>';
-    return;
-  }
+  if(!results.length){body.innerHTML='<div class="search-awb-empty"><span class="material-icons-round">search_off</span>AWB tidak ditemukan di semua data OB, HVS, dan IB</div>';return;}
   var typeLabel={OB:'Outbound BDO',HVS:'Outbound HVS',IB:'Inbound HVS'};
   var typeIcon={OB:'local_shipping',HVS:'inventory_2',IB:'move_to_inbox'};
   body.innerHTML=results.map(function(item){
@@ -833,25 +924,17 @@ function doSearchAwb(q){
         '<div class="search-awb-item-meta">'+
           '<span class="search-awb-type-tag '+t.toLowerCase()+'">'+typeLabel[t]+'</span>'+
           '<span>'+escH(item.incharge||'—')+'</span>'+
-          '<span>•</span>'+
-          '<span>'+escH(item.service||'—')+'</span>'+
-          '<span>•</span>'+
-          '<span>→ '+escH(item.tujuan||'—')+'</span>'+
+          '<span>•</span><span>'+escH(item.service||'—')+'</span>'+
+          '<span>•</span><span>→ '+escH(item.tujuan||'—')+'</span>'+
           (item.from?'<span>• FROM: '+escH(item.from)+'</span>':'')+
-          '<span>•</span>'+
-          '<span style="color:var(--gray4)">'+escH(item.date||'')+'</span>'+
+          '<span>•</span><span style="color:var(--gray4)">'+escH(item.date||'')+'</span>'+
         '</div>'+
         '<div style="margin-top:3px">NO TRACK: <span class="search-awb-item-notrack" onclick="openDetailModal(\''+t.toLowerCase()+'\',\''+escQ(item.noTrack)+'\')">'+escH(item.noTrack)+'</span></div>'+
       '</div>'+
     '</div>';
   }).join('');
 }
-
-function clearSearchAwb(){
-  document.getElementById('searchAwbMainInput').value='';
-  doSearchAwb('');
-}
-
+function clearSearchAwb(){document.getElementById('searchAwbMainInput').value='';doSearchAwb('');}
 function escRegex(s){return(s||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 
 // ═══════════════════════════════════════════════════════════
@@ -863,7 +946,7 @@ function updateHvsStats(){var d=filteredData(hvsData);var t=d.reduce(function(s,
 function updateIbStats(){var d=filteredData(ibData);var t=d.reduce(function(s,x){return s+(+x.total_awb||0);},0);var s=d.filter(function(x){return x.status==='SELESAI';}).length;document.getElementById('ibTotalAwb').innerText=t;document.getElementById('ibSelesai').innerText=s;document.getElementById('ibProses').innerText=d.length-s;}
 
 // ═══════════════════════════════════════════════════════════
-// TABLE RENDER (OB / HVS / IB)
+// TABLE RENDER
 // ═══════════════════════════════════════════════════════════
 function statusBadge(s){return(s==='SELESAI'||s==='selesai')?'<span class="badge badge-selesai">✓ Selesai</span>':'<span class="badge badge-proses">● On Proses</span>';}
 function fotoThumb(url){if(!url)return'<span style="font-size:11px;color:var(--gray4)">—</span>';return'<a href="'+url+'" target="_blank"><img src="'+url+'" style="width:42px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--gray3)"></a>';}
@@ -875,188 +958,138 @@ function filterHvsTable(){renderHvsTable(document.getElementById('hvsSearch').va
 function filterIbTable(){renderIbTable(document.getElementById('ibSearch').value||'');}
 
 // ═══════════════════════════════════════════════════════════
-// ★ MANIFEST — SPREADSHEET LAYOUT (FIXED v4.0)
+// ★ OB&IB PAGE — dengan kolom INBOUND_HVS format baru
 // ═══════════════════════════════════════════════════════════
-function loadManifestPage(){
-  if(_mfLoaded){renderManifestSheet();return;}
-  showLoading('Memuat manifest...');
-  gasGet('getManifestData').then(function(res){
-    hideLoading();
-    if(res.error){toast('Error manifest: '+res.error,'error');return;}
-    _mfData=res;_mfLoaded=true;_mfSelRow=-1;_mfSelCol=-1;
-    renderManifestSheet();setupMfKeyboard();
-  }).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});
+function renderObibPage(){
+  var filter=document.getElementById('obibSearch').value||'';
+  renderObibTable(obibHeaders,obibRows,obibIbSections,filter);
 }
 
-function reloadManifest(){
-  _mfLoaded=false;_mfData=null;_mfSelRow=-1;_mfSelCol=-1;
-  showLoading('Refresh manifest...');
-  gasGet('getManifestData').then(function(res){
-    hideLoading();
-    if(res.error){toast('Error: '+res.error,'error');return;}
-    _mfData=res;_mfLoaded=true;
-    renderManifestSheet();setupMfKeyboard();
-  }).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});
-}
+function filterObib(){renderObibPage();}
 
-function filterManifest(){
-  _mfFilter=document.getElementById('manifestSearch').value||'';
-  if(_mfLoaded)renderManifestSheet();
-}
+/*
+ * Format kolom INBOUND_HVS:
+ *   TUJUAN_(FROM)   ← header section bold biru
+ *   awb1
+ *   awb2
+ *   ---separator---
+ *   TUJUAN2_(FROM2)
+ *   awb3
+ *
+ * Dirender sebagai satu cell dengan blok-blok section.
+ */
+function renderObibTable(headers, rows, ibSections, filter){
+  var wrap=document.getElementById('obibTableWrap');
 
-function renderManifestSheet(){
-  if(!_mfData){
-    document.getElementById('mfSheetOuter').innerHTML='<div style="padding:40px;text-align:center;color:var(--gray5)"><span class="material-icons-round" style="font-size:40px;color:var(--gray4);display:block;margin-bottom:8px">grid_on</span>Klik Manifest di sidebar untuk memuat data</div>';
-    return;
-  }
-  var hRows=_mfData.headerRows||[];
-  var colDefs=_mfData.colDefs||[];
-  var awbRows=_mfData.awbRows||[];
-  var totalCols=_mfData.totalCols||0;
-
-  // Filter baris
-  var fq=_mfFilter.toLowerCase().trim();
-  var filteredAwbRows=awbRows;
-  if(fq){
-    // Cek apakah ada kolom tujuan yang cocok dg filter
-    var tujuanMatch=false;
-    if(hRows[2])hRows[2].forEach(function(v){if((v||'').toLowerCase().indexOf(fq)!==-1)tujuanMatch=true;});
-    if(!tujuanMatch){
-      filteredAwbRows=awbRows.filter(function(row){
-        return row.some(function(cell){return(cell||'').toLowerCase().indexOf(fq)!==-1;});
+  // Bangun HTML INBOUND_HVS column dari ibSections
+  // ibSections: [{service,from,tujuan,date,status,totalAwb,noTrack,incharge,awbs:[{awb,tujuan,from,date}]}]
+  var ibColHtml='';
+  if(!ibSections||!ibSections.length){
+    ibColHtml='<span class="ib-no-data">—</span>';
+  } else {
+    // Filter berdasarkan search jika perlu
+    var filteredSec=ibSections;
+    if(filter){
+      var fq=filter.toLowerCase();
+      filteredSec=ibSections.filter(function(sec){
+        return (sec.tujuan+sec.from+sec.service+sec.incharge+sec.no_track).toLowerCase().indexOf(fq)!==-1
+          || sec.awbs.some(function(a){return(a.awb||'').toLowerCase().indexOf(fq)!==-1;});
       });
     }
+    if(!filteredSec.length){
+      ibColHtml='<span class="ib-no-data">Tidak ada data</span>';
+    } else {
+      ibColHtml=filteredSec.map(function(sec){
+        // Header: TUJUAN_(FROM)
+        var headerLabel=escH(sec.tujuan)+(sec.from?'_('+escH(sec.from)+')':'');
+        // AWB list
+        var awbLines=sec.awbs.length
+          ? sec.awbs.map(function(a){return'<span class="ib-section-awb-item">'+escH(a.awb)+'</span>';}).join('')
+          : '<span class="ib-section-awb-item" style="color:var(--gray4);font-style:italic">— kosong —</span>';
+        // Meta info kecil
+        var meta='<span style="font-size:10px;color:var(--gray5);display:block;margin-top:1px">'+
+          escH(sec.service)+' • '+escH(sec.date)+' • '+statusBadge(sec.status)+
+          ' • <strong>'+sec.totalAwb+'</strong> AWB'+
+          ' • <span style="color:var(--blue2);cursor:pointer;text-decoration:underline" onclick="openDetailModal(\'ib\',\''+escQ(sec.no_track)+'\')">'+escH(sec.no_track)+'</span>'+
+          '</span>';
+        return'<div class="ib-section-block">'+
+          '<div class="ib-section-header">'+headerLabel+'</div>'+
+          '<div class="ib-section-awb">'+awbLines+'</div>'+
+          meta+
+        '</div>';
+      }).join('');
+    }
   }
-  _mfFilteredRows=filteredAwbRows;
 
-  // Stats
+  // Bangun tabel OB+HVS rows (dari sheet OB&IB)
+  var obibData=rows;
+  if(filter&&headers.length){
+    var fq=filter.toLowerCase();
+    obibData=rows.filter(function(r){return r.join(' ').toLowerCase().indexOf(fq)!==-1;});
+  }
+
+  var html='<table><thead><tr>';
+  // Header OB&IB sheet columns
+  headers.forEach(function(h){html+='<th>'+escH(h||'')+'</th>';});
+  // Header INBOUND_HVS column
+  html+='<th style="background:var(--green-light);color:var(--green);min-width:200px">INBOUND HVS</th>';
+  html+='</tr></thead><tbody>';
+
+  if(!obibData.length&&(!ibSections||!ibSections.length)){
+    html+='<tr><td colspan="'+(headers.length+1)+'"><div class="empty-state"><span class="material-icons-round">table_view</span>Tidak ada data</div></td></tr>';
+  } else {
+    // Baris dari sheet OB&IB, tambah cell INBOUND_HVS di baris pertama
+    obibData.forEach(function(r,ri){
+      html+='<tr>';
+      r.forEach(function(c){html+='<td style="font-size:12px">'+escH(c||'')+'</td>';});
+      // INBOUND_HVS cell hanya di baris pertama, baris lain kosong
+      if(ri===0){
+        html+='<td style="vertical-align:top;padding:8px 11px" rowspan="'+Math.max(obibData.length,1)+'">'+ibColHtml+'</td>';
+      }
+      html+='</tr>';
+    });
+    // Jika tidak ada rows OB&IB tapi ada IB sections
+    if(!obibData.length){
+      html+='<tr><td colspan="'+headers.length+'"><div class="empty-state" style="padding:16px"><span class="material-icons-round">inbox</span>Tidak ada data OB & HVS</div></td>';
+      html+='<td style="vertical-align:top;padding:8px 11px">'+ibColHtml+'</td></tr>';
+    }
+  }
+  html+='</tbody></table>';
+  wrap.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MANIFEST
+// ═══════════════════════════════════════════════════════════
+function loadManifestPage(){if(_mfLoaded){renderManifestSheet();return;}showLoading('Memuat manifest...');gasGet('getManifestData').then(function(res){hideLoading();if(res.error){toast('Error manifest: '+res.error,'error');return;}_mfData=res;_mfLoaded=true;_mfSelRow=-1;_mfSelCol=-1;renderManifestSheet();setupMfKeyboard();}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
+function reloadManifest(){_mfLoaded=false;_mfData=null;_mfSelRow=-1;_mfSelCol=-1;showLoading('Refresh manifest...');gasGet('getManifestData').then(function(res){hideLoading();if(res.error){toast('Error: '+res.error,'error');return;}_mfData=res;_mfLoaded=true;renderManifestSheet();setupMfKeyboard();}).catch(function(e){hideLoading();toast('Error: '+e.message,'error');});}
+function filterManifest(){_mfFilter=document.getElementById('manifestSearch').value||'';if(_mfLoaded)renderManifestSheet();}
+function renderManifestSheet(){
+  if(!_mfData){document.getElementById('mfSheetOuter').innerHTML='<div style="padding:40px;text-align:center;color:var(--gray5)"><span class="material-icons-round" style="font-size:40px;color:var(--gray4);display:block;margin-bottom:8px">grid_on</span>Klik Manifest di sidebar</div>';return;}
+  var hRows=_mfData.headerRows||[];var colDefs=_mfData.colDefs||[];var awbRows=_mfData.awbRows||[];var totalCols=_mfData.totalCols||0;
+  var fq=_mfFilter.toLowerCase().trim();
+  var filteredAwbRows=awbRows;
+  if(fq){var tujuanMatch=false;if(hRows[2])hRows[2].forEach(function(v){if((v||'').toLowerCase().indexOf(fq)!==-1)tujuanMatch=true;});if(!tujuanMatch){filteredAwbRows=awbRows.filter(function(row){return row.some(function(cell){return(cell||'').toLowerCase().indexOf(fq)!==-1;});});}}
+  _mfFilteredRows=filteredAwbRows;
   var incSet={};colDefs.forEach(function(c){if(c.incharge)incSet[c.incharge]=true;});
   var tujCols=colDefs.filter(function(c){return!c.isDate&&c.tujuan;});
-  var totalAwb=tujCols.reduce(function(s,c){
-    var cnt=awbRows.filter(function(r){return r[c.colIdx]&&r[c.colIdx].trim();}).length;
-    return s+cnt;
-  },0);
-  document.getElementById('mfTotalCols').innerText=tujCols.length;
-  document.getElementById('mfTotalAwb').innerText=totalAwb;
-  document.getElementById('mfTotalInc').innerText=Object.keys(incSet).length;
-
+  var totalAwb=tujCols.reduce(function(s,c){var cnt=awbRows.filter(function(r){return r[c.colIdx]&&r[c.colIdx].trim();}).length;return s+cnt;},0);
+  document.getElementById('mfTotalCols').innerText=tujCols.length;document.getElementById('mfTotalAwb').innerText=totalAwb;document.getElementById('mfTotalInc').innerText=Object.keys(incSet).length;
   var nCols=totalCols;
-
-  // Build header row 0 & 1 with colspan (run-length encoding)
-  function buildSpannedRow(hArr,cellClass){
-    var cells=[];var i=0;
-    while(i<nCols){
-      var val=hArr[i]||'';
-      if(!val){cells.push({val:'',span:1});i++;continue;}
-      var span=1;
-      while(i+span<nCols&&(!hArr[i+span]||hArr[i+span]===''))span++;
-      cells.push({val:val,span:span});i+=span;
-    }
-    return'<tr><th class="mf-rn" style="z-index:5">#</th>'+
-      cells.map(function(c){return'<th colspan="'+c.span+'" class="'+cellClass+'">'+escH(c.val)+'</th>';}).join('')+
-    '</tr>';
-  }
-
+  function buildSpannedRow(hArr,cellClass){var cells=[];var i=0;while(i<nCols){var val=hArr[i]||'';if(!val){cells.push({val:'',span:1});i++;continue;}var span=1;while(i+span<nCols&&(!hArr[i+span]||hArr[i+span]===''))span++;cells.push({val:val,span:span});i+=span;}return'<tr><th class="mf-rn" style="z-index:5">#</th>'+cells.map(function(c){return'<th colspan="'+c.span+'" class="'+cellClass+'">'+escH(c.val)+'</th>';}).join('')+'</tr>';}
   var row0Html=buildSpannedRow(hRows[0]||[],'mf-hdr-incharge');
   var row1Html=buildSpannedRow(hRows[1]||[],'mf-hdr-service');
-  var row2Html='<tr><th class="mf-rn">—</th>'+
-    colDefs.map(function(c){
-      if(c.isDate)return'<th class="mf-hdr-date">DATE</th>';
-      return'<th class="mf-hdr-tujuan">'+escH(c.tujuan)+'</th>';
-    }).join('')+
-  '</tr>';
-
-  // Data rows
-  var dataHtml=filteredAwbRows.length?filteredAwbRows.map(function(row,ri){
-    return'<tr class="mf-data-row" data-ri="'+ri+'">'+
-      '<td class="mf-rn">'+(ri+1)+'</td>'+
-      colDefs.map(function(c,ci){
-        var val=row[c.colIdx]||'';
-        var isSel=(_mfSelRow===ri&&_mfSelCol===ci);
-        if(c.isDate)return'<td class="mf-cell-date'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')">'+escH(val)+'</td>';
-        if(!val)return'<td class="mf-cell-empty'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')"></td>';
-        return'<td class="mf-cell-awb'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')" title="'+escH(val)+'">'+escH(val)+'</td>';
-      }).join('')+
-    '</tr>';
-  }).join(''):'<tr><td class="mf-rn" style="color:var(--gray5)">—</td><td colspan="'+(nCols||1)+'" style="text-align:center;padding:20px;color:var(--gray5);font-size:12px">Tidak ada data AWB</td></tr>';
-
+  var row2Html='<tr><th class="mf-rn">—</th>'+colDefs.map(function(c){if(c.isDate)return'<th class="mf-hdr-date">DATE</th>';return'<th class="mf-hdr-tujuan">'+escH(c.tujuan)+'</th>';}).join('')+'</tr>';
+  var dataHtml=filteredAwbRows.length?filteredAwbRows.map(function(row,ri){return'<tr class="mf-data-row" data-ri="'+ri+'"><td class="mf-rn">'+(ri+1)+'</td>'+colDefs.map(function(c,ci){var val=row[c.colIdx]||'';var isSel=(_mfSelRow===ri&&_mfSelCol===ci);if(c.isDate)return'<td class="mf-cell-date'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')">'+escH(val)+'</td>';if(!val)return'<td class="mf-cell-empty'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')"></td>';return'<td class="mf-cell-awb'+(isSel?' mf-cell-selected':'')+'" data-ci="'+ci+'" data-ri="'+ri+'" onclick="mfSelectCell('+ri+','+ci+')" title="'+escH(val)+'">'+escH(val)+'</td>';}).join('')+'</tr>';}).join(''):'<tr><td class="mf-rn" style="color:var(--gray5)">—</td><td colspan="'+(nCols||1)+'" style="text-align:center;padding:20px;color:var(--gray5);font-size:12px">Tidak ada data AWB</td></tr>';
   var tableHtml='<table class="mf-table"><thead>'+row0Html+row1Html+row2Html+'</thead><tbody>'+dataHtml+'</tbody></table>';
   document.getElementById('mfSheetOuter').innerHTML=tableHtml;
   updateMfActiveCellLabel();
 }
-
-function mfSelectCell(ri,ci){
-  _mfSelRow=ri;_mfSelCol=ci;
-  document.querySelectorAll('.mf-cell-selected').forEach(function(el){el.classList.remove('mf-cell-selected');});
-  var target=document.querySelector('[data-ri="'+ri+'"][data-ci="'+ci+'"]');
-  if(target){target.classList.add('mf-cell-selected');target.scrollIntoView({block:'nearest',inline:'nearest'});}
-  updateMfActiveCellLabel();
-  document.getElementById('mfSheetOuter').focus();
-}
-
-function updateMfActiveCellLabel(){
-  var el=document.getElementById('mfActiveCell');if(!el)return;
-  if(_mfSelRow<0||_mfSelCol<0||!_mfData){el.innerText='—';return;}
-  var row=_mfFilteredRows[_mfSelRow];
-  var colDefs=_mfData.colDefs||[];
-  var c=colDefs[_mfSelCol];
-  if(!row||!c){el.innerText='—';return;}
-  el.innerText=(row[c.colIdx]||'(kosong)');
-}
-
-function setupMfKeyboard(){
-  var outer=document.getElementById('mfSheetOuter');
-  if(!outer||outer._kbSetup)return;
-  outer._kbSetup=true;
-  outer.addEventListener('keydown',function(e){
-    if(!_mfData)return;
-    var colDefs=_mfData.colDefs||[];
-    var nRows=_mfFilteredRows.length;var nCols=colDefs.length;
-    if(!nRows||!nCols)return;
-    if(_mfSelRow<0){_mfSelRow=0;_mfSelCol=0;}
-    var moved=false;
-    if(e.key==='ArrowDown'){e.preventDefault();_mfSelRow=Math.min(_mfSelRow+1,nRows-1);moved=true;}
-    else if(e.key==='ArrowUp'){e.preventDefault();_mfSelRow=Math.max(_mfSelRow-1,0);moved=true;}
-    else if(e.key==='ArrowRight'){e.preventDefault();_mfSelCol=Math.min(_mfSelCol+1,nCols-1);moved=true;}
-    else if(e.key==='ArrowLeft'){e.preventDefault();_mfSelCol=Math.max(_mfSelCol-1,0);moved=true;}
-    else if(e.key==='Tab'){e.preventDefault();_mfSelCol=(_mfSelCol+1)%nCols;if(_mfSelCol===0)_mfSelRow=Math.min(_mfSelRow+1,nRows-1);moved=true;}
-    else if(e.key==='c'&&(e.ctrlKey||e.metaKey)){e.preventDefault();copyMfCell();return;}
-    if(moved){
-      document.querySelectorAll('.mf-cell-selected').forEach(function(el){el.classList.remove('mf-cell-selected');});
-      var target=document.querySelector('[data-ri="'+_mfSelRow+'"][data-ci="'+_mfSelCol+'"]');
-      if(target){target.classList.add('mf-cell-selected');target.scrollIntoView({block:'nearest',inline:'nearest'});}
-      updateMfActiveCellLabel();
-    }
-  });
-}
-
-function copyMfCell(){
-  if(_mfSelRow<0||_mfSelCol<0||!_mfData)return;
-  var row=_mfFilteredRows[_mfSelRow];
-  var colDefs=_mfData.colDefs||[];
-  var c=colDefs[_mfSelCol];
-  if(!row||!c)return;
-  var val=row[c.colIdx]||'';
-  if(!val){toast('Sel kosong','error');return;}
-  navigator.clipboard.writeText(val).then(function(){showCopyFlash(val);}).catch(function(){
-    var ta=document.createElement('textarea');ta.value=val;ta.style.position='fixed';ta.style.opacity='0';
-    document.body.appendChild(ta);ta.select();
-    try{document.execCommand('copy');showCopyFlash(val);}catch(ex){toast('Gagal copy','error');}
-    document.body.removeChild(ta);
-  });
-}
-
-function showCopyFlash(val){
-  var el=document.getElementById('copyFlash');
-  el.innerText='✓ Copied: '+val;el.classList.add('show');
-  clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},1200);
-}
-
-// ═══════════════════════════════════════════════════════════
-// OBIB TABLE
-// ═══════════════════════════════════════════════════════════
-function renderObibTable(headers,rows,filter){var data=rows;if(filter){var v=filter.toLowerCase();data=data.filter(function(r){return r.join(' ').toLowerCase().indexOf(v)!==-1;});}var wrap=document.getElementById('obibTableWrap');if(!headers.length){wrap.innerHTML='<div class="empty-state"><span class="material-icons-round">table_view</span>Sheet OB&IB masih kosong</div>';return;}var html='<table><thead><tr>'+headers.map(function(h){return'<th>'+(h||'')+'</th>';}).join('')+'</tr></thead><tbody>';html+=data.map(function(r){return'<tr>'+r.map(function(c){return'<td style="font-size:12px">'+(c||'')+'</td>';}).join('')+'</tr>';}).join('');wrap.innerHTML=html+'</tbody></table>';}
-function filterObib(){renderObibTable(obibHeaders,obibRows,document.getElementById('obibSearch').value);}
+function mfSelectCell(ri,ci){_mfSelRow=ri;_mfSelCol=ci;document.querySelectorAll('.mf-cell-selected').forEach(function(el){el.classList.remove('mf-cell-selected');});var target=document.querySelector('[data-ri="'+ri+'"][data-ci="'+ci+'"]');if(target){target.classList.add('mf-cell-selected');target.scrollIntoView({block:'nearest',inline:'nearest'});}updateMfActiveCellLabel();document.getElementById('mfSheetOuter').focus();}
+function updateMfActiveCellLabel(){var el=document.getElementById('mfActiveCell');if(!el)return;if(_mfSelRow<0||_mfSelCol<0||!_mfData){el.innerText='—';return;}var row=_mfFilteredRows[_mfSelRow];var colDefs=_mfData.colDefs||[];var c=colDefs[_mfSelCol];if(!row||!c){el.innerText='—';return;}el.innerText=(row[c.colIdx]||'(kosong)');}
+function setupMfKeyboard(){var outer=document.getElementById('mfSheetOuter');if(!outer||outer._kbSetup)return;outer._kbSetup=true;outer.addEventListener('keydown',function(e){if(!_mfData)return;var colDefs=_mfData.colDefs||[];var nRows=_mfFilteredRows.length;var nCols=colDefs.length;if(!nRows||!nCols)return;if(_mfSelRow<0){_mfSelRow=0;_mfSelCol=0;}var moved=false;if(e.key==='ArrowDown'){e.preventDefault();_mfSelRow=Math.min(_mfSelRow+1,nRows-1);moved=true;}else if(e.key==='ArrowUp'){e.preventDefault();_mfSelRow=Math.max(_mfSelRow-1,0);moved=true;}else if(e.key==='ArrowRight'){e.preventDefault();_mfSelCol=Math.min(_mfSelCol+1,nCols-1);moved=true;}else if(e.key==='ArrowLeft'){e.preventDefault();_mfSelCol=Math.max(_mfSelCol-1,0);moved=true;}else if(e.key==='Tab'){e.preventDefault();_mfSelCol=(_mfSelCol+1)%nCols;if(_mfSelCol===0)_mfSelRow=Math.min(_mfSelRow+1,nRows-1);moved=true;}else if(e.key==='c'&&(e.ctrlKey||e.metaKey)){e.preventDefault();copyMfCell();return;}if(moved){document.querySelectorAll('.mf-cell-selected').forEach(function(el){el.classList.remove('mf-cell-selected');});var target=document.querySelector('[data-ri="'+_mfSelRow+'"][data-ci="'+_mfSelCol+'"]');if(target){target.classList.add('mf-cell-selected');target.scrollIntoView({block:'nearest',inline:'nearest'});}updateMfActiveCellLabel();}});}
+function copyMfCell(){if(_mfSelRow<0||_mfSelCol<0||!_mfData)return;var row=_mfFilteredRows[_mfSelRow];var colDefs=_mfData.colDefs||[];var c=colDefs[_mfSelCol];if(!row||!c)return;var val=row[c.colIdx]||'';if(!val){toast('Sel kosong','error');return;}navigator.clipboard.writeText(val).then(function(){showCopyFlash(val);}).catch(function(){var ta=document.createElement('textarea');ta.value=val;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showCopyFlash(val);}catch(ex){toast('Gagal copy','error');}document.body.removeChild(ta);});}
+function showCopyFlash(val){var el=document.getElementById('copyFlash');el.innerText='✓ Copied: '+val;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show');},1200);}
 
 // ═══════════════════════════════════════════════════════════
 // MARK SELESAI & DELETE
@@ -1071,11 +1104,9 @@ function openDetailModal(type,noTrack){
   var data=type==='ob'?obData:type==='hvs'?hvsData:ibData;
   var item=data.find(function(d){return d.no_track===noTrack;});
   if(!item){
-    // Coba cari dari semua data (mungkin dipanggil dari search)
     var allData=obData.concat(hvsData).concat(ibData);
     item=allData.find(function(d){return d.no_track===noTrack;});
     if(!item){toast('Data tidak ditemukan','error');return;}
-    // Tentukan type dari no_track prefix
     if(noTrack.indexOf('OB_')===0)type='ob';
     else if(noTrack.indexOf('HVS_')===0)type='hvs';
     else if(noTrack.indexOf('IB_')===0)type='ib';
@@ -1105,19 +1136,23 @@ function onFotoChange(e){var file=e.target.files[0];if(!file||!currentDetailItem
 // ═══════════════════════════════════════════════════════════
 // EXPORT
 // ═══════════════════════════════════════════════════════════
-function exportCSV(){
-  var page=document.querySelector('.nav-item.active .nav-label');
-  var pname=page?page.innerText:'';
-  var data,headers,filename;
-  if(pname.indexOf('Outbound BDO')!==-1){data=filteredData(obData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='OB_export.csv';}
-  else if(pname.indexOf('Outbound HVS')!==-1){data=filteredData(hvsData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='HVS_export.csv';}
-  else if(pname.indexOf('Inbound HVS')!==-1){data=filteredData(ibData);headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb'];filename='IB_export.csv';}
-  else{toast('Pilih halaman OB/HVS/IB dulu','error');return;}
-  var csv=headers.join(',')+'\n'+data.map(function(d){return headers.map(function(h){return'"'+(d[h]||'')+'"';}).join(',');}).join('\n');
-  dlCSV(csv,filename);
-}
+function exportCSV(){var page=document.querySelector('.nav-item.active .nav-label');var pname=page?page.innerText:'';var data,headers,filename;if(pname.indexOf('Outbound BDO')!==-1){data=filteredData(obData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='OB_export.csv';}else if(pname.indexOf('Outbound HVS')!==-1){data=filteredData(hvsData);headers=['no_track','incharge','service','tujuan','created_date','status','total_awb'];filename='HVS_export.csv';}else if(pname.indexOf('Inbound HVS')!==-1){data=filteredData(ibData);headers=['no_track','incharge','service','from','tujuan','created_date','status','total_awb'];filename='IB_export.csv';}else{toast('Pilih halaman OB/HVS/IB dulu','error');return;}var csv=headers.join(',')+'\n'+data.map(function(d){return headers.map(function(h){return'"'+(d[h]||'')+'"';}).join(',');}).join('\n');dlCSV(csv,filename);}
 function exportManifestCSV(){if(!_mfData){toast('Manifest belum dimuat','error');return;}var colDefs=_mfData.colDefs||[];var awbRows=_mfData.awbRows||[];var hRows=_mfData.headerRows||[];if(!colDefs.length){toast('Tidak ada data manifest','error');return;}var h0=hRows[0]||[];var h1=hRows[1]||[];var h2=hRows[2]||[];var csvRows=[];csvRows.push(['#'].concat(h0).map(function(v){return'"'+v+'"';}).join(','));csvRows.push([''].concat(h1).map(function(v){return'"'+v+'"';}).join(','));csvRows.push([''].concat(h2).map(function(v){return'"'+v+'"';}).join(','));awbRows.forEach(function(row,i){csvRows.push(['"'+(i+1)+'"'].concat(row.map(function(c){return'"'+(c||'')+'"';})).join(','));});dlCSV(csvRows.join('\n'),'manifest_export.csv');}
-function exportObibCSV(){if(!obibRows.length){toast('Tidak ada data OB&IB','error');return;}dlCSV(obibHeaders.join(',')+'\n'+obibRows.map(function(r){return r.map(function(c){return'"'+c+'"';}).join(',');}).join('\n'),'OBIB_export.csv');}
+function exportObibCSV(){
+  // Export OB&IB termasuk IB sections
+  var rows=[['TYPE','SERVICE','FROM','TUJUAN','DATE','STATUS','TOTAL AWB','NO TRACK','INCHARGE','AWB']];
+  (obibIbSections||[]).forEach(function(sec){
+    if(sec.awbs&&sec.awbs.length){
+      sec.awbs.forEach(function(a,i){
+        rows.push(['IB',sec.service,sec.from,sec.tujuan,sec.date,sec.status,sec.totalAwb,i===0?sec.no_track:'',i===0?sec.incharge:'',a.awb]);
+      });
+    } else {
+      rows.push(['IB',sec.service,sec.from,sec.tujuan,sec.date,sec.status,sec.totalAwb,sec.no_track,sec.incharge,'']);
+    }
+  });
+  var csv=rows.map(function(r){return r.map(function(c){return'"'+(c||'')+'"';}).join(',');}).join('\n');
+  dlCSV(csv,'OBIB_IB_export.csv');
+}
 function dlCSV(csv,fn){var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;a.click();}
 </script>
 </body>
